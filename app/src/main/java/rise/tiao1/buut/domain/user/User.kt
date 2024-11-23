@@ -1,8 +1,11 @@
 package rise.tiao1.buut.domain.user
 
 import rise.tiao1.buut.data.local.user.LocalUser
+import rise.tiao1.buut.data.remote.user.dto.PutUserDTO
+import rise.tiao1.buut.data.remote.user.dto.RoleDTO
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
 import rise.tiao1.buut.utils.toLocalDateTime
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class User(
@@ -13,7 +16,8 @@ data class User(
     val password: String? = null,
     val phone: String? = null,
     val dateOfBirth: LocalDateTime?= null,
-    val address: Address ?=null
+    val address: Address? =null,
+    val roles: List<Role>,
 )
 
 fun User.toLocalUser(): LocalUser {
@@ -24,7 +28,8 @@ fun User.toLocalUser(): LocalUser {
         email = this.email,
         address = this.address,
         phone = this.phone,
-        dateOfBirth = this.dateOfBirth.toString()
+        dateOfBirth = this.dateOfBirth.toString(),
+        roles = this.roles.toString()
     )
 }
 
@@ -37,6 +42,20 @@ fun User.toUserDTO(): UserDTO {
         email = this.email,
         password = this.password,
         dateOfBirth = this.dateOfBirth.toString()
+    )
+}
+
+fun User.toPutUserDTO(): PutUserDTO {
+    return PutUserDTO(
+        id = this.id.toString(),
+        firstName = this.firstName,
+        lastName = this.lastName,
+        address = this.address?.toAddressDTO(),
+        phone = this.phone,
+        email = this.email,
+        password = this.password,
+        dateOfBirth = this.dateOfBirth.toString(),
+        roles = this.roles.map { r -> r.toRoleDTO() }
     )
 }
 
