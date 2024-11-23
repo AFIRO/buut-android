@@ -17,6 +17,9 @@ import com.auth0.android.authentication.storage.CredentialsManager
 import dagger.hilt.android.AndroidEntryPoint
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingScreen
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingViewModel
+import rise.tiao1.buut.presentation.editProfile.EditProfileScreen
+import rise.tiao1.buut.presentation.editProfile.EditProfileScreenState
+import rise.tiao1.buut.presentation.editProfile.EditProfileViewModel
 import rise.tiao1.buut.presentation.home.HomeScreen
 import rise.tiao1.buut.presentation.home.HomeViewModel
 import rise.tiao1.buut.presentation.login.LoginScreen
@@ -149,8 +152,30 @@ class MainActivity : ComponentActivity() {
                     uiLayout = uiLayout
                 )
             }
+
+            composable(route = Route.EDIT_PROFILE){
+                val editProfileViewModel: EditProfileViewModel = hiltViewModel()
+                EditProfileScreen(
+                    state = editProfileViewModel.state.value,
+                    navigateTo = { route: String -> navController.navigate(route) },
+                    uiLayout = uiLayout,
+                    onValueChanged = { input: String, field: String ->
+                        editProfileViewModel.update(input, field)
+                    },
+                    onConfirmClick = { editProfileViewModel.onConfirmClick({
+                        navController.navigate(
+                            Route.PROFILE
+                        )
+                    }) },
+                    onValidate = { field: String ->
+                        editProfileViewModel.validate(field)
+                    },
+                )
+            }
         }
     }
+
+
 
     private fun setStartingPage(): String {
         if (credentialsManager.hasValidCredentials())
