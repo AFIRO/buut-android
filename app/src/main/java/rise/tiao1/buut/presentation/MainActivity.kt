@@ -1,9 +1,7 @@
 package rise.tiao1.buut.presentation
 
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -12,11 +10,9 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.auth0.android.authentication.storage.CredentialsManager
 import dagger.hilt.android.AndroidEntryPoint
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingScreen
@@ -31,9 +27,7 @@ import rise.tiao1.buut.presentation.register.RegistrationScreen
 import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys.Route
-import rise.tiao1.buut.utils.SharedPreferencesKeys
 import rise.tiao1.buut.utils.UiLayout
-import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -92,7 +86,8 @@ class MainActivity : ComponentActivity() {
                 HomeScreen(
                     state = viewModel.state.value,
                     navigateTo =  { route:String -> navController.navigate(route)} ,
-                    uiLayout = uiLayout
+                    uiLayout = uiLayout,
+                    onNotificationClick =  { notificationId:String, Boolean: Boolean -> viewModel.onNotificationClick(notificationId, Boolean) }
                 )
             }
             composable(route = Route.REGISTER) {

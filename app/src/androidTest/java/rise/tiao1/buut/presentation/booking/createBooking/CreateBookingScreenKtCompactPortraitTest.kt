@@ -299,6 +299,7 @@ class CreateBookingScreenKtCompactPortraitTest {
                         state = HomeScreenState(),
                         navigateTo = { },
                         uiLayout = uiLayout,
+                        onNotificationClick = { _,_ -> }
                     )
                 }
             }

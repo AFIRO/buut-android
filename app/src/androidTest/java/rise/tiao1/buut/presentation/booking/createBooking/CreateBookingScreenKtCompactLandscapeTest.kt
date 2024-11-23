@@ -299,6 +299,7 @@ class CreateBookingScreenKtCompactLandscapeTest {
                         state = HomeScreenState(),
                         navigateTo = { },
                         uiLayout = uiLayout,
+                        onNotificationClick = { _,_ -> }
                     )
                 }
             }

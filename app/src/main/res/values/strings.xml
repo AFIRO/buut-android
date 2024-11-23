@@ -87,4 +87,5 @@
     <string name="booking_info_follows">Thank you for your reservation.\nWe\'ll provide you boat and battery information 2 days in advance of your booking.</string>
     <string name="profile_button">Profile</string>
     <string name="edit_profile_button">Edit</string>
+    <string name="user_has_no_notifications">You have no notifications.</string>
 </resources>

@@ -22,8 +22,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import rise.tiao1.buut.data.local.BuutDb
 import rise.tiao1.buut.data.local.booking.BookingDao
+import rise.tiao1.buut.data.local.notification.NotificationDao
 import rise.tiao1.buut.data.local.user.UserDao
 import rise.tiao1.buut.data.remote.booking.BookingApiService
+import rise.tiao1.buut.data.remote.notification.NotificationApiService
 import rise.tiao1.buut.data.remote.user.UserApiService
 import rise.tiao1.buut.utils.SharedPreferencesKeys
 import javax.inject.Inject
@@ -50,6 +52,11 @@ object BuutModule {
     @Provides
     fun provideBookingDao(database: BuutDb): BookingDao {
         return database.bookingDao
+    }
+
+    @Provides
+    fun provideNotificationDao(database: BuutDb): NotificationDao {
+        return database.notificationDao
     }
 
 
@@ -106,6 +113,12 @@ object BuutModule {
     @Singleton
     fun provideBookingApiService(retrofit: Retrofit): BookingApiService {
         return retrofit.create(BookingApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationApiService(retrofit: Retrofit): NotificationApiService {
+        return retrofit.create(NotificationApiService::class.java)
     }
 
     @Singleton
