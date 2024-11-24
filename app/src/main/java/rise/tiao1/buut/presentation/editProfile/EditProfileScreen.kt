@@ -58,6 +58,7 @@ import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
@@ -101,56 +102,17 @@ fun EditProfileScreen(
                 modifier = Modifier.testTag("navigation")
             )
         },
-//        bottomBar = {
-//            if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM) {
-//                Navigation(
-//                    navigateTo = navigateTo,
-//                    uiLayout = uiLayout,
-//                    currentPage = NavigationKeys.Route.HOME
-//                )
-//            }
-//        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM) {
-                Column {
-                    EditProfileScreenContent(
-                        state = state,
-                        navigateTo = navigateTo,
-                        onConfirmClick = onConfirmClick,
-                        onCancelClick = onCancelClick,
-                        onValueChanged = onValueChanged,
-                        onValidate = onValidate,
-                        uiLayout = uiLayout
-                    )
-                }
-            } else {
-                Row {
-//                    Navigation(
-//                        uiLayout = uiLayout,
-//                        navigateTo = navigateTo,
-//                        currentPage = NavigationKeys.Route.PROFILE,
-//                        content = { EditProfileScreenContent(
-//                            state = state,
-//                            navigateTo = navigateTo,
-//                            onConfirmClick = onConfirmClick,
-//                            onCancelClick = onCancelClick,
-//                            onValueChanged = onValueChanged,
-//                            onValidate = onValidate,
-//                            uiLayout = uiLayout
-//                        ) }
-//                    )
-                    EditProfileScreenContent(
-                        state = state,
-                        navigateTo = navigateTo,
-                        onConfirmClick = onConfirmClick,
-                        onCancelClick = onCancelClick,
-                        onValueChanged = onValueChanged,
-                        onValidate = onValidate,
-                        uiLayout = uiLayout
-                    )
-                }
-            }
+            EditProfileScreenContent(
+                state = state,
+                navigateTo = navigateTo,
+                onConfirmClick = onConfirmClick,
+                onCancelClick = onCancelClick,
+                onValueChanged = onValueChanged,
+                onValidate = onValidate,
+                uiLayout = uiLayout
+            )
         }
     }
 }
@@ -180,13 +142,19 @@ fun EditProfileScreenContent(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            EditProfileProfileContent(state, onValueChanged, onValidate, uiLayout)
+            EditProfileProfileContent(
+                state = state,
+                onValueChanged = onValueChanged,
+                onValidate = onValidate,
+                uiLayout = uiLayout
+            )
             EditProfileButtonContent(
                 state = state,
                 onConfirmClick= onConfirmClick,
                 onCancelClick = onCancelClick,
                 navigateTo = navigateTo,
-                uiLayout = uiLayout)
+                uiLayout = uiLayout
+            )
         }
     }
 }
@@ -442,11 +410,13 @@ fun EditProfileProfileContent(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
+        Log.d(TAG, uiLayout.name
+        )
         if (uiLayout != LANDSCAPE_SMALL) {
             HeaderOne(stringResource(R.string.edit_profile_page_title))
         }
 
-        if (uiLayout == LANDSCAPE_SMALL || uiLayout == LANDSCAPE_MEDIUM || uiLayout == LANDSCAPE_MEDIUM){
+        if (uiLayout == LANDSCAPE_SMALL || uiLayout == LANDSCAPE_MEDIUM || uiLayout == LANDSCAPE_EXPANDED){
              Row (
                  horizontalArrangement = Arrangement.spacedBy(8.dp),
                  modifier = Modifier
@@ -486,7 +456,8 @@ fun EditProfileProfileContent(
                  }
 
                 }
-        }else {
+        }
+        else {
             Column {
                 EditProfileScreenNameComponent(
                     state = state,
@@ -514,13 +485,6 @@ fun EditProfileProfileContent(
             }
         }
     }
-
-
-
-
-
-
-
 }
 
 @Preview(
