@@ -1,14 +1,17 @@
 package rise.tiao1.buut.presentation.booking.bookingList
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
@@ -21,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
@@ -46,7 +49,8 @@ import java.time.LocalDateTime
 
 @Composable
 fun BookingList(
-    state: HomeScreenState
+    state: HomeScreenState,
+    onEditClicked: (String) -> Unit,
 ) {
     when {
         state.isLoading -> {
@@ -82,7 +86,8 @@ fun BookingList(
                     BookingItem(
                         item = booking,
                         isExpanded = index == firstUpcomingBookingIndex,
-                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny))
+                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny)),
+                        onEditClicked = onEditClicked
                     )
                 }
             }
@@ -94,7 +99,8 @@ fun BookingList(
 fun BookingItem(
     item: Booking,
     isExpanded: Boolean = false,
-    modifier: Modifier
+    modifier: Modifier,
+    onEditClicked: (String) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(isExpanded) }
     val isHistory = item.date.isBefore(LocalDateTime.now().minusDays(1))
@@ -116,19 +122,36 @@ fun BookingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column {
-                    Text(
-                        text = item.date.toDateString(),
-                        style = MaterialTheme.typography.labelLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_small))
-                    )
-                    Text(
-                        text = item.date.toTimeString(),
-                        style = MaterialTheme.typography.labelMedium,
-                        textAlign = TextAlign.Center,
-                    )
+                Row (horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
+                    Box(modifier = Modifier.widthIn(180.dp)) {
+                        Column {
+                            Text(
+                                text = item.date.toDateString(),
+                                style = MaterialTheme.typography.labelLarge,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_small))
+                            )
+                            Text(
+                                text = item.date.toTimeString(),
+                                style = MaterialTheme.typography.labelMedium,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                    if (!item.boat.equals(stringResource(R.string.no_boat_assigned)) || !item.battery.equals(
+                            stringResource(R.string.no_battery_assigned)
+                        )
+                    ) {
+                        IconButton(onClick = { onEditClicked(item.id) }) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = stringResource(R.string.edit_booking_button),
+                            )
+                        }
+                    }
                 }
+
+
                 IconButton(
                     onClick = { expanded = !expanded },
                     modifier = Modifier.semantics { this.testTag = "ExpandButton" }

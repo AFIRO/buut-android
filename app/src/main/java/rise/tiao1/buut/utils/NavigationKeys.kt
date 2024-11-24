@@ -36,6 +36,13 @@ object NavigationKeys {
         const val CREATE_BOOKING = "create_booking"
 
         /**
+         * Route for the update booking screen.
+         */
+
+        const val UPDATE_BOOKING = "update_booking/{bookingId}"
+
+
+        /**
          * Route for the profile screen.
          */
 
