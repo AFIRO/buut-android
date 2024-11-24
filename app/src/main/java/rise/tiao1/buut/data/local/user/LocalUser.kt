@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.type.DateTime
 import rise.tiao1.buut.domain.user.Address
+import rise.tiao1.buut.domain.user.Role
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -26,4 +27,7 @@ data class LocalUser(
     val dateOfBirth: String?,
     @Embedded
     val address: Address?,
+    @ColumnInfo
+    val roles: String
     )
+
