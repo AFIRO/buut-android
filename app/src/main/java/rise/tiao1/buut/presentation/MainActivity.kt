@@ -167,6 +167,11 @@ class MainActivity : ComponentActivity() {
                             Route.PROFILE
                         )
                     }) },
+                    onCancelClick = { editProfileViewModel.onCancelClick({
+                        navController.navigate(
+                            Route.HOME
+                        )
+                    }) },
                     onValidate = { field: String ->
                         editProfileViewModel.validate(field)
                     },

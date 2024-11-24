@@ -125,7 +125,7 @@ class EditProfileViewModel @Inject constructor(
 
 
 
-    fun onConfirmClick(navigateToEditProfile: ()->Unit) {
+    fun onConfirmClick(navigateToProfile: ()->Unit) {
 
         listOfInputKeys.forEach { validate(it) }
 
@@ -170,7 +170,7 @@ class EditProfileViewModel @Inject constructor(
                     newUser,
                     onSuccess = {
                         _state.value = state.value.copy(isLoading = false, registrationSuccess = true)
-                        navigateToEditProfile()
+                        navigateToProfile()
                     },
                     onError = { error ->
                         _state.value = state.value.copy(
@@ -181,6 +181,10 @@ class EditProfileViewModel @Inject constructor(
 
             }
         }
+    }
+
+    fun onCancelClick(navigateToProfile: ()->Unit) {
+        navigateToProfile()
     }
 
     fun onRegistrationSuccessDismissed(navigateToHome: () -> Unit) {
