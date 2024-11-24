@@ -77,6 +77,8 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-android:1.6.0-beta01")
     implementation("androidx.compose.animation:animation-core-android:1.6.0-beta01")
     implementation("androidx.compose.foundation:foundation-layout-android:1.6.0-beta01")
+    implementation("androidx.hilt:hilt-common:1.2.0")
+    implementation("androidx.hilt:hilt-work:1.2.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation(project(":app"))
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -125,4 +127,7 @@ dependencies {
     androidTestImplementation("io.mockk:mockk:1.12.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.0")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.0")
+    implementation("androidx.work:work-runtime:2.8.1")
+    androidTestImplementation("androidx.work:work-testing:2.8.1")
+    testImplementation("androidx.work:work-testing:2.8.1")
 }
