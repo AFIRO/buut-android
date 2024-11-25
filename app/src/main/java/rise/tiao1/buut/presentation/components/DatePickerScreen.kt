@@ -59,4 +59,4 @@ object CustomSelectableDates: SelectableDates {
 
 
 
-fun LocalDateTime.toMillis() = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+fun LocalDateTime.toMillis() = this.atZone(ZoneId.of("GMT")).toInstant().toEpochMilli()
