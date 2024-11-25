@@ -6,4 +6,6 @@ data class BookingUpdateDTO(
     val id: String? = null,
     @SerializedName("bookingDate")
     val date: String,
+    val boat: BoatDTO? = null,
+    val battery: BatteryDTO? = null,
 )
