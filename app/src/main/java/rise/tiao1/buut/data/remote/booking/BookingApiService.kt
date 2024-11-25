@@ -25,6 +25,6 @@ interface BookingApiService {
     suspend fun getFreeTimeSlotsForDateRange(@Query("startDate") startDate: String, @Query("endDate") endDate: String): List<TimeSlotDTO>
 
     @PUT("api/Booking/{bookingId}")
-    suspend fun updateBooking(@Path("bookingId") bookingId: String, @Body BookingUpdateDTO: BookingUpdateDTO)
+    suspend fun updateBooking(@Path("bookingId") bookingId: String, @Body bookingUpdateDTO: BookingUpdateDTO)
 }
 

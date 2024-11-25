@@ -43,7 +43,7 @@ fun BookingConfirmationModal(
                 }
             }
 
-            if (idOfBookingToUpdate != null) {
+            if (error.isNullOrBlank() && idOfBookingToUpdate != null) {
                 Button(onClick = {onUpdateBooking(idOfBookingToUpdate)}) {
                     Text(text = stringResource(R.string.update))
                 }
