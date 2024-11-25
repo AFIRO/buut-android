@@ -138,9 +138,9 @@ fun BookingItem(
                             )
                         }
                     }
-                    if (!item.boat.equals(stringResource(R.string.no_boat_assigned)) || !item.battery.equals(
-                            stringResource(R.string.no_battery_assigned)
-                        )
+                    if (item.boat == null
+                        && item.battery == null
+                        && item.date.isAfter(LocalDateTime.now())
                     ) {
                         IconButton(onClick = { onEditClicked(item.id) }) {
                             Icon(
