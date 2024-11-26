@@ -79,6 +79,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-layout-android:1.6.0-beta01")
     implementation("androidx.hilt:hilt-common:1.2.0")
     implementation("androidx.hilt:hilt-work:1.2.0")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation(project(":app"))
     debugImplementation("androidx.compose.ui:ui-tooling")
