@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
@@ -142,7 +143,7 @@ fun BookingItem(
                         && item.battery == null
                         && item.date.isAfter(LocalDateTime.now())
                     ) {
-                        IconButton(onClick = { onEditClicked(item.id) }) {
+                        IconButton(onClick = { onEditClicked(item.id) }, modifier = Modifier.testTag("bookingEditButton")) {
                             Icon(
                                 imageVector = Icons.Filled.Edit,
                                 contentDescription = stringResource(R.string.edit_booking_button),
