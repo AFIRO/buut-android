@@ -1,5 +1,6 @@
 package rise.tiao1.buut.data.remote.booking
 
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -25,6 +26,6 @@ interface BookingApiService {
     suspend fun getFreeTimeSlotsForDateRange(@Query("startDate") startDate: String, @Query("endDate") endDate: String): List<TimeSlotDTO>
 
     @PUT("api/Booking/{bookingId}")
-    suspend fun updateBooking(@Path("bookingId") bookingId: String, @Body bookingUpdateDTO: BookingUpdateDTO)
+    suspend fun updateBooking(@Path("bookingId") bookingId: String, @Body bookingUpdateDTO: BookingUpdateDTO) : Response<Unit>
 }
 
