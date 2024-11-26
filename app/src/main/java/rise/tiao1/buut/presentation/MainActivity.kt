@@ -178,6 +178,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     navigateTo = { route:String -> navController.navigate(route)},
+                    navigateUp = {navController.navigateUp()},
                     uiLayout = uiLayout
                 )
             }

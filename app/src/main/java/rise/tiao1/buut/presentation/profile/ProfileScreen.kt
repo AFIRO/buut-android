@@ -20,10 +20,14 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -66,7 +70,8 @@ fun ProfileScreen(
     state: ProfileScreenState,
     logout: () -> Unit,
     navigateTo: (String) -> Unit,
-    uiLayout: UiLayout
+    uiLayout: UiLayout,
+    navigateUp: () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -87,7 +92,15 @@ fun ProfileScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.inversePrimary
                 ),
-                modifier = Modifier.testTag("navigation")
+                modifier = Modifier.testTag("navigation"),
+                navigationIcon = {
+                    IconButton(onClick = navigateUp) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_button)
+                        )
+                    }
+                },
             )
         },
         bottomBar = {
