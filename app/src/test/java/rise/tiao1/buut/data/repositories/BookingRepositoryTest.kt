@@ -12,6 +12,7 @@ import org.junit.Assert
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.mockito.kotlin.any
+import retrofit2.Response
 import rise.tiao1.buut.data.local.booking.BookingDao
 import rise.tiao1.buut.data.local.booking.LocalBooking
 import rise.tiao1.buut.data.remote.booking.BatteryDTO
@@ -125,7 +126,7 @@ class BookingRepositoryTest {
 
     @Test
     fun updateBook_updatesBooking() = scope.runTest {
-        coEvery { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) } returns Unit
+        coEvery { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) } returns Response.success(Unit)
         coEvery { dao.insertAllBookings(any()) } returns Unit
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(getBookingsDTOs()[0])
 
@@ -149,7 +150,7 @@ class BookingRepositoryTest {
 
     @Test
     fun updateBook_refreshThrowsExceptionAndHandles() = scope.runTest {
-        coEvery { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) } returns Unit
+        coEvery { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) } returns Response.success(Unit)
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(testException)
 
         val result = runCatching { repo.updateBooking(getBookingUpdateDto().id.toString(), USER_ID_WITH_BOOKINGS, getBookingUpdateDto()) }

@@ -30,7 +30,7 @@ class GetSelectableDatesUseCaseTest {
     fun getSelectableDates_ReturnsSelectableDates() =
         scope.runTest {
             coEvery { bookingRepository.getAvailableDays() } returns getSelectableTimeSlots()
-            val expected = today.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            val expected = today.atZone(ZoneId.of("GMT")).toInstant().toEpochMilli()
             val actual = useCase()
             assert(actual.isSelectableDate(expected))
         }
