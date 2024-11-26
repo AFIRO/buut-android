@@ -58,6 +58,7 @@ import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
+import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
@@ -98,59 +99,20 @@ fun EditProfileScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.inversePrimary
                 ),
-                modifier = Modifier.testTag("navigation")
+                modifier = Modifier.testTag("topBar")
             )
         },
-//        bottomBar = {
-//            if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM) {
-//                Navigation(
-//                    navigateTo = navigateTo,
-//                    uiLayout = uiLayout,
-//                    currentPage = NavigationKeys.Route.HOME
-//                )
-//            }
-//        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM) {
-                Column {
-                    EditProfileScreenContent(
-                        state = state,
-                        navigateTo = navigateTo,
-                        onConfirmClick = onConfirmClick,
-                        onCancelClick = onCancelClick,
-                        onValueChanged = onValueChanged,
-                        onValidate = onValidate,
-                        uiLayout = uiLayout
-                    )
-                }
-            } else {
-                Row {
-//                    Navigation(
-//                        uiLayout = uiLayout,
-//                        navigateTo = navigateTo,
-//                        currentPage = NavigationKeys.Route.PROFILE,
-//                        content = { EditProfileScreenContent(
-//                            state = state,
-//                            navigateTo = navigateTo,
-//                            onConfirmClick = onConfirmClick,
-//                            onCancelClick = onCancelClick,
-//                            onValueChanged = onValueChanged,
-//                            onValidate = onValidate,
-//                            uiLayout = uiLayout
-//                        ) }
-//                    )
-                    EditProfileScreenContent(
-                        state = state,
-                        navigateTo = navigateTo,
-                        onConfirmClick = onConfirmClick,
-                        onCancelClick = onCancelClick,
-                        onValueChanged = onValueChanged,
-                        onValidate = onValidate,
-                        uiLayout = uiLayout
-                    )
-                }
-            }
+            EditProfileScreenContent(
+                state = state,
+                navigateTo = navigateTo,
+                onConfirmClick = onConfirmClick,
+                onCancelClick = onCancelClick,
+                onValueChanged = onValueChanged,
+                onValidate = onValidate,
+                uiLayout = uiLayout
+            )
         }
     }
 }
@@ -180,13 +142,19 @@ fun EditProfileScreenContent(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            EditProfileProfileContent(state, onValueChanged, onValidate, uiLayout)
+            EditProfileProfileContent(
+                state = state,
+                onValueChanged = onValueChanged,
+                onValidate = onValidate,
+                uiLayout = uiLayout
+            )
             EditProfileButtonContent(
                 state = state,
                 onConfirmClick= onConfirmClick,
                 onCancelClick = onCancelClick,
                 navigateTo = navigateTo,
-                uiLayout = uiLayout)
+                uiLayout = uiLayout
+            )
         }
     }
 }
@@ -307,7 +275,8 @@ fun EditProfileScreenNameComponent(
             errorMessage = state.firstNameError?.asString(),
             label = R.string.firstName,
             colors = uiColors,
-            alternativeUnfocusedLabelColor = Color.Gray
+            alternativeUnfocusedLabelColor = Color.Gray,
+            modifier = Modifier.testTag("firstNameTextField")
         )
 
         // last name input field
@@ -319,7 +288,8 @@ fun EditProfileScreenNameComponent(
             errorMessage = state.lastNameError?.asString(),
             label = R.string.last_name,
             colors = uiColors,
-            alternativeUnfocusedLabelColor = Color.Gray
+            alternativeUnfocusedLabelColor = Color.Gray,
+            modifier = Modifier.testTag("lastNameTextField")
         )
     }
 }
@@ -333,17 +303,17 @@ fun EditProfileScreenContactComponent(
     uiColors: TextFieldColors,
 ) {
     Column{
-        // email input field
-        OutlinedTextFieldComponent(
-            value = state.email,
-            onValueChanged = { onValueChanged(it, InputKeys.EMAIL) },
-            onFocusLost = { onValidate(InputKeys.EMAIL) },
-            isError = false,
-            errorMessage = state.emailError?.asString(),
-            label = R.string.email_label,
-            colors = uiColors,
-            alternativeUnfocusedLabelColor = Color.Gray
-        )
+//        // email input field
+//        OutlinedTextFieldComponent(
+//            value = state.email,
+//            onValueChanged = { onValueChanged(it, InputKeys.EMAIL) },
+//            onFocusLost = { onValidate(InputKeys.EMAIL) },
+//            isError = false,
+//            errorMessage = state.emailError?.asString(),
+//            label = R.string.email_label,
+//            colors = uiColors,
+//            alternativeUnfocusedLabelColor = Color.Gray
+//        )
 
 
         // phone input field
@@ -355,7 +325,8 @@ fun EditProfileScreenContactComponent(
             errorMessage = state.phoneError?.asString(),
             label = R.string.phone,
             colors = uiColors,
-            alternativeUnfocusedLabelColor = Color.Gray
+            alternativeUnfocusedLabelColor = Color.Gray,
+            modifier = Modifier.testTag("phoneTextField")
         )
     }
 }
@@ -402,7 +373,8 @@ fun EditProfileScreenAddressComponent(
                         imeAction = ImeAction.Next
                     ),
                     colors = uiColors,
-                    alternativeUnfocusedLabelColor = Color.Gray
+                    alternativeUnfocusedLabelColor = Color.Gray,
+                    modifier = Modifier.testTag("houseNumberTextField")
 
 
                 )
@@ -414,7 +386,8 @@ fun EditProfileScreenAddressComponent(
                     onFocusLost = { onValidate(InputKeys.BOX) },
                     label = R.string.box,
                     colors = uiColors,
-                    alternativeUnfocusedLabelColor = Color.Gray
+                    alternativeUnfocusedLabelColor = Color.Gray,
+                    modifier = Modifier.testTag("addressBoxTextField")
                 )
             }
         }
@@ -442,11 +415,13 @@ fun EditProfileProfileContent(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
+        Log.d(TAG, uiLayout.name
+        )
         if (uiLayout != LANDSCAPE_SMALL) {
-            HeaderOne(stringResource(R.string.edit_profile_page_title))
+            HeaderOne(stringResource(R.string.edit_profile_page_title),)
         }
 
-        if (uiLayout == LANDSCAPE_SMALL || uiLayout == LANDSCAPE_MEDIUM || uiLayout == LANDSCAPE_MEDIUM){
+        if (uiLayout == LANDSCAPE_SMALL || uiLayout == LANDSCAPE_MEDIUM || uiLayout == LANDSCAPE_EXPANDED){
              Row (
                  horizontalArrangement = Arrangement.spacedBy(8.dp),
                  modifier = Modifier
@@ -462,7 +437,7 @@ fun EditProfileProfileContent(
                          onValueChanged = onValueChanged,
                          onValidate = onValidate,
                          uiLayout = uiLayout,
-                         uiColors = uiColors
+                         uiColors = uiColors,
                      )
                      EditProfileScreenContactComponent(
                          state = state,
@@ -486,7 +461,8 @@ fun EditProfileProfileContent(
                  }
 
                 }
-        }else {
+        }
+        else {
             Column {
                 EditProfileScreenNameComponent(
                     state = state,
@@ -514,13 +490,6 @@ fun EditProfileProfileContent(
             }
         }
     }
-
-
-
-
-
-
-
 }
 
 @Preview(

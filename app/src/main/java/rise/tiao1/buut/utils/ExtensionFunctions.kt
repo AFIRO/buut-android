@@ -134,6 +134,9 @@ fun List<Role>.toJson(): String {
 }
 
 fun String.toRoleList(): List<Role> {
+    if (this.isBlank()) {
+        return emptyList()
+    }
     // Deserialize the JSON into a List of Role objects
     val roleList: List<Role> = Gson().fromJson(this, object : TypeToken<List<Role>>() {}.type)
 

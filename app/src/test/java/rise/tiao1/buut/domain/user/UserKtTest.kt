@@ -49,7 +49,8 @@ class UserKtTest {
             password = "TestPassword",
             phone = "TestPhone",
             dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1),
-            address = getAddress()
+            address = getAddress(),
+            roles = listOf()
         )
     }
 
@@ -73,7 +74,8 @@ class UserKtTest {
             email = "TestEmail",
             phone = "TestPhone",
             dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
-            address = getAddress()
+            address = getAddress(),
+            roles = "[]"
         )
     }
 }

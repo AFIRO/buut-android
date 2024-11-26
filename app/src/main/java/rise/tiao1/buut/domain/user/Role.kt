@@ -11,3 +11,4 @@ fun Role.toRoleDTO() : RoleDTO {
         name = this.name
     )
 }
+

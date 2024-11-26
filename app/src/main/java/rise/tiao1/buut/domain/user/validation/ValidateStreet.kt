@@ -9,14 +9,11 @@ import javax.inject.Inject
 
 class ValidateStreet @Inject constructor() {
     fun execute(street: String): UiText? {
-        val formattedStreet = street
-            .lowercase()
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
-        if (formattedStreet.isBlank())
+        if (street.isBlank())
             return UiText.StringResource(resId = R.string.street_is_blank_error)
 
-        if (!StreetType.entries.map { it.streetName }.contains(formattedStreet)) {
+        if (!StreetType.entries.map { it.streetName }.contains(street)) {
             return UiText.StringResource(resId = R.string.invalid_street)
         }
 

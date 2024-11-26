@@ -11,7 +11,6 @@ import javax.inject.Inject
 
 class UpdateUserUseCase @Inject constructor(
     private val userRepository: UserRepository,
-    private val sharedPreferences: SharedPreferences
 ) {
 
     suspend operator fun invoke(

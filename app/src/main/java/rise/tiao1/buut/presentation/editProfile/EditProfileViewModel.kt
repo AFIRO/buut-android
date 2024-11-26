@@ -63,11 +63,10 @@ class EditProfileViewModel @Inject constructor(
            lastName = state.value.user?.lastName ?: "",
            email = state.value.user?.email ?: "",
            phone = state.value.user?.phone ?: "",
-           dateOfBirth = (state.value.user?.dateOfBirth?.toLocalDate().toString()),
+           dateOfBirth = state.value.user?.dateOfBirth?.toLocalDate()?.toString() ?: "",
            street = state.value.user?.address?.street?.streetName ?: "",
            houseNumber = state.value.user?.address?.houseNumber ?: "",
            box = state.value.user?.address?.box ?: "",
-
        )
     }
 
@@ -79,6 +78,7 @@ class EditProfileViewModel @Inject constructor(
             val user = getUserUseCase()
             _state.value = state.value.copy(isLoading = false, user = user)
         } catch (e: Exception) {
+            println("Exception")
             _state.value = state.value.copy(
                 isLoading = false,
                 apiError = e.message
@@ -169,7 +169,7 @@ class EditProfileViewModel @Inject constructor(
                 updateUserUseCase(
                     newUser,
                     onSuccess = {
-                        _state.value = state.value.copy(isLoading = false, registrationSuccess = true)
+                        _state.value = state.value.copy(isLoading = false, updateSuccess = true)
                         navigateToProfile()
                     },
                     onError = { error ->
@@ -188,7 +188,7 @@ class EditProfileViewModel @Inject constructor(
     }
 
     fun onRegistrationSuccessDismissed(navigateToHome: () -> Unit) {
-        _state.value = state.value.copy(registrationSuccess = false)
+        _state.value = state.value.copy(updateSuccess = false)
         navigateToHome()
     }
 
