@@ -18,7 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingScreen
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingViewModel
 import rise.tiao1.buut.presentation.editProfile.EditProfileScreen
-import rise.tiao1.buut.presentation.editProfile.EditProfileScreenState
 import rise.tiao1.buut.presentation.editProfile.EditProfileViewModel
 import rise.tiao1.buut.presentation.home.HomeScreen
 import rise.tiao1.buut.presentation.home.HomeViewModel

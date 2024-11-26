@@ -57,7 +57,17 @@ class HomeViewModelTest {
     }
 
     private fun getUser(): User {
-        return User(id = testId, firstName = "TestFirstName", lastName = "TestLastName", email = "TestEmail", password = "TestPassword", phone = "TestPhone", dateOfBirth = null, address = null)
+        return User(
+            id = testId,
+            firstName = "TestFirstName",
+            lastName = "TestLastName",
+            email = "TestEmail",
+            password = "TestPassword",
+            phone = "TestPhone",
+            dateOfBirth = null,
+            address = null,
+            roles = listOf()
+        )
     }
 
     private fun getBookings(): List<Booking> {

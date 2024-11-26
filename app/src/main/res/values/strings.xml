@@ -23,6 +23,7 @@
     <string name="terms_not_accepted_error">You must agree to the Terms of Usage to continue</string>
     <string name="privacy_not_accepted_error">You must agree to the Privacy Policy to continue</string>
     <string name="invalid_phone_error">Telephone number is invalid</string>
+    <string name="invalid_date_of_birth_error">date of birth is invalid</string>
     <string name="street_is_blank_error">You must select a street</string>
     <string name="invalid_house_number_error">House number must be greater than %d"</string>
     <string name="minimum_age_error">You must be more than %d years old</string>

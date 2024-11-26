@@ -61,7 +61,8 @@ class ProfileViewModelTest {
             password = "TestPassword",
             phone = "TestPhoneNumber",
             dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0),
-            address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
+            address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox"),
+            roles = listOf()
         )
 
     }

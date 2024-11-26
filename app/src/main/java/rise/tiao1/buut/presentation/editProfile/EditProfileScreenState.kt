@@ -24,7 +24,7 @@ data class EditProfileScreenState (
     val dateOfBirthError: UiText? = null,
     val isLoading: Boolean = true,
     val formHasErrors: Boolean= false,
-    val registrationSuccess: Boolean = false,
+    val updateSuccess: Boolean = false,
 
     val apiError: String? = ""
 )

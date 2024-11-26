@@ -22,6 +22,7 @@ import org.junit.Rule
 import org.junit.Test
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.Address
+import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
@@ -175,7 +176,8 @@ class ProfileScreenKtMediumPortraitTest {
             password = "TestPassword",
             phone = "TestPhoneNumber",
             dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0),
-            address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
+            address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox"),
+            roles = listOf(Role(name = "Admin"))
         )
     }
 }

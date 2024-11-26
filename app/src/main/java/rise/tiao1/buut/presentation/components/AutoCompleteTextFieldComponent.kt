@@ -32,7 +32,14 @@ fun AutoCompleteTextFieldComponent(
     errorMessage: String? = null,
     optionList: List<String> = emptyList(),
     @StringRes label: Int,
-    colors: TextFieldColors? = null,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        unfocusedContainerColor = Color.White,
+        focusedContainerColor = Color.White,
+        focusedBorderColor = Color.Blue,
+        errorContainerColor = Color.White,
+        focusedLabelColor = Color.White,
+        unfocusedLabelColor = Color.Black
+    ),
     alternativeUnfocusedLabelColor: Color = Color.White,
     modifier: Modifier = Modifier
 ) {
@@ -49,8 +56,6 @@ fun AutoCompleteTextFieldComponent(
         }
     }
 
-    // If colors are provided, use them; otherwise, use default colors
-    val appliedColors = colors ?: OutlinedTextFieldDefaults.colors()
     ExposedDropdownMenuBox(
         expanded = expanded.value,
         onExpandedChange = { expanded.value = !expanded.value },
@@ -69,7 +74,7 @@ fun AutoCompleteTextFieldComponent(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
             },
-            colors = appliedColors,
+            colors = colors,
             alternativeUnfocusedLabelColor = alternativeUnfocusedLabelColor
 
         )
