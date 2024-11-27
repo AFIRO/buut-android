@@ -12,7 +12,7 @@ class GetBookingsSortedByDateUseCase @Inject constructor (
     ):List<Booking> {
        val bookings = bookingRepository.getAllBookingsFromUser(userId)
         return if (bookings.isNotEmpty())
-            bookings.sortedBy { it.date }
+            bookings.sortedByDescending { it.date }
         else
             emptyList()
     }

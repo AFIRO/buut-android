@@ -10,11 +10,15 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.auth0.android.authentication.storage.CredentialsManager
 import dagger.hilt.android.AndroidEntryPoint
+import rise.tiao1.buut.presentation.booking.UpdateBooking.UpdateBookingScreen
+import rise.tiao1.buut.presentation.booking.UpdateBooking.UpdateBookingViewModel
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingScreen
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingViewModel
 import rise.tiao1.buut.presentation.home.HomeScreen
@@ -87,7 +91,10 @@ class MainActivity : ComponentActivity() {
                     state = viewModel.state.value,
                     navigateTo =  { route:String -> navController.navigate(route)} ,
                     uiLayout = uiLayout,
-                    onNotificationClick =  { notificationId:String, Boolean: Boolean -> viewModel.onNotificationClick(notificationId, Boolean) }
+                    onNotificationClick =  { notificationId:String, Boolean: Boolean -> viewModel.onNotificationClick(notificationId, Boolean) },
+                    onEditBookingClicked = { bookingId:String ->
+                        navController.navigate("update_booking/$bookingId")
+                    }
                 )
             }
             composable(route = Route.REGISTER) {
@@ -134,6 +141,31 @@ class MainActivity : ComponentActivity() {
                     uiLayout = uiLayout
                 )
             }
+            composable(route = Route.UPDATE_BOOKING, arguments = listOf(navArgument("bookingId") { type = NavType.StringType })) {
+                val updateBookingViewModel: UpdateBookingViewModel = hiltViewModel()
+                UpdateBookingScreen(
+                    state = updateBookingViewModel.state.value,
+                    navigateUp = {navController.navigateUp()},
+                    onDateSelected = { input: Long? ->
+                        updateBookingViewModel.updateSelectedDate(input)
+                    },
+                    onUpdateBooking = {
+                        bookingId :String ->
+                        updateBookingViewModel.onUpdateBooking(bookingId)
+                    },
+                    onDismissBooking = {
+                        updateBookingViewModel.onDismissBooking()
+                    },
+                    onTimeSlotClicked = { input ->
+                        updateBookingViewModel.onTimeSlotClicked(input)
+                    },
+                    toBookingsOverview = {
+                        navController.navigate(Route.HOME)
+                    },
+                    uiLayout = uiLayout,
+                    idOfBookingToUpdate = it.arguments?.getString("bookingId")
+                )
+            }
             composable(route = Route.PROFILE){
                 val profileViewModel: ProfileViewModel = hiltViewModel()
                 ProfileScreen(
@@ -146,6 +178,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     navigateTo = { route:String -> navController.navigate(route)},
+                    navigateUp = {navController.navigateUp()},
                     uiLayout = uiLayout
                 )
             }

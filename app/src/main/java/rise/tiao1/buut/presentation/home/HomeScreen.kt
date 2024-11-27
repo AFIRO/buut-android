@@ -60,7 +60,8 @@ fun HomeScreen(
     state: HomeScreenState,
     navigateTo: (String) -> Unit,
     uiLayout: UiLayout,
-    onNotificationClick: (String, Boolean) -> Unit
+    onNotificationClick: (String, Boolean) -> Unit,
+    onEditBookingClicked: (String) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -96,7 +97,7 @@ fun HomeScreen(
         Box(modifier = Modifier.padding(innerPadding)) {
             if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM) {
                 Column {
-                    Content(state, onNotificationClick)
+                    Content(state, onNotificationClick, onEditBookingClicked)
                 }
             } else {
                 Row {
@@ -104,9 +105,9 @@ fun HomeScreen(
                         uiLayout = uiLayout,
                         navigateTo = navigateTo,
                         currentPage = NavigationKeys.Route.HOME,
-                        content = {Content(state, onNotificationClick)}
+                        content = {Content(state, onNotificationClick, onEditBookingClicked)}
                     )
-                    Content(state, onNotificationClick)
+                    Content(state, onNotificationClick, onEditBookingClicked)
                 }
             }
         }
@@ -115,7 +116,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Content(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Unit) {
+fun Content(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Unit, onEditBookingClicked: (String) -> Unit) {
     val tabItems = listOf(
         TabItem(title= stringResource(R.string.notifications_title)),
         TabItem(title= stringResource(R.string.booking_list_title))
@@ -173,7 +174,7 @@ fun Content(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Un
             ) {
                 when (tabItems[index].title){
                     stringResource(R.string.booking_list_title) -> {
-                        BookingList(state)
+                        BookingList(state, onEditBookingClicked)
                     }
                     stringResource(R.string.notifications_title) -> {
                         NotificationList(state, onNotificationClick)

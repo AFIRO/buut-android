@@ -15,8 +15,10 @@ import rise.tiao1.buut.domain.booking.TimeSlot
 fun BookingConfirmationModal(
     timeSlot: TimeSlot?,
     error: String?,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onConfirm: () -> Unit = {},
+    onDismiss: () -> Unit,
+    onUpdateBooking: (String) -> Unit = {},
+    idOfBookingToUpdate: String? = null
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -33,12 +35,20 @@ fun BookingConfirmationModal(
                 ActionErrorContainer(error)
             }
         },
+
         confirmButton = {
-            if (error.isNullOrBlank()) {
+            if (error.isNullOrBlank() && idOfBookingToUpdate == null) {
                 Button(onClick = onConfirm) {
                     Text(text = stringResource(R.string.confirm))
                 }
             }
+
+            if (error.isNullOrBlank() && idOfBookingToUpdate != null) {
+                Button(onClick = {onUpdateBooking(idOfBookingToUpdate)}) {
+                    Text(text = stringResource(R.string.update))
+                }
+            }
+
         },
         dismissButton = {
             Button(onClick = onDismiss) {

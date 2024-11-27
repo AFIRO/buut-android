@@ -13,6 +13,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -24,6 +27,9 @@ import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.domain.user.User
+import rise.tiao1.buut.presentation.booking.UpdateBooking.UpdateBookingScreen
+import rise.tiao1.buut.presentation.booking.UpdateBooking.UpdateBookingScreenState
+import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.NotificationType
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
@@ -261,6 +267,86 @@ class HomeScreenKtMediumPortraitTest {
         assert(displayedBookings.size == bookings.size)
     }
 
+    @Test
+    fun homeScreen_editableBookingExists_editButtonisDisplayedCorrectly(){
+        val bookings = listOf(
+            Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = "testBoat", battery = "testBattery"),
+            Booking(id= "2", date = LocalDateTime.now().plusDays(2), boat = "testBoat", battery = "testBattery"),
+            Booking(id= "3", date = LocalDateTime.now().plusDays(6))
+        )
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(bookings = bookings),
+                navigateTo = {},
+                uiLayout = uiLayout,
+                onNotificationClick = { _,_ -> }
+            )
+        }
+
+        rule.waitForIdle()
+        bookingTabSelecor.performClick()
+        rule.onNodeWithTag("bookingEditButton").assertIsDisplayed()
+    }
+
+    @Test
+    fun homeScreen_editableDoesNotBookingExist_editButtonisNotDisplayed(){
+        val bookings = listOf(
+            Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = "testBoat", battery = "testBattery"),
+            Booking(id= "2", date = LocalDateTime.now().plusDays(2), boat = "testBoat", battery = "testBattery"),
+            Booking(id= "3", date = LocalDateTime.now().plusDays(6), boat = "testBoat", battery = "testBattery")
+        )
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(bookings = bookings),
+                navigateTo = {},
+                uiLayout = uiLayout,
+                onNotificationClick = { _,_ -> }
+            )
+        }
+
+        rule.waitForIdle()
+        bookingTabSelecor.performClick()
+        rule.onNodeWithTag("bookingEditButton").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun homeScreen_editBookingClicked_navigatesCorrectly(){
+        val bookings = listOf(
+            Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = "testBoat", battery = "testBattery"),
+            Booking(id= "2", date = LocalDateTime.now().plusDays(2), boat = "testBoat", battery = "testBattery"),
+            Booking(id= "3", date = LocalDateTime.now().plusDays(6))
+        )
+
+        rule.setContent {
+            val navController = rememberNavController()
+            navControllerState = navController
+            NavHost(
+                navController = navController,
+                startDestination = NavigationKeys.Route.HOME
+            ) {
+                composable(route = NavigationKeys.Route.HOME) {
+                    HomeScreen(
+                        state = getState(bookings = bookings),
+                        navigateTo = {},
+                        uiLayout = uiLayout,
+                        onNotificationClick = { _, _ -> },
+                        onEditBookingClicked = {navController.navigate("update_booking/1")}
+                    )
+                }
+                composable(route = "update_booking/1") {
+                    UpdateBookingScreen(state = UpdateBookingScreenState(), uiLayout = uiLayout)
+                }
+            }
+        }
+
+        rule.waitForIdle()
+        bookingTabSelecor.performClick()
+        rule.onNodeWithTag("bookingEditButton").performClick()
+        rule.waitForIdle()
+        assert(navControllerState?.currentDestination?.route == "update_booking/1")
+    }
 
     @Test
     fun homeScreen_onlyFirstUpcomingBooking_isExpanded() {

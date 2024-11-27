@@ -1,6 +1,7 @@
 package rise.tiao1.buut.domain.booking.useCases
 
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -8,6 +9,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import rise.tiao1.buut.data.remote.booking.BookingDTO
+import rise.tiao1.buut.data.remote.booking.BookingUpdateDTO
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.user.Address
@@ -18,33 +20,35 @@ import rise.tiao1.buut.utils.toApiDateString
 import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
 import java.time.LocalDateTime
 
+
 @ExperimentalCoroutinesApi
-class CreateBookingsUseCaseTest {
+class UpdateBookingsUseCaseTest{
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
     private val bookingRepository: BookingRepository = mockk()
     private val getUserUseCase: GetUserUseCase = mockk()
     private val today = LocalDateTime.now()
-    private val createBookingsUseCase = CreateBookingsUseCase(bookingRepository, getUserUseCase)
+    private val updateBookingsUseCase = UpdateBookingsUseCase(bookingRepository, getUserUseCase)
+    private val testBookingId = "testBookingId"
 
     @Test
-    fun createBookingsUseCase_returnsSuccess() = scope.runTest {
-        val expected = getExpectedBookingDTO()
+    fun updateBookingsUseCase_returnsSuccess() = scope.runTest {
         coEvery { getUserUseCase() } returns getUser()
-        coEvery { bookingRepository.createBooking(any()) } returns Unit
+        coEvery { bookingRepository.updateBooking(testBookingId, getUser().id.toString(), getExpectedBookingDTO()) } returns Unit
 
-        createBookingsUseCase(getTimeSlot())
+        updateBookingsUseCase(testBookingId, getTimeSlot())
 
-        coEvery { bookingRepository.createBooking(expected) }
+        coVerify { bookingRepository.updateBooking(testBookingId, getUser().id.toString(), getExpectedBookingDTO()) }
     }
 
     private fun getTimeSlot(): TimeSlot {
         return TimeSlot(
-            date = today.toApiDateString().toLocalDateTimeFromApiString(),
+            date = today.plusDays(1).toApiDateString().toLocalDateTimeFromApiString(),
             slot= "Morning",
             available = true
         )
     }
+
 
     fun getUser() : User {
         return User(
@@ -59,11 +63,12 @@ class CreateBookingsUseCaseTest {
         )
     }
 
-    fun getExpectedBookingDTO(): BookingDTO {
-        return BookingDTO(
-            date = today.toApiDateString(),
-            userId = "fg"
+    fun getExpectedBookingDTO(): BookingUpdateDTO {
+        return BookingUpdateDTO(
+            id = testBookingId,
+            date = today.plusDays(1).toApiDateString(),
         )
     }
+
 
 }

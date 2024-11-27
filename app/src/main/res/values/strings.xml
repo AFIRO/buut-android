@@ -83,9 +83,12 @@
     <string name="confirm_booking_prompt">Are you sure you want to book this time slot:</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
     <string name="unknown_error">Unkown error</string>
     <string name="booking_info_follows">Thank you for your reservation.\nWe\'ll provide you boat and battery information 2 days in advance of your booking.</string>
+    <string name="booking_updated_info_follows">Thank you for updating your reservation.\nWe\'ll provide you boat and battery information 2 days in advance of your booking.</string>
     <string name="profile_button">Profile</string>
     <string name="edit_profile_button">Edit</string>
     <string name="user_has_no_notifications">You have no notifications.</string>
+    <string name="edit_booking_button">edit booking</string>
 </resources>
