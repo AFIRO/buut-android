@@ -1,4 +1,4 @@
-package rise.tiao1.buut.user.presentation.register
+package rise.tiao1.buut.presentation.register
 
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -23,8 +23,6 @@ import rise.tiao1.buut.domain.user.validation.MINIMUM_AGE
 import rise.tiao1.buut.domain.user.validation.PASSWORD_LENGTH
 import rise.tiao1.buut.domain.user.validation.ValidateBox
 import rise.tiao1.buut.domain.user.validation.ValidateDateOfBirth
-
-
 import rise.tiao1.buut.domain.user.validation.ValidateEmail
 import rise.tiao1.buut.domain.user.validation.ValidateFirstName
 import rise.tiao1.buut.domain.user.validation.ValidateHouseNumber
@@ -35,8 +33,6 @@ import rise.tiao1.buut.domain.user.validation.ValidatePrivacy
 import rise.tiao1.buut.domain.user.validation.ValidateRepeatedPassword
 import rise.tiao1.buut.domain.user.validation.ValidateStreet
 import rise.tiao1.buut.domain.user.validation.ValidateTerms
-import rise.tiao1.buut.presentation.register.RegistrationScreenState
-import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiText
 
@@ -88,7 +84,20 @@ class RegistrationViewModelTest {
     @Test
     fun updateState_updateAllValuesWithCorrectValues_updatesState() = scope.runTest {
         val viewModel = getViewModel()
-        val updatedState = RegistrationScreenState(firstName = "Jan", lastName = "Jansen", email = "william.henry.harrison@example-pet-store.com", phone = "0612345678", street = StreetType.AFRIKALAAN.streetName, houseNumber = "123", box = "12", dateOfBirth = "01-01-1990", password = "Password1!", repeatedPassword = "Password1!", acceptedTermsOfUsage = true, acceptedPrivacyConditions = true)
+        val updatedState = RegistrationScreenState(
+            firstName = "Jan",
+            lastName = "Jansen",
+            email = "william.henry.harrison@example-pet-store.com",
+            phone = "0612345678",
+            street = StreetType.AFRIKALAAN.streetName,
+            houseNumber = "123",
+            box = "12",
+            dateOfBirth = "01-01-1990",
+            password = "Password1!",
+            repeatedPassword = "Password1!",
+            acceptedTermsOfUsage = true,
+            acceptedPrivacyConditions = true
+        )
         viewModel.updateState {
             copy(firstName = updatedState.firstName, lastName = updatedState.lastName, email = updatedState.email, phone = updatedState.phone, street = updatedState.street, houseNumber = updatedState.houseNumber, box = updatedState.box, dateOfBirth = updatedState.dateOfBirth, password = updatedState.password, repeatedPassword = updatedState.repeatedPassword, acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage, acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions)
             }
@@ -164,7 +173,10 @@ class RegistrationViewModelTest {
     @Test
     fun validate_houseNumberError_updatesStateWithCorrectError() = scope.runTest {
         val viewModel = getViewModel()
-        val houseNumberError = UiText.StringResource(resId = R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER)
+        val houseNumberError = UiText.StringResource(
+            resId = R.string.invalid_house_number_error,
+            LOWEST_POSSIBLE_HOUSE_NUMBER
+        )
         every { validateHouseNumber.execute("0") } returns houseNumberError
         viewModel.updateState {
             copy(houseNumber = "0")
@@ -190,7 +202,8 @@ class RegistrationViewModelTest {
     @Test
     fun validate_dateOfBirthError_updatesStateWithCorrectError() = scope.runTest {
         val viewModel = getViewModel()
-        val dateOfBirthError = UiText.StringResource(resId = R.string.minimum_age_error, MINIMUM_AGE)
+        val dateOfBirthError =
+            UiText.StringResource(resId = R.string.minimum_age_error, MINIMUM_AGE)
         every { validateDateOfBirth.execute("01-01-2000") } returns dateOfBirthError
         viewModel.updateState {
             copy(dateOfBirth = "01-01-2000")
@@ -203,7 +216,8 @@ class RegistrationViewModelTest {
     @Test
     fun validate_passwordError_updatesStateWithCorrectError() = scope.runTest {
         val viewModel = getViewModel()
-        val passwordError = UiText.StringResource(resId = R.string.invalid_password_length_error, PASSWORD_LENGTH)
+        val passwordError =
+            UiText.StringResource(resId = R.string.invalid_password_length_error, PASSWORD_LENGTH)
         every { validatePassword.execute("1234567") } returns passwordError
         viewModel.updateState {
             copy(password = "1234567")
@@ -260,10 +274,15 @@ class RegistrationViewModelTest {
         val emailError = UiText.StringResource(resId = R.string.email_is_blank_error)
         val phoneError = UiText.StringResource(resId = R.string.invalid_phone_error)
         val streetError = UiText.StringResource(resId = R.string.street_is_blank_error)
-        val houseNumberError = UiText.StringResource(resId = R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER)
+        val houseNumberError = UiText.StringResource(
+            resId = R.string.invalid_house_number_error,
+            LOWEST_POSSIBLE_HOUSE_NUMBER
+        )
         val boxError = UiText.StringResource(resId = R.string.invalid_box)
-        val dateOfBirthError = UiText.StringResource(resId = R.string.minimum_age_error, MINIMUM_AGE)
-        val passwordError = UiText.StringResource(resId = R.string.invalid_password_length_error, PASSWORD_LENGTH)
+        val dateOfBirthError =
+            UiText.StringResource(resId = R.string.minimum_age_error, MINIMUM_AGE)
+        val passwordError =
+            UiText.StringResource(resId = R.string.invalid_password_length_error, PASSWORD_LENGTH)
         val passwordRepeatedError = UiText.StringResource(resId = R.string.repeated_password_error)
         val termsError = UiText.StringResource(resId = R.string.terms_not_accepted_error)
         val privacyError = UiText.StringResource(resId = R.string.privacy_not_accepted_error)
@@ -323,7 +342,20 @@ class RegistrationViewModelTest {
    @Test
    fun onRegisterClick_happyFlow() = scope.runTest {
        val viewModel = spyk(getViewModel())
-       val updatedState = RegistrationScreenState(firstName = "Jan", lastName = "Jansen", email = "william.henry.harrison@example-pet-store.com", phone = "0612345678", street = StreetType.AFRIKALAAN.streetName, houseNumber = "123", box = "12", dateOfBirth = "01/01/1990", password = "Password1!", repeatedPassword = "Password1!", acceptedTermsOfUsage = true, acceptedPrivacyConditions = true)
+       val updatedState = RegistrationScreenState(
+           firstName = "Jan",
+           lastName = "Jansen",
+           email = "william.henry.harrison@example-pet-store.com",
+           phone = "0612345678",
+           street = StreetType.AFRIKALAAN.streetName,
+           houseNumber = "123",
+           box = "12",
+           dateOfBirth = "01/01/1990",
+           password = "Password1!",
+           repeatedPassword = "Password1!",
+           acceptedTermsOfUsage = true,
+           acceptedPrivacyConditions = true
+       )
        viewModel.updateState {
            copy(firstName = updatedState.firstName, lastName = updatedState.lastName, email = updatedState.email, phone = updatedState.phone, street = updatedState.street, houseNumber = updatedState.houseNumber, box = updatedState.box, dateOfBirth = updatedState.dateOfBirth, password = updatedState.password, repeatedPassword = updatedState.repeatedPassword, acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage, acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions)
        }
@@ -356,14 +388,27 @@ class RegistrationViewModelTest {
        verify { validateRepeatedPassword.execute(any(), any()) }
        verify { validateTerms.execute(any()) }
        verify { validatePrivacy.execute(any()) }
-       verify { viewModel.onRegisterClick()}
+       verify { viewModel.onRegisterClick() }
        Dispatchers.resetMain()
    }
 
     @Test
     fun onRegisterClick_errorHappens_dataNotSend() = scope.runTest {
         val viewModel = spyk(getViewModel())
-        val updatedState = RegistrationScreenState(firstName = "Jan", lastName = "Jansen", email = "william.henry.harrison@example-pet-store.com", phone = "0612345678", street = StreetType.AFRIKALAAN.streetName, houseNumber = "123", box = "12", dateOfBirth = "01/01/1990", password = "Password1!", repeatedPassword = "Password1!", acceptedTermsOfUsage = true, acceptedPrivacyConditions = true)
+        val updatedState = RegistrationScreenState(
+            firstName = "Jan",
+            lastName = "Jansen",
+            email = "william.henry.harrison@example-pet-store.com",
+            phone = "0612345678",
+            street = StreetType.AFRIKALAAN.streetName,
+            houseNumber = "123",
+            box = "12",
+            dateOfBirth = "01/01/1990",
+            password = "Password1!",
+            repeatedPassword = "Password1!",
+            acceptedTermsOfUsage = true,
+            acceptedPrivacyConditions = true
+        )
         viewModel.updateState {
             copy(firstName = updatedState.firstName, lastName = updatedState.lastName, email = updatedState.email, phone = updatedState.phone, street = updatedState.street, houseNumber = updatedState.houseNumber, box = updatedState.box, dateOfBirth = updatedState.dateOfBirth, password = updatedState.password, repeatedPassword = updatedState.repeatedPassword, acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage, acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions)
         }
@@ -396,25 +441,25 @@ class RegistrationViewModelTest {
         verify { validateRepeatedPassword.execute(any(), any()) }
         verify { validateTerms.execute(any()) }
         verify { validatePrivacy.execute(any()) }
-        verify { viewModel.onRegisterClick()}
+        verify { viewModel.onRegisterClick() }
         Dispatchers.resetMain()
     }
 
     private fun getViewModel(): RegistrationViewModel {
           return RegistrationViewModel(
-            validateFirstName = validateFirstName,
-            validateLastName = validateLastName,
-            validateEmail = validateEmail,
-            validatePassword = validatePassword,
-            validateRepeatedPassword = validateRepeatedPassword,
-            validateStreet = validateStreet,
-            validateHouseNumber = validateHouseNumber,
-            validateBox = validateBox,
-            validateDateOfBirth = validateDateOfBirth,
-            validatePhone = validatePhone,
-            validateTerms = validateTerms,
-            validatePrivacy = validatePrivacy,
-            registerUserUseCase = registerUserUseCase
-        )
+              validateFirstName = validateFirstName,
+              validateLastName = validateLastName,
+              validateEmail = validateEmail,
+              validatePassword = validatePassword,
+              validateRepeatedPassword = validateRepeatedPassword,
+              validateStreet = validateStreet,
+              validateHouseNumber = validateHouseNumber,
+              validateBox = validateBox,
+              validateDateOfBirth = validateDateOfBirth,
+              validatePhone = validatePhone,
+              validateTerms = validateTerms,
+              validatePrivacy = validatePrivacy,
+              registerUserUseCase = registerUserUseCase
+          )
     }
 }

@@ -1,4 +1,4 @@
-package rise.tiao1.buut.presentation.editProfile
+package rise.tiao1.buut.presentation.profile.editProfile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,17 +10,13 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.swipeLeft
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.platform.app.InstrumentationRegistry
-import kotlinx.coroutines.delay
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -28,17 +24,15 @@ import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
-import rise.tiao1.buut.presentation.profile.ProfileScreen
-import rise.tiao1.buut.presentation.profile.ProfileScreenState
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
 
-class EditProfileScreenKtCompactPortraitTest {
+class EditProfileScreenKtMediumPortraitTest {
     val startOrientation = ScreenOrientation.PORTRAIT
     val updatedOrientation = ScreenOrientation.LANDSCAPE
-    val uiLayout = UiLayout.PORTRAIT_SMALL
+    val uiLayout = UiLayout.PORTRAIT_MEDIUM
 
     @get:Rule
     val rule: ComposeContentTestRule =
@@ -122,17 +116,18 @@ class EditProfileScreenKtCompactPortraitTest {
         headerText.assertIsNotDisplayed()
         topBar.assertIsDisplayed()
 
-        // buttons
+        //buttons
         profileEditConfirmButton.assertIsNotDisplayed()
         profileEditCancelButton.assertIsNotDisplayed()
 
-        //textfields
+        // textfields
         firstNameTextField.assertIsNotDisplayed()
         lastNameTextField.assertIsNotDisplayed()
         phoneTextField.assertIsNotDisplayed()
         streetTextField.assertIsNotDisplayed()
         houseNumberTextField.assertIsNotDisplayed()
         addressBoxTextField.assertIsNotDisplayed()
+
     }
 
     @Test
@@ -155,9 +150,9 @@ class EditProfileScreenKtCompactPortraitTest {
         loadingIndicator.assertIsNotDisplayed()
         errorContainer.assertIsNotDisplayed()
 
-        //topbar
-        topBar.assertIsDisplayed()
+        // topbar and headder
         headerText.assertIsDisplayed()
+        topBar.assertIsDisplayed()
 
         //buttons
         profileEditConfirmButton.assertIsDisplayed()
@@ -221,8 +216,7 @@ class EditProfileScreenKtCompactPortraitTest {
                         uiLayout = uiLayout,
                         onConfirmClick = {},
                         onCancelClick = {navController.navigate(NavigationKeys.Route.PROFILE)},
-                        onValidate = {},
-
+                        onValidate = {}
                     )
 
                 }
@@ -234,10 +228,8 @@ class EditProfileScreenKtCompactPortraitTest {
         rule.waitForIdle()
         profileEditCancelButton.performClick()
 
-
         rule.waitForIdle()
-        assertEquals(NavigationKeys.Route.PROFILE, navControllerState?.currentDestination?.route)
-
+        assertEquals(navControllerState?.currentDestination?.route, NavigationKeys.Route.PROFILE)
     }
 
     fun getUser(): User {

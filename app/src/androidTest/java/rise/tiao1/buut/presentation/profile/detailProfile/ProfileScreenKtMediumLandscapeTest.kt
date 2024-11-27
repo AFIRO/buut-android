@@ -1,8 +1,6 @@
-package rise.tiao1.buut.presentation.profile
+package rise.tiao1.buut.presentation.profile.detailProfile
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
@@ -17,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import rise.tiao1.buut.R
@@ -29,11 +27,10 @@ import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
 
-
-class ProfileScreenKtExpandedLandscapeTest {
+class ProfileScreenKtMediumLandscapeTest {
     val startOrientation = ScreenOrientation.LANDSCAPE
     val updatedOrientation = ScreenOrientation.PORTRAIT
-    val uiLayout = UiLayout.LANDSCAPE_EXPANDED
+    val uiLayout = UiLayout.LANDSCAPE_MEDIUM
 
     @get:Rule
     val rule: ComposeContentTestRule =
@@ -130,17 +127,25 @@ class ProfileScreenKtExpandedLandscapeTest {
             ) {
                 composable(route = NavigationKeys.Route.PROFILE) {
                     ProfileScreen(
-                        state = ProfileScreenState(user = getUser(), isLoading = false, apiError = ""),
+                        state = ProfileScreenState(
+                            user = getUser(),
+                            isLoading = false,
+                            apiError = ""
+                        ),
                         logout = {},
                         navigateTo = { navController.navigate(NavigationKeys.Route.EDIT_PROFILE) },
-                        uiLayout = uiLayout)
+                        uiLayout = uiLayout
+                    )
                 }
                 composable(route = NavigationKeys.Route.EDIT_PROFILE) {
                 }
             }
         }
         profileEditButton.performClick()
-        assertEquals(navControllerState?.currentDestination?.route, NavigationKeys.Route.EDIT_PROFILE)
+        Assert.assertEquals(
+            navControllerState?.currentDestination?.route,
+            NavigationKeys.Route.EDIT_PROFILE
+        )
     }
 
     @Test
@@ -154,17 +159,25 @@ class ProfileScreenKtExpandedLandscapeTest {
             ) {
                 composable(route = NavigationKeys.Route.PROFILE) {
                     ProfileScreen(
-                        state = ProfileScreenState(user = getUser(), isLoading = false, apiError = ""),
-                        logout = {navController.navigate(NavigationKeys.Route.LOGIN)},
+                        state = ProfileScreenState(
+                            user = getUser(),
+                            isLoading = false,
+                            apiError = ""
+                        ),
+                        logout = { navController.navigate(NavigationKeys.Route.LOGIN) },
                         navigateTo = { },
-                        uiLayout = uiLayout)
+                        uiLayout = uiLayout
+                    )
                 }
                 composable(route = NavigationKeys.Route.LOGIN) {
                 }
             }
         }
         profileLogoutButton.performClick()
-        assertEquals(navControllerState?.currentDestination?.route, NavigationKeys.Route.LOGIN)
+        Assert.assertEquals(
+            navControllerState?.currentDestination?.route,
+            NavigationKeys.Route.LOGIN
+        )
     }
 
     fun getUser(): User {

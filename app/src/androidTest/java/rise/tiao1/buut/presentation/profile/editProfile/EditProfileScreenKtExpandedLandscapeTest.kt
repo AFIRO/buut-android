@@ -1,4 +1,4 @@
-package rise.tiao1.buut.presentation.editProfile
+package rise.tiao1.buut.presentation.profile.editProfile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.platform.app.InstrumentationRegistry
-import kotlinx.coroutines.delay
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -25,17 +24,15 @@ import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
-import rise.tiao1.buut.presentation.profile.ProfileScreen
-import rise.tiao1.buut.presentation.profile.ProfileScreenState
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
 
-class EditProfileScreenKtCompactLandscapeTest {
+class EditProfileScreenKtExpandedLandscapeTest {
     val startOrientation = ScreenOrientation.LANDSCAPE
     val updatedOrientation = ScreenOrientation.PORTRAIT
-    val uiLayout = UiLayout.LANDSCAPE_SMALL
+    val uiLayout = UiLayout.LANDSCAPE_EXPANDED
 
     @get:Rule
     val rule: ComposeContentTestRule =
@@ -153,9 +150,9 @@ class EditProfileScreenKtCompactLandscapeTest {
         loadingIndicator.assertIsNotDisplayed()
         errorContainer.assertIsNotDisplayed()
 
-        // topbar and headder
-        headerText.assertIsNotDisplayed()
+        //topbar and header
         topBar.assertIsDisplayed()
+        headerText.assertIsDisplayed()
 
         //buttons
         profileEditConfirmButton.assertIsDisplayed()

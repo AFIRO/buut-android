@@ -1,4 +1,4 @@
-package rise.tiao1.buut.presentation.editProfile
+package rise.tiao1.buut.presentation.profile.editProfile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,17 +10,13 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.swipeLeft
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.platform.app.InstrumentationRegistry
-import kotlinx.coroutines.delay
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -28,17 +24,15 @@ import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
-import rise.tiao1.buut.presentation.profile.ProfileScreen
-import rise.tiao1.buut.presentation.profile.ProfileScreenState
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
 
-class EditProfileScreenKtExpandedPortraitTest {
-    val startOrientation = ScreenOrientation.PORTRAIT
-    val updatedOrientation = ScreenOrientation.LANDSCAPE
-    val uiLayout = UiLayout.PORTRAIT_EXPANDED
+class EditProfileScreenKtMediumLandscapeTest {
+    val startOrientation = ScreenOrientation.LANDSCAPE
+    val updatedOrientation = ScreenOrientation.PORTRAIT
+    val uiLayout = UiLayout.LANDSCAPE_MEDIUM
 
     @get:Rule
     val rule: ComposeContentTestRule =

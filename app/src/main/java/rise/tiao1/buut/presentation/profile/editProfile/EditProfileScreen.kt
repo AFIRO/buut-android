@@ -1,7 +1,6 @@
-package rise.tiao1.buut.presentation.editProfile
+package rise.tiao1.buut.presentation.profile.editProfile
 
 import android.content.res.Configuration
-import android.renderscript.ScriptGroup
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,10 +17,13 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -48,14 +50,10 @@ import rise.tiao1.buut.presentation.components.ButtonComponent
 import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.HeaderOne
 import rise.tiao1.buut.presentation.components.LoadingIndicator
-import rise.tiao1.buut.presentation.components.Navigation
 import rise.tiao1.buut.presentation.components.OutlinedTextFieldComponent
-import rise.tiao1.buut.presentation.profile.getUser
-import rise.tiao1.buut.presentation.register.RegistrationScreen
-import rise.tiao1.buut.presentation.register.RegistrationScreenState
+import rise.tiao1.buut.presentation.profile.detailProfile.getUser
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.InputKeys
-import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
 import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_EXPANDED
@@ -78,6 +76,7 @@ fun EditProfileScreen(
     onConfirmClick: () -> Unit = {},
     onCancelClick: () -> Unit = {},
     onValidate: (field: String) -> Unit,
+    navigateUp: () -> Unit = {},
     uiLayout: UiLayout
 ) {
     Scaffold(
@@ -99,7 +98,15 @@ fun EditProfileScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.inversePrimary
                 ),
-                modifier = Modifier.testTag("topBar")
+                modifier = Modifier.testTag("topBar"),
+                navigationIcon = {
+                    IconButton(onClick = navigateUp) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_button)
+                        )
+                    }
+                }
             )
         },
     ) { innerPadding ->
@@ -415,7 +422,8 @@ fun EditProfileProfileContent(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Log.d(TAG, uiLayout.name
+        Log.d(
+            TAG, uiLayout.name
         )
         if (uiLayout != LANDSCAPE_SMALL) {
             HeaderOne(stringResource(R.string.edit_profile_page_title),)
@@ -543,7 +551,7 @@ fun EditProfileExpandedPortraitPreview() {
             navigateTo = {},
             onValueChanged = { _, _ -> } ,
             onValidate = {},
-            uiLayout = UiLayout.PORTRAIT_EXPANDED
+            uiLayout = PORTRAIT_EXPANDED
         )
     }
 }
@@ -564,7 +572,7 @@ fun EditProfileLandscapeSmallPreview() {
             navigateTo = {},
             onValueChanged = { _, _ -> } ,
             onValidate = {},
-            uiLayout = UiLayout.LANDSCAPE_SMALL
+            uiLayout = LANDSCAPE_SMALL
         )
     }
 }
@@ -600,7 +608,7 @@ fun EditProfileExpandedLandscapePreview() {
             navigateTo = {},
             onValueChanged = { _, _ -> } ,
             onValidate = {},
-            uiLayout = UiLayout.LANDSCAPE_MEDIUM
+            uiLayout = LANDSCAPE_MEDIUM
         )
     }
 }

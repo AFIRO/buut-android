@@ -41,7 +41,6 @@ import rise.tiao1.buut.domain.notification.Notification
 import rise.tiao1.buut.presentation.booking.bookingList.BookingList
 import rise.tiao1.buut.presentation.components.Navigation
 import rise.tiao1.buut.presentation.components.NotificationBadge
-import rise.tiao1.buut.presentation.notification.notificationList.NotificationList
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.NotificationType

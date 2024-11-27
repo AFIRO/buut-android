@@ -21,14 +21,14 @@ import rise.tiao1.buut.presentation.booking.UpdateBooking.UpdateBookingScreen
 import rise.tiao1.buut.presentation.booking.UpdateBooking.UpdateBookingViewModel
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingScreen
 import rise.tiao1.buut.presentation.booking.createBooking.CreateBookingViewModel
-import rise.tiao1.buut.presentation.editProfile.EditProfileScreen
-import rise.tiao1.buut.presentation.editProfile.EditProfileViewModel
+import rise.tiao1.buut.presentation.profile.editProfile.EditProfileScreen
+import rise.tiao1.buut.presentation.profile.editProfile.EditProfileViewModel
 import rise.tiao1.buut.presentation.home.HomeScreen
 import rise.tiao1.buut.presentation.home.HomeViewModel
 import rise.tiao1.buut.presentation.login.LoginScreen
 import rise.tiao1.buut.presentation.login.LoginViewModel
-import rise.tiao1.buut.presentation.profile.ProfileScreen
-import rise.tiao1.buut.presentation.profile.ProfileViewModel
+import rise.tiao1.buut.presentation.profile.detailProfile.ProfileScreen
+import rise.tiao1.buut.presentation.profile.detailProfile.ProfileViewModel
 import rise.tiao1.buut.presentation.register.RegistrationScreen
 import rise.tiao1.buut.presentation.register.RegistrationViewModel
 import rise.tiao1.buut.ui.theme.AppTheme
@@ -207,6 +207,7 @@ class MainActivity : ComponentActivity() {
                     onValidate = { field: String ->
                         editProfileViewModel.validate(field)
                     },
+                    navigateUp = {navController.navigateUp()},
                 )
             }
         }

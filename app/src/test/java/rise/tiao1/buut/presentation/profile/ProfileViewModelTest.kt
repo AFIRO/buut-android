@@ -13,9 +13,10 @@ import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.useCases.GetUserUseCase
 import rise.tiao1.buut.domain.user.useCases.LogoutUseCase
+import rise.tiao1.buut.presentation.profile.detailProfile.ProfileScreenState
+import rise.tiao1.buut.presentation.profile.detailProfile.ProfileViewModel
 import rise.tiao1.buut.utils.StreetType
 import java.time.LocalDateTime
-import kotlin.math.exp
 
 @ExperimentalCoroutinesApi
 class ProfileViewModelTest {
