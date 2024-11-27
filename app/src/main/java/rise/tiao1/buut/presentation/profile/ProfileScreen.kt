@@ -1,10 +1,8 @@
 package rise.tiao1.buut.presentation.profile
 
 import android.content.res.Configuration
-import android.icu.text.DateFormat
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -42,13 +39,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import rise.tiao1.buut.R
+import rise.tiao1.buut.data.remote.user.dto.RoleDTO
 import rise.tiao1.buut.domain.user.Address
+import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.presentation.components.ButtonComponent
 import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.HeaderOne
 import rise.tiao1.buut.presentation.components.LoadingIndicator
 import rise.tiao1.buut.presentation.components.Navigation
+import rise.tiao1.buut.presentation.editProfile.TAG
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
@@ -59,10 +59,11 @@ import rise.tiao1.buut.utils.UiLayout.LANDSCAPE_SMALL
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
-import rise.tiao1.buut.utils.toDateString
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import kotlin.collections.listOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -145,6 +146,7 @@ fun Content(
         LoadingIndicator()
     }
     if (state.apiError?.isNotEmpty() == true) {
+        Log.e(TAG, state.apiError)
         ErrorMessageContainer(state.apiError)
     } else {
         Column(verticalArrangement = Arrangement.Top, modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -194,7 +196,7 @@ fun ProfileContent(state: ProfileScreenState, uiLayout: UiLayout) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${state.user?.dateOfBirth?.toLocalDate()?.format(DateTimeFormatter.ofLocalizedDate(
+                        text = "${state.user?.dateOfBirth?.format(DateTimeFormatter.ofLocalizedDate(
                             FormatStyle.SHORT))}",
                         modifier = Modifier.testTag("dob")
                     )
@@ -398,7 +400,8 @@ fun getUser(): User {
         email = "Test@Test.be",
         password = "TestPassword",
         phone = "TestPhoneNumber",
-        dateOfBirth = LocalDateTime.now(),
-        address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
+        dateOfBirth =  LocalDateTime.now(),
+        address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox"),
+                roles = listOf(Role("admin"))
     )
 }

@@ -6,7 +6,9 @@ import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.data.remote.user.dto.AddressDTO
+import rise.tiao1.buut.data.remote.user.dto.RoleDTO
 import rise.tiao1.buut.domain.user.Address
+import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDate
@@ -24,7 +26,8 @@ object DummyContent {
             "TestEmail1@hogent.be",
             phoneNumber = "Testphone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
-            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
+            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox"),
+            roles = listOf(RoleDTO("admin"))
         ),
         RemoteUser(
             "auth0|6713ad614fda04f4b9ae2156",
@@ -33,7 +36,8 @@ object DummyContent {
             "TestEmail2@hogent.be",
             phoneNumber = "Testphone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
-            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
+            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox"),
+            roles = listOf(RoleDTO("admin"))
         ),
         RemoteUser(
             "auth0|6713ad524e8a8907fbf0d57f",
@@ -42,7 +46,8 @@ object DummyContent {
             "TestEmail3@hogent.be",
             phoneNumber = "Testphone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0).toString(),
-            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox")
+            address = AddressDTO(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox"),
+            roles = listOf(RoleDTO("admin"))
         )
     )
 

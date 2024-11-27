@@ -53,7 +53,8 @@ android {
     packaging {
         resources.excludes.addAll(
             listOf(
-                "META-INF/LICENSE.md"
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
         )
         )
     }
@@ -122,7 +123,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.4")
-    androidTestImplementation("io.mockk:mockk:1.12.1")
+    androidTestImplementation("io.mockk:mockk:1.13.5")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.0")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.0")
 }

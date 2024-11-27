@@ -1,5 +1,6 @@
 package rise.tiao1.buut.presentation.components
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.heightIn
@@ -7,7 +8,10 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +32,15 @@ fun AutoCompleteTextFieldComponent(
     errorMessage: String? = null,
     optionList: List<String> = emptyList(),
     @StringRes label: Int,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        unfocusedContainerColor = Color.White,
+        focusedContainerColor = Color.White,
+        focusedBorderColor = Color.Blue,
+        errorContainerColor = Color.White,
+        focusedLabelColor = Color.White,
+        unfocusedLabelColor = Color.Black
+    ),
+    alternativeUnfocusedLabelColor: Color = Color.White,
     modifier: Modifier = Modifier
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -42,7 +55,6 @@ fun AutoCompleteTextFieldComponent(
             }
         }
     }
-
 
     ExposedDropdownMenuBox(
         expanded = expanded.value,
@@ -62,6 +74,8 @@ fun AutoCompleteTextFieldComponent(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
             },
+            colors = colors,
+            alternativeUnfocusedLabelColor = alternativeUnfocusedLabelColor
 
         )
         ExposedDropdownMenu(

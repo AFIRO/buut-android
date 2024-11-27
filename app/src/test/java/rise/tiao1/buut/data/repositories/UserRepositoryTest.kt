@@ -1,6 +1,6 @@
 package rise.tiao1.buut.data.repositories
 
-import android.util.Log
+
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -8,7 +8,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import okhttp3.ResponseBody
+import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.mockito.kotlin.verify
+import retrofit2.HttpException
+import retrofit2.Response
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.local.user.UserDao
 import rise.tiao1.buut.data.remote.user.RemoteUser
@@ -20,8 +26,9 @@ import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toLocalUser
 import rise.tiao1.buut.utils.toUser
 import rise.tiao1.buut.data.remote.user.dto.AddressDTO
+import rise.tiao1.buut.data.remote.user.dto.PutUserDTO
+import rise.tiao1.buut.data.remote.user.dto.RoleDTO
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
-import rise.tiao1.buut.utils.toDateString
 import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
@@ -71,7 +78,8 @@ class UserRepositoryTest {
             null.toString(),
             null.toString(),
             birthDate = LocalDateTime.of(1996, 8, 19,0,0,1).toString(),
-            address = getAddressDto()
+            address = getAddressDto(),
+            roles = listOf(RoleDTO(name = "Admin"))
         )
         val userToInsert = userFromApi.toLocalUser()
         val expected = userFromApi.toLocalUser().toUser()
@@ -112,6 +120,51 @@ class UserRepositoryTest {
         coVerify { apiService.registerUser(userDto) }
     }
 
+    @Test
+    fun updateUser_succes_updatesRemoteAndLocalUsersSuccessfully() = scope.runTest {
+        // Mock input
+        val putUserDTO = getPutUserDto()
+        val remoteUser = getRemoteUser()
+
+        // Mock behaviors
+        coEvery { apiService.updateUser(putUserDTO) } returns Unit
+        coEvery { apiService.getUserById("fg") } returns remoteUser
+        coEvery { dao.insertUser(remoteUser.toLocalUser()) } returns Unit
+
+        // Call the method
+        userRepository.updateUser(putUserDTO)
+
+        // Verify interactions
+        coVerify { apiService.updateUser(putUserDTO) }
+        coVerify { apiService.getUserById("fg") }
+        coVerify { dao.insertUser(remoteUser.toLocalUser()) }
+    }
+
+    @Test
+    fun updateUser_exception_throwsExceptionWhenApiServiceUpdateFails() = scope.runTest {
+        // Mock input
+        val putUserDTO = getPutUserDto()
+
+        // Mock behaviors
+        coEvery { apiService.updateUser(putUserDTO) }throws HttpException(
+            Response.error<Any>(400, ResponseBody.create(null, "Bad Request")))
+
+
+        // Assert exception
+        val result = runCatching { userRepository.updateUser(putUserDTO) }
+
+        assert(result.isFailure)
+        assert(result.exceptionOrNull() != null)
+        assert(result.exceptionOrNull() is Exception)
+        // Verify no further interactions
+        coVerify(exactly = 0) { apiService.getUserById(any()) }
+        coVerify(exactly = 0) { dao.insertUser(any()) }
+    }
+
+
+
+
+
     fun getUser() : User {
         return User(
             id = "fg",
@@ -121,7 +174,8 @@ class UserRepositoryTest {
             password = "TestPassword",
             phone = "TestPhone",
             dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1),
-            address = getAddress()
+            address = getAddress(),
+            roles = listOf()
         )
     }
 
@@ -133,7 +187,8 @@ class UserRepositoryTest {
             email = "TestEmail",
             phone = "TestPhone",
             dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0 ,1).toString(),
-            address = getAddress()
+            address = getAddress(),
+            roles = ""
         )
     }
 
@@ -145,7 +200,8 @@ class UserRepositoryTest {
             email = "TestEmail",
             phoneNumber = "TestPhone",
             birthDate = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
-            address = getAddressDto()
+            address = getAddressDto(),
+            roles = listOf()
         )
     }
 
@@ -158,6 +214,21 @@ class UserRepositoryTest {
             phone = "TestPhone",
             dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
             address = getAddressDto()
+        )
+
+    }
+
+    fun getPutUserDto() : PutUserDTO {
+        return PutUserDTO(
+            firstName = "TestFirstName",
+            lastName = "TestLastName",
+            email = "TestEmail",
+            password = "TestPassword",
+            phone = "TestPhone",
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0, 1).toString(),
+            address = getAddressDto(),
+            id = "fg",
+            roles = listOf()
         )
 
     }
