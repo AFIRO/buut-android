@@ -2,10 +2,7 @@ package rise.tiao1.buut.domain.user
 
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.remote.user.dto.PutUserDTO
-import rise.tiao1.buut.data.remote.user.dto.RoleDTO
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
-import rise.tiao1.buut.utils.toLocalDateTime
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class User(
@@ -52,10 +49,10 @@ fun User.toPutUserDTO(): PutUserDTO {
         lastName = this.lastName,
         address = this.address?.toAddressDTO(),
         phone = this.phone,
-        email = this.email,
-        password = this.password,
+        email = null,
+        password = null,
         dateOfBirth = this.dateOfBirth.toString(),
-        roles = this.roles.map { r -> r.toRoleDTO() }
+        roles = null
     )
 }
 

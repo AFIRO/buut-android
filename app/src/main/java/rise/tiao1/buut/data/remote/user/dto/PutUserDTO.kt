@@ -15,12 +15,12 @@ data class PutUserDTO(
     @SerializedName("PhoneNumber")
     val phone: String?,
     @SerializedName("Email")
-    val email: String,
+    val email: String?,
     @SerializedName("Password")
     val password: String?,
     @SerializedName("BirthDate")
     val dateOfBirth: String?,
     @SerializedName("Roles")
-    val roles: List<RoleDTO>,
+    val roles: List<RoleDTO>?,
 )
 
