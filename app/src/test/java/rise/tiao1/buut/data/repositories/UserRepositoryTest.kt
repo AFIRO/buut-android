@@ -9,10 +9,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody
-import org.junit.Assert.assertThrows
-import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.mockito.kotlin.verify
 import retrofit2.HttpException
 import retrofit2.Response
 import rise.tiao1.buut.data.local.user.LocalUser

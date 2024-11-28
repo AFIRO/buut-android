@@ -49,8 +49,8 @@ fun User.toPutUserDTO(): PutUserDTO {
         lastName = this.lastName,
         address = this.address?.toAddressDTO(),
         phone = this.phone,
-        email = this.email,
-        password = this.password,
+        email = null,
+        password = null,
         dateOfBirth = this.dateOfBirth.toString(),
         roles = null
     )
