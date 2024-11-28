@@ -21,6 +21,6 @@ data class PutUserDTO(
     @SerializedName("BirthDate")
     val dateOfBirth: String?,
     @SerializedName("Roles")
-    val roles: List<RoleDTO>,
+    val roles: List<RoleDTO>?,
 )
 
