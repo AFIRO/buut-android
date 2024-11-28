@@ -1,7 +1,6 @@
-package rise.tiao1.buut.presentation.editProfile
+package rise.tiao1.buut.presentation.profile.editProfile
 
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import rise.tiao1.buut.domain.user.validation.ValidateDateOfBirth
@@ -25,8 +24,6 @@ import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.useCases.UpdateUserUseCase
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toLocalDateTime
-import kotlinx.coroutines.delay
-
 
 
 @HiltViewModel

@@ -1,4 +1,4 @@
-package rise.tiao1.buut.presentation.editProfile
+package rise.tiao1.buut.presentation.profile.editProfile
 
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.utils.UiText

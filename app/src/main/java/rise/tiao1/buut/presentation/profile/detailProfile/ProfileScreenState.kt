@@ -1,4 +1,4 @@
-package rise.tiao1.buut.presentation.profile
+package rise.tiao1.buut.presentation.profile.detailProfile
 
 import rise.tiao1.buut.domain.user.User
 

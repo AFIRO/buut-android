@@ -22,7 +22,7 @@ class UpdateUserUseCase @Inject constructor(
             userRepository.updateUser(user.toPutUserDTO())
             onSuccess()
         } catch (e: Exception) {
-            onError("Error registering user: ${e.message}")
+            onError("Error updating user: ${e.message}")
         }
 
     }
