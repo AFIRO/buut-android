@@ -20,9 +20,10 @@ class HomeViewModel @Inject constructor(
     private val getBookingsSortedByDateUseCase: GetBookingsSortedByDateUseCase,
     private val getNotificationsUseCase: GetNotificationsUseCase,
     private val toggleNotificationUseCase: ToggleNotificationReadStatusUseCase,
+    private val homeScreenState: HomeScreenState,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val _state = mutableStateOf(HomeScreenState())
+    private val _state = mutableStateOf(homeScreenState)
     val state: State<HomeScreenState> get() = _state
 
     init {
