@@ -53,7 +53,7 @@ class HomeViewModelTest {
     }
 
     private fun getViewModel(): HomeViewModel {
-        return HomeViewModel(getUserUseCase, getBookingsUseCase, getNotificationsUseCase, toggleNotificationReadStatusUseCase, dispatcher)
+        return HomeViewModel(getUserUseCase, getBookingsUseCase, getNotificationsUseCase, toggleNotificationReadStatusUseCase, homeScreenState = HomeScreenState(), dispatcher)
     }
 
     private fun getUser(): User {

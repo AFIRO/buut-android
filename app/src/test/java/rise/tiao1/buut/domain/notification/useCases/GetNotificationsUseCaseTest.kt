@@ -10,6 +10,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import rise.tiao1.buut.data.repositories.NotificationRepository
 import rise.tiao1.buut.domain.notification.Notification
+import rise.tiao1.buut.presentation.home.HomeScreenState
 import rise.tiao1.buut.utils.NotificationType
 import rise.tiao1.buut.utils.toApiDateString
 import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
@@ -23,7 +24,8 @@ class GetNotificationsUseCaseTest {
     private val notificationRepository = mockk<NotificationRepository>()
     private val testId = "TestId"
     private val useCase = GetNotificationsUseCase(
-        notificationRepository = notificationRepository
+        notificationRepository = notificationRepository,
+        homeScreenState = HomeScreenState()
     )
 
 

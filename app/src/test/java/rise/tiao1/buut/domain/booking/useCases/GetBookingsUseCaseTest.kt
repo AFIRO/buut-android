@@ -18,6 +18,7 @@ import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.toBooking
+import rise.tiao1.buut.presentation.home.HomeScreenState
 import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDateTime
 
@@ -29,7 +30,8 @@ class GetBookingsUseCaseTest {
     private val bookingRepository = mockk<BookingRepository>()
     private val USER_ID_WITH_BOOKINGS = "TestUser1"
     private val useCase = GetBookingsSortedByDateUseCase(
-        bookingRepository = bookingRepository
+        bookingRepository = bookingRepository,
+        homeScreenState = HomeScreenState()
     )
 
     @Test

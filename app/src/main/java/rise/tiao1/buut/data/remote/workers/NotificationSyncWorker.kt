@@ -1,6 +1,7 @@
 package rise.tiao1.buut.data.remote.workers
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -22,6 +23,7 @@ class NotificationSyncWorker @AssistedInject constructor(
             runBlocking {
                 val currentUser = getUserUseCase.invoke()
                 getNotificationsUseCase.invoke(currentUser.id!!)
+                Log.i("NotificationSyncWorker", "Notifications synced successfully")
                 Result.success()
             }
         } catch (e: Exception) {
