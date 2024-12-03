@@ -50,27 +50,46 @@ class HomeViewModel @Inject constructor(
 
     private fun getBookings() {
         viewModelScope.launch(dispatcher) {
-            val bookings = getBookingsSortedByDateUseCase(
-                userId = state.value.user?.id ?: ""
-            )
-            _state.value = state.value.copy(bookings = bookings)
+            try {
+                val bookings = getBookingsSortedByDateUseCase(
+                    userId = state.value.user?.id ?: ""
+                )
+                _state.value = state.value.copy(bookings = bookings)
+            } catch (e: Exception) {
+                _state.value = state.value.copy(
+                    apiError = e.message
+                )
+            }
         }
 
     }
 
     private fun getNotifications() {
         viewModelScope.launch(dispatcher) {
-            val notifications = getNotificationsUseCase(
-                userId = state.value.user?.id ?: ""
-            )
-            _state.value = state.value.copy(notifications = notifications, unReadNotifications = notifications.count { !it.isRead })
+            try {
+                val notifications = getNotificationsUseCase(
+                    userId = state.value.user?.id ?: ""
+                )
+                _state.value = state.value.copy(notifications = notifications, unReadNotifications = notifications.count { !it.isRead })
+
+            } catch (e: Exception) {
+                _state.value = state.value.copy(
+                    apiError = e.message
+                )
+            }
         }
     }
 
     fun onNotificationClick(notificationId: String, currentStatus: Boolean) {
         viewModelScope.launch(dispatcher) {
+            try {
             toggleNotificationUseCase(notificationId, currentStatus)
             getNotifications()
+            } catch (e: Exception) {
+                _state.value = state.value.copy(
+                    apiError = e.message
+                )
+            }
         }
     }
 }

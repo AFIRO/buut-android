@@ -18,14 +18,15 @@ class NotificationSyncWorker @AssistedInject constructor(
     private val getUserUseCase: GetUserUseCase,
 ) : Worker(context, params) {
     override fun doWork(): Result {
-        return try {
-            runBlocking {
+        runBlocking {
+            try {
                 val currentUser = getUserUseCase.invoke()
                 getNotificationsUseCase.invoke(currentUser.id!!)
-                Result.success()
+                return@runBlocking Result.success()
+            } catch (e: Exception) {
+                return@runBlocking Result.failure()
             }
-        } catch (e: Exception) {
-            Result.failure()
         }
+        return Result.failure()
     }
 }

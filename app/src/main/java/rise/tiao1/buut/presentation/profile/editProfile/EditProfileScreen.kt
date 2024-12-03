@@ -310,19 +310,6 @@ fun EditProfileScreenContactComponent(
     uiColors: TextFieldColors,
 ) {
     Column{
-//        // email input field
-//        OutlinedTextFieldComponent(
-//            value = state.email,
-//            onValueChanged = { onValueChanged(it, InputKeys.EMAIL) },
-//            onFocusLost = { onValidate(InputKeys.EMAIL) },
-//            isError = false,
-//            errorMessage = state.emailError?.asString(),
-//            label = R.string.email_label,
-//            colors = uiColors,
-//            alternativeUnfocusedLabelColor = Color.Gray
-//        )
-
-
         // phone input field
         OutlinedTextFieldComponent(
             value = state.phone,
@@ -346,12 +333,10 @@ fun EditProfileScreenAddressComponent(
     uiLayout: UiLayout,
     uiColors: TextFieldColors,
 ) {
-    Column (
-//        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_tiny))
-    ) {
+    Column {
 
         AutoCompleteTextFieldComponent(
-            value = state.street.toString(),
+            value = state.street,
             onValueChanged = { onValueChanged(it, InputKeys.STREET) },
             onFocusLost = { onValidate(InputKeys.STREET) },
             isError = state.streetError != null,

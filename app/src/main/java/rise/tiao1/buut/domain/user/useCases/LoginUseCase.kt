@@ -32,7 +32,7 @@ class LoginUseCase @Inject constructor(
             .setAudience(context.getString(R.string.com_auth0_audience))
             .start(object : Callback<Credentials, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {
-                    onError(error.message ?: "Login failed")
+                    onError(error.message ?: context.getString(R.string.login_error))
                 }
 
                 override fun onSuccess(result: Credentials) {
@@ -47,7 +47,7 @@ class LoginUseCase @Inject constructor(
                         onSuccess()
                     }
                     else
-                        onError("You do not have the required roles.")
+                        onError(context.getString(R.string.no_required_roles))
 
                 }
             })

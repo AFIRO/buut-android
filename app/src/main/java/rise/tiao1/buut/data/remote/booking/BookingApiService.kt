@@ -20,7 +20,7 @@ interface BookingApiService {
     suspend fun getAllBookingsFromUser(@Path("userId") userId: String): List<BookingDTO>
 
     @GET("api/Booking/free")
-    suspend fun getAvailableDays(): List<TimeSlotDTO>
+    suspend fun getAvailableDays(): TimeSlotResponse
 
     @GET("api/Booking/free/byDateRange")
     suspend fun getFreeTimeSlotsForDateRange(@Query("startDate") startDate: String, @Query("endDate") endDate: String): List<TimeSlotDTO>

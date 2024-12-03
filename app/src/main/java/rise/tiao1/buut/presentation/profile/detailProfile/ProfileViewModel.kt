@@ -46,13 +46,15 @@ class ProfileViewModel  @Inject constructor(
 
     fun onLogoutClicked(navigateToLogin: () -> Unit) {
         viewModelScope.launch(dispatcher) {
-            logoutUseCase(state.value.user)
-            navigateToLogin()
+            try {
+                logoutUseCase(state.value.user)
+                navigateToLogin()
+            }
+            catch (e: Exception){
+                _state.value = state.value.copy(
+                    apiError = e.message
+                )
+            }
         }
-
-    }
-
-    fun onEditClicked(navigateToEdit: () -> Unit){
-        navigateToEdit()
     }
 }
