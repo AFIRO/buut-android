@@ -49,15 +49,20 @@ fun LocalUser.toUser(): User {
 }
 
 fun String.toDate(): LocalDate? {
-    // Try to parse in "yyyy-MM-dd" format first
-    try {
-        val formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        return LocalDate.parse(this, formatter1)
-    } catch (e: DateTimeParseException) {
-        // If parsing with "yyyy-MM-dd" fails, try "dd/MM/yyyy"
-        val formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        return LocalDate.parse(this, formatter2)
+    val formatters = listOf(
+        DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+        DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+        DateTimeFormatter.ofPattern("d/M/yyyy")
+    )
+    for (formatter in formatters) {
+        try {
+            return LocalDate.parse(this, formatter)
+        } catch (e: DateTimeParseException) {
+            // Ignore and try the next formatter
+        }
     }
+    Log.e("toDate","Invalid date format: $this")
+    return null // Return null if none of the formatters worked
 }
 
 fun LocalDateTime.toTestDateString(): String {

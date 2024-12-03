@@ -35,7 +35,7 @@ class BuutApplication : Application(), Configuration.Provider {
         val workManager = WorkManager.getInstance(this)
 
         val bookingSyncWorkRequest = PeriodicWorkRequestBuilder<BookingSyncWorker>(
-            5, TimeUnit.MINUTES
+            15, TimeUnit.MINUTES
         ).setConstraints(
             Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -50,7 +50,7 @@ class BuutApplication : Application(), Configuration.Provider {
         )
 
         val notificationSyncWorkRequest = PeriodicWorkRequestBuilder<NotificationSyncWorker>(
-            1, TimeUnit.MINUTES
+            15, TimeUnit.MINUTES
         ).setConstraints(
             Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
