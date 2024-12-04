@@ -26,6 +26,9 @@ import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 class ProfileScreenKtCompactPortraitTest {
     val startOrientation = ScreenOrientation.PORTRAIT

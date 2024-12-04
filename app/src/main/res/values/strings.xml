@@ -93,4 +93,6 @@
     <string name="edit_profile_page_title">Edit Profile</string>
     <string name="user_has_no_notifications">You have no notifications.</string>
     <string name="edit_booking_button">edit booking</string>
+    <string name="login_error">Login failed</string>
+    <string name="no_required_roles">You do not have the required roles.</string>
 </resources>

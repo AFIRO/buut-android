@@ -1,6 +1,5 @@
 package rise.tiao1.buut.utils
 
-import android.util.Log
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import retrofit2.HttpException
@@ -9,7 +8,6 @@ import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
-import java.text.DateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -61,8 +59,7 @@ fun String.toDate(): LocalDate? {
             // Ignore and try the next formatter
         }
     }
-    Log.e("toDate","Invalid date format: $this")
-    return null // Return null if none of the formatters worked
+    return null
 }
 
 fun LocalDateTime.toTestDateString(): String {
@@ -103,24 +100,20 @@ fun LocalDateTime.toTimeString():String {
     return this.format(formatter)
 }
 
-fun String.toLocalDateTime(): LocalDateTime {
-    // Try parsing with yyyy-MM-dd format first
-    try {
-        val formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val localDate = LocalDate.parse(this, formatter1)
-        return localDate.atStartOfDay()
-    } catch (e: DateTimeParseException) {
-        // If parsing with yyyy-MM-dd fails, try d/M/yyyy
+fun String.toLocalDateTime(): LocalDateTime? {
+    val formatters = listOf(
+        DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+        DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+        DateTimeFormatter.ofPattern("d/M/yyyy")
+    )
+    for (formatter in formatters) {
         try {
-            val formatter2 = DateTimeFormatter.ofPattern("d/M/yyyy")
-            val localDate = LocalDate.parse(this, formatter2)
-            return localDate.atStartOfDay()
+            return LocalDateTime.parse(this, formatter)
         } catch (e: DateTimeParseException) {
-            // If both parsing attempts fail, log the error and return an invalid date
-            e.printStackTrace()  // You can replace this with a log statement if necessary
-            throw e  // Rethrow the exception or handle it as per your use case
+            // Ignore and try the next formatter
         }
     }
+    return null
 }
 
 fun String.toLocalDateTimeFromApiString(): LocalDateTime {

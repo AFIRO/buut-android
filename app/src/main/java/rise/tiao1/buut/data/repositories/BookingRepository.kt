@@ -52,7 +52,7 @@ class BookingRepository @Inject constructor(
     suspend fun getAvailableDays(): List<TimeSlot> =
         withContext(dispatcher) {
             try {
-                val remoteAvailableDays = apiService.getAvailableDays()
+                val remoteAvailableDays = apiService.getAvailableDays().value
                 return@withContext remoteAvailableDays.map { it.toTimeSlot() }
             } catch (e: Exception) {
                 when (e) {
