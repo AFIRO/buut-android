@@ -21,7 +21,7 @@ import rise.tiao1.buut.utils.InputKeys
 import rise.tiao1.buut.utils.UiText
 
 @ExperimentalCoroutinesApi
-class LoginViewModelTest{
+class LoginViewModelTest {
     private val validateEmail: ValidateEmail = mockk()
     private val validatePassword: ValidatePassword = mockk()
     private val login: LoginUseCase = mockk()
@@ -91,12 +91,12 @@ class LoginViewModelTest{
         Dispatchers.setMain(testDispatcher)
         viewModel.login {}
         advanceUntilIdle()
-        verify { viewModel.login(any())}
+        verify { viewModel.login(any()) }
         Dispatchers.resetMain()
     }
 
     private fun getViewModel(): LoginViewModel {
-        return LoginViewModel(login,validateEmail, validatePassword)
+        return LoginViewModel(login, validateEmail, validatePassword)
     }
 
 }

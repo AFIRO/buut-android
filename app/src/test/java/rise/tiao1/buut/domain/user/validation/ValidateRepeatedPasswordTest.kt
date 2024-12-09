@@ -5,17 +5,15 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import rise.tiao1.buut.R
-import rise.tiao1.buut.utils.UiText
 
 @ExperimentalCoroutinesApi
 
-class ValidateRepeatedPasswordTest{
+class ValidateRepeatedPasswordTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
 
     @Test
-    fun passwordsDontMatch_returnsCorrectError() = scope.runTest{
+    fun passwordsDontMatch_returnsCorrectError() = scope.runTest {
         val validateRepeatedPassword = ValidateRepeatedPassword()
         val result = validateRepeatedPassword.execute("password1!", "password2!")
         assert(result != null)

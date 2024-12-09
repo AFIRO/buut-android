@@ -3,21 +3,21 @@ package rise.tiao1.buut.domain.user.useCases
 import android.content.Context
 import android.content.SharedPreferences
 import com.auth0.android.authentication.AuthenticationAPIClient
+import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.authentication.storage.CredentialsManager
+import com.auth0.android.callback.Callback
+import com.auth0.android.result.Credentials
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Test
-import com.auth0.android.callback.Callback
-import io.mockk.verify
 import org.junit.Assert.assertTrue
-import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.result.Credentials
-import io.mockk.Runs
-import io.mockk.just
+import org.junit.Test
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.utils.SharedPreferencesKeys
@@ -53,7 +53,8 @@ class LoginUseCaseTest {
             }
         }
 
-        val loginUseCase = LoginUseCase(authentication, credentialsManager, sharedPreferences, context)
+        val loginUseCase =
+            LoginUseCase(authentication, credentialsManager, sharedPreferences, context)
 
         var result = false
         loginUseCase(user.email, user.password.toString(),
@@ -62,15 +63,25 @@ class LoginUseCaseTest {
         )
 
         verify { authentication.login(user.email, user.password.toString()) }
-        verify (exactly = 0) { sharedPreferences.edit() }
-        verify (exactly = 0) { sharedPreferencesEditor.putString(SharedPreferencesKeys.ACCESSTOKEN, any()) }
-        verify (exactly = 0) { sharedPreferencesEditor.putString(SharedPreferencesKeys.IDTOKEN, any()) }
-        verify (exactly = 0) { sharedPreferencesEditor.apply() }
-        verify (exactly = 0) { credentialsManager.saveCredentials(any()) }
+        verify(exactly = 0) { sharedPreferences.edit() }
+        verify(exactly = 0) {
+            sharedPreferencesEditor.putString(
+                SharedPreferencesKeys.ACCESSTOKEN,
+                any()
+            )
+        }
+        verify(exactly = 0) {
+            sharedPreferencesEditor.putString(
+                SharedPreferencesKeys.IDTOKEN,
+                any()
+            )
+        }
+        verify(exactly = 0) { sharedPreferencesEditor.apply() }
+        verify(exactly = 0) { credentialsManager.saveCredentials(any()) }
         assertTrue(result)
     }
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "TestId",
             firstName = "TestFirstName",

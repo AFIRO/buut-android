@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 class HomeViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
-    private val getUserUseCase : GetUserUseCase = mockk()
+    private val getUserUseCase: GetUserUseCase = mockk()
     private val getBookingsUseCase: GetBookingsSortedByDateUseCase = mockk()
     private val getNotificationsUseCase: GetNotificationsUseCase = mockk()
     private val toggleNotificationReadStatusUseCase: ToggleNotificationReadStatusUseCase = mockk()
@@ -49,11 +49,18 @@ class HomeViewModelTest {
         assertEquals(initialState.unReadNotifications, getNotifications().count())
         coVerify { getUserUseCase.invoke() }
         coVerify { getBookingsUseCase.invoke(testId) }
-        coVerify { getNotificationsUseCase.invoke(testId)}
+        coVerify { getNotificationsUseCase.invoke(testId) }
     }
 
     private fun getViewModel(): HomeViewModel {
-        return HomeViewModel(getUserUseCase, getBookingsUseCase, getNotificationsUseCase, toggleNotificationReadStatusUseCase, homeScreenState = HomeScreenState(), dispatcher)
+        return HomeViewModel(
+            getUserUseCase,
+            getBookingsUseCase,
+            getNotificationsUseCase,
+            toggleNotificationReadStatusUseCase,
+            homeScreenState = HomeScreenState(),
+            dispatcher
+        )
     }
 
     private fun getUser(): User {
@@ -75,7 +82,18 @@ class HomeViewModelTest {
     }
 
     private fun getNotifications(): List<Notification> {
-        return listOf(Notification(testId, "TestUserId", "TestTitle", "TestMessage", false, NotificationType.GENERAL, today, "TestRelatedEntityId"))
+        return listOf(
+            Notification(
+                testId,
+                "TestUserId",
+                "TestTitle",
+                "TestMessage",
+                false,
+                NotificationType.GENERAL,
+                today,
+                "TestRelatedEntityId"
+            )
+        )
 
     }
 }

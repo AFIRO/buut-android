@@ -26,7 +26,10 @@ class ValidateTermsTest {
         val validateTerms = ValidateTerms()
         val result = validateTerms.execute(false)
         assert(result != null)
-        assert(result?.getStringId() == UiText.StringResource(R.string.terms_not_accepted_error).getStringId())
-        }
-
+        assert(
+            result?.getStringId() == UiText.StringResource(R.string.terms_not_accepted_error)
+                .getStringId()
+        )
     }
+
+}

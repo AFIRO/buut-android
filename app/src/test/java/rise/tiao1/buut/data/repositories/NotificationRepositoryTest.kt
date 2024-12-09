@@ -2,9 +2,7 @@ package rise.tiao1.buut.data.repositories
 
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -37,13 +35,13 @@ class NotificationRepositoryTest {
         coEvery { notificationDao.getNotificationsByUserId(testId) } returns getLocalNotifications()
         coEvery { apiService.getAllNotificationsFromUser(testId) } returns getNotificationDTOs()
         coEvery { notificationDao.insertAllNotifications(any()) } returns Unit
-        var actual =  repository.getAllNotificationsFromUser(testId)
+        var actual = repository.getAllNotificationsFromUser(testId)
         var expected = getNotifications()
-        assertEquals(actual,expected)
+        assertEquals(actual, expected)
         coVerify { notificationDao.getNotificationsByUserId(testId) }
         coVerify { apiService.getAllNotificationsFromUser(testId) }
         coVerify { notificationDao.insertAllNotifications(any()) }
-}
+    }
 
     @Test
     fun getAllNotificationsFromUser_ApiError_HandlesCorrectly() = scope.runTest {
@@ -53,8 +51,8 @@ class NotificationRepositoryTest {
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
         coVerify { apiService.getAllNotificationsFromUser(testId) }
-        coVerify (exactly = 0) {  notificationDao.getNotificationsByUserId(testId) }
-        coVerify (exactly = 0) {  notificationDao.insertAllNotifications(any()) }
+        coVerify(exactly = 0) { notificationDao.getNotificationsByUserId(testId) }
+        coVerify(exactly = 0) { notificationDao.insertAllNotifications(any()) }
     }
 
     @Test
@@ -66,8 +64,8 @@ class NotificationRepositoryTest {
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
         coVerify { apiService.getAllNotificationsFromUser(testId) }
-        coVerify {  notificationDao.insertAllNotifications(any()) }
-        coVerify (exactly = 0) {  notificationDao.getNotificationsByUserId(testId) }
+        coVerify { notificationDao.insertAllNotifications(any()) }
+        coVerify(exactly = 0) { notificationDao.getNotificationsByUserId(testId) }
     }
 
     @Test
@@ -85,13 +83,15 @@ class NotificationRepositoryTest {
 
     @Test
     fun toggleNotificationReadStatus_ApiError_HandlesCorrectly() = scope.runTest {
-        coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } throws Exception(testError)
+        coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } throws Exception(
+            testError
+        )
         val actual = runCatching { repository.toggleNotificationReadStatus(testId, false) }
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
         coVerify { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
-        coVerify (exactly = 0) { notificationDao.getNotificationById(testId) }
-        coVerify (exactly = 0) { notificationDao.insertNotification(any()) }
+        coVerify(exactly = 0) { notificationDao.getNotificationById(testId) }
+        coVerify(exactly = 0) { notificationDao.insertNotification(any()) }
     }
 
     @Test
@@ -105,7 +105,6 @@ class NotificationRepositoryTest {
         coVerify { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
         coVerify { notificationDao.getNotificationById(testId) }
     }
-
 
 
     private fun getNotifications() = listOf(
@@ -123,27 +122,28 @@ class NotificationRepositoryTest {
 
     private fun getLocalNotifications() = listOf(
         LocalNotification(
-        id = "1",
-        userId = "TestUserId",
-        title = "title",
-        message = "message",
-        isRead = true,
-        type = "General",
-        createdAt = today.toApiDateString(),
-        relatedEntityId = ""
-    )
+            id = "1",
+            userId = "TestUserId",
+            title = "title",
+            message = "message",
+            isRead = true,
+            type = "General",
+            createdAt = today.toApiDateString(),
+            relatedEntityId = ""
+        )
     )
 
     private fun getNotificationDTOs() = listOf(
         NotificationDTO(
-        notificationId = "1",
-        title = "title",
-        message = "message",
-        isRead = true,
-        type = "General",
-        createdAt = today.toApiDateString(),
-        relatedEntityId = ""
-    ))
+            notificationId = "1",
+            title = "title",
+            message = "message",
+            isRead = true,
+            type = "General",
+            createdAt = today.toApiDateString(),
+            relatedEntityId = ""
+        )
+    )
 
     private fun getNotificatioIsReadDto() =
         NotificationIsReadDTO(

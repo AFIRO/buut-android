@@ -39,34 +39,40 @@ class HomeScreenKtCompactLandscapeTest {
     val startOrientation = ScreenOrientation.LANDSCAPE
     val updatedOrientation = ScreenOrientation.PORTRAIT
     val uiLayout = UiLayout.LANDSCAPE_SMALL
+
     @get:Rule
     val rule = createComposeRule()
+
     @get:Rule
-    val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(ScreenOrientation.PORTRAIT)
+    val screenOrientationRule: ScreenOrientationRule =
+        ScreenOrientationRule(ScreenOrientation.PORTRAIT)
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
     val today = LocalDateTime.now()
     val testError = "testError"
     val loadingIndicator = rule.onNodeWithTag(context.getString(R.string.loading_indicator))
     val errorContainer = rule.onNodeWithText(testError)
     var navControllerState by mutableStateOf<NavController?>(null)
-    val notificationTabSelector = rule.onNodeWithTag(context.getString(R.string.notifications_title))
+    val notificationTabSelector =
+        rule.onNodeWithTag(context.getString(R.string.notifications_title))
     val bookingTabSelecor = rule.onNodeWithTag(context.getString(R.string.booking_list_title))
     val bookingItem = rule.onNodeWithTag("BookingItem")
-    val notificationBadge = rule.onNodeWithTag("notificationBadge",true)
-    val notificationBadgeText = rule.onNodeWithTag("notificationBadgeText",true)
-    val noNotificationsText = rule.onNodeWithText(context.getString(R.string.user_has_no_notifications))
+    val notificationBadge = rule.onNodeWithTag("notificationBadge", true)
+    val notificationBadgeText = rule.onNodeWithTag("notificationBadgeText", true)
+    val noNotificationsText =
+        rule.onNodeWithText(context.getString(R.string.user_has_no_notifications))
     val noBookingsText = rule.onNodeWithText(context.getString(R.string.user_has_no_bookings))
     val notificationCard = rule.onNodeWithTag("notificationCard")
-    val bookingExpansionButton = rule.onNodeWithContentDescription(context.getString(R.string.expand_button_content_description))
+    val bookingExpansionButton =
+        rule.onNodeWithContentDescription(context.getString(R.string.expand_button_content_description))
 
     @Test
-    fun homeScreen_loadingState_isDisplayedCorrectly(){
+    fun homeScreen_loadingState_isDisplayedCorrectly() {
         rule.setContent {
             HomeScreen(
                 state = getState(isLoading = true),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -85,13 +91,13 @@ class HomeScreenKtCompactLandscapeTest {
     }
 
     @Test
-    fun homeScreen_errorState_isDisplayedCorrectly(){
+    fun homeScreen_errorState_isDisplayedCorrectly() {
         rule.setContent {
             HomeScreen(
                 state = getState(apiError = testError),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -112,13 +118,13 @@ class HomeScreenKtCompactLandscapeTest {
 
 
     @Test
-    fun homeScreen_noNotifications_isDisplayedCorrectly(){
+    fun homeScreen_noNotifications_isDisplayedCorrectly() {
         rule.setContent {
             HomeScreen(
                 state = getState(notifications = emptyList(), unReadNotifications = 0),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -134,13 +140,13 @@ class HomeScreenKtCompactLandscapeTest {
     }
 
     @Test
-    fun homeScreen_noBookings_isDisplayedCorrectly(){
+    fun homeScreen_noBookings_isDisplayedCorrectly() {
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = emptyList()),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -154,7 +160,7 @@ class HomeScreenKtCompactLandscapeTest {
     }
 
     @Test
-    fun homeScreen_notificationsExist_isDisplayedCorrectly(){
+    fun homeScreen_notificationsExist_isDisplayedCorrectly() {
         val notifications = listOf(
             Notification(
                 notificationId = "1",
@@ -186,13 +192,16 @@ class HomeScreenKtCompactLandscapeTest {
                 createdAt = today.plusDays(3),
                 relatedEntityId = ""
             ),
-            )
+        )
         rule.setContent {
             HomeScreen(
-                state = getState(notifications = notifications, unReadNotifications = notifications.size),
+                state = getState(
+                    notifications = notifications,
+                    unReadNotifications = notifications.size
+                ),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -201,13 +210,14 @@ class HomeScreenKtCompactLandscapeTest {
         notificationBadge.assertIsDisplayed()
         notificationBadgeText.assertIsDisplayed()
         notificationBadgeText.assertTextEquals(notifications.size.toString())
-        val displayedNotifications = rule.onAllNodesWithTag("notificationCard").fetchSemanticsNodes()
+        val displayedNotifications =
+            rule.onAllNodesWithTag("notificationCard").fetchSemanticsNodes()
         assert(displayedNotifications.size == notifications.size)
     }
 
 
     @Test
-    fun homeScreen_onClickNotification_stateShiftsCorrectly(){
+    fun homeScreen_onClickNotification_stateShiftsCorrectly() {
 
         val notifications = listOf(
             Notification(
@@ -230,7 +240,10 @@ class HomeScreenKtCompactLandscapeTest {
 
         rule.setContent {
             HomeScreen(
-                state = getState(notifications = notifications, unReadNotifications = notifications.size),
+                state = getState(
+                    notifications = notifications,
+                    unReadNotifications = notifications.size
+                ),
                 navigateTo = {},
                 uiLayout = uiLayout,
                 onNotificationClick = onNotificationClick
@@ -245,11 +258,11 @@ class HomeScreenKtCompactLandscapeTest {
 
 
     @Test
-    fun homeScreen_bookingsExist_isDisplayedCorrectly(){
+    fun homeScreen_bookingsExist_isDisplayedCorrectly() {
         val bookings = listOf(
-            Booking(id= "1", date = LocalDateTime.now().plusDays(1)),
-            Booking(id= "2", date = LocalDateTime.now().plusDays(2)),
-            Booking(id= "3", date = LocalDateTime.now().plusDays(3))
+            Booking(id = "1", date = LocalDateTime.now().plusDays(1)),
+            Booking(id = "2", date = LocalDateTime.now().plusDays(2)),
+            Booking(id = "3", date = LocalDateTime.now().plusDays(3))
         )
 
         rule.setContent {
@@ -257,7 +270,7 @@ class HomeScreenKtCompactLandscapeTest {
                 state = getState(bookings = bookings),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -268,11 +281,21 @@ class HomeScreenKtCompactLandscapeTest {
     }
 
     @Test
-    fun homeScreen_editableBookingExists_editButtonisDisplayedCorrectly(){
+    fun homeScreen_editableBookingExists_editButtonisDisplayedCorrectly() {
         val bookings = listOf(
-            Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = "testBoat", battery = "testBattery"),
-            Booking(id= "2", date = LocalDateTime.now().plusDays(2), boat = "testBoat", battery = "testBattery"),
-            Booking(id= "3", date = LocalDateTime.now().plusDays(6))
+            Booking(
+                id = "1",
+                date = LocalDateTime.now().plusDays(1),
+                boat = "testBoat",
+                battery = "testBattery"
+            ),
+            Booking(
+                id = "2",
+                date = LocalDateTime.now().plusDays(2),
+                boat = "testBoat",
+                battery = "testBattery"
+            ),
+            Booking(id = "3", date = LocalDateTime.now().plusDays(6))
         )
 
         rule.setContent {
@@ -280,7 +303,7 @@ class HomeScreenKtCompactLandscapeTest {
                 state = getState(bookings = bookings),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -290,11 +313,26 @@ class HomeScreenKtCompactLandscapeTest {
     }
 
     @Test
-    fun homeScreen_editableDoesNotBookingExist_editButtonisNotDisplayed(){
+    fun homeScreen_editableDoesNotBookingExist_editButtonisNotDisplayed() {
         val bookings = listOf(
-            Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = "testBoat", battery = "testBattery"),
-            Booking(id= "2", date = LocalDateTime.now().plusDays(2), boat = "testBoat", battery = "testBattery"),
-            Booking(id= "3", date = LocalDateTime.now().plusDays(6), boat = "testBoat", battery = "testBattery")
+            Booking(
+                id = "1",
+                date = LocalDateTime.now().plusDays(1),
+                boat = "testBoat",
+                battery = "testBattery"
+            ),
+            Booking(
+                id = "2",
+                date = LocalDateTime.now().plusDays(2),
+                boat = "testBoat",
+                battery = "testBattery"
+            ),
+            Booking(
+                id = "3",
+                date = LocalDateTime.now().plusDays(6),
+                boat = "testBoat",
+                battery = "testBattery"
+            )
         )
 
         rule.setContent {
@@ -302,7 +340,7 @@ class HomeScreenKtCompactLandscapeTest {
                 state = getState(bookings = bookings),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -312,11 +350,21 @@ class HomeScreenKtCompactLandscapeTest {
     }
 
     @Test
-    fun homeScreen_editBookingClicked_navigatesCorrectly(){
+    fun homeScreen_editBookingClicked_navigatesCorrectly() {
         val bookings = listOf(
-            Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = "testBoat", battery = "testBattery"),
-            Booking(id= "2", date = LocalDateTime.now().plusDays(2), boat = "testBoat", battery = "testBattery"),
-            Booking(id= "3", date = LocalDateTime.now().plusDays(6))
+            Booking(
+                id = "1",
+                date = LocalDateTime.now().plusDays(1),
+                boat = "testBoat",
+                battery = "testBattery"
+            ),
+            Booking(
+                id = "2",
+                date = LocalDateTime.now().plusDays(2),
+                boat = "testBoat",
+                battery = "testBattery"
+            ),
+            Booking(id = "3", date = LocalDateTime.now().plusDays(6))
         )
 
         rule.setContent {
@@ -326,15 +374,15 @@ class HomeScreenKtCompactLandscapeTest {
                 navController = navController,
                 startDestination = NavigationKeys.Route.HOME
             ) {
-               composable(route = NavigationKeys.Route.HOME) {
-                   HomeScreen(
-                       state = getState(bookings = bookings),
-                       navigateTo = {},
-                       uiLayout = uiLayout,
-                       onNotificationClick = { _, _ -> },
-                       onEditBookingClicked = {navController.navigate("update_booking/1")}
-                   )
-               }
+                composable(route = NavigationKeys.Route.HOME) {
+                    HomeScreen(
+                        state = getState(bookings = bookings),
+                        navigateTo = {},
+                        uiLayout = uiLayout,
+                        onNotificationClick = { _, _ -> },
+                        onEditBookingClicked = { navController.navigate("update_booking/1") }
+                    )
+                }
                 composable(route = "update_booking/1") {
                     UpdateBookingScreen(state = UpdateBookingScreenState(), uiLayout = uiLayout)
                 }
@@ -349,14 +397,22 @@ class HomeScreenKtCompactLandscapeTest {
     }
 
 
-
-
     @Test
     fun homeScreen_onlyFirstUpcomingBooking_isExpanded() {
         val bookings = listOf(
-            Booking(id= "1", date = LocalDateTime.now().minusDays(2)),
-            Booking(id= "2", date = LocalDateTime.now().plusDays(1), boat = "expandedBoat", battery = "expandedBattery"),
-            Booking(id= "3", date = LocalDateTime.now().plusDays(2), boat="collapsedBoat", battery = "collapsedBattery")
+            Booking(id = "1", date = LocalDateTime.now().minusDays(2)),
+            Booking(
+                id = "2",
+                date = LocalDateTime.now().plusDays(1),
+                boat = "expandedBoat",
+                battery = "expandedBattery"
+            ),
+            Booking(
+                id = "3",
+                date = LocalDateTime.now().plusDays(2),
+                boat = "collapsedBoat",
+                battery = "collapsedBattery"
+            )
         )
 
         rule.setContent {
@@ -364,27 +420,27 @@ class HomeScreenKtCompactLandscapeTest {
                 state = getState(bookings = bookings),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
         bookingTabSelecor.performClick()
-        rule.onNodeWithText("Boat: expandedBoat").assertIsDisplayed()
-        rule.onNodeWithText("Battery: expandedBattery").assertIsDisplayed()
-        rule.onNodeWithText("Boat: collapsedBoat").assertIsNotDisplayed()
-        rule.onNodeWithText("Battery: collapsedBattery").assertIsNotDisplayed()
+        rule.onNodeWithText("expandedBoat").assertIsDisplayed()
+        rule.onNodeWithText("expandedBattery").assertIsDisplayed()
+        rule.onNodeWithText("collapsedBoat").assertIsNotDisplayed()
+        rule.onNodeWithText("collapsedBattery").assertIsNotDisplayed()
     }
 
     @Test
     fun homeScreen_pastBookings_areFaded() {
-        val pastBooking = Booking(id= "1", date = LocalDateTime.now().minusDays(1))
+        val pastBooking = Booking(id = "1", date = LocalDateTime.now().minusDays(1))
 
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(pastBooking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -395,32 +451,32 @@ class HomeScreenKtCompactLandscapeTest {
 
     @Test
     fun homeScreen_expandBooking_onIconClick() {
-        val booking = Booking(id= "1", date = LocalDateTime.now().minusDays(2), boat = "testBoat")
+        val booking = Booking(id = "1", date = LocalDateTime.now().minusDays(2), boat = "testBoat")
 
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
         bookingTabSelecor.performClick()
         rule.onNodeWithTag("ExpandButton").performClick()
-        rule.onNodeWithText("${context.getString(R.string.boat)}: ${booking.boat}").assertIsDisplayed()
+        rule.onNodeWithText("${booking.boat}").assertIsDisplayed()
     }
 
     @Test
     fun homeScreen_collapseBooking_onIconClick() {
-        val booking = Booking(id= "1", date = LocalDateTime.now().minusDays(1), boat = "testBoat")
+        val booking = Booking(id = "1", date = LocalDateTime.now().minusDays(1), boat = "testBoat")
 
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -428,19 +484,20 @@ class HomeScreenKtCompactLandscapeTest {
 
         bookingExpansionButton.performClick()
         bookingExpansionButton.performClick()
-        rule.onNodeWithText("${context.getString(R.string.boat)}: ${booking.boat}").assertDoesNotExist()
+        rule.onNodeWithText("${context.getString(R.string.boat)}: ${booking.boat}")
+            .assertDoesNotExist()
     }
 
     @Test
     fun homeScreen_missingBoatMessage_isDisplayed() {
-        val booking = Booking(id= "1", date = LocalDateTime.now().plusDays(1), boat = null)
+        val booking = Booking(id = "1", date = LocalDateTime.now().plusDays(1), boat = null)
 
         rule.setContent {
             HomeScreen(
                 state = getState(bookings = listOf(booking)),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -450,14 +507,14 @@ class HomeScreenKtCompactLandscapeTest {
 
     @Test
     fun homeScreen_missingBatteryMessage_isDisplayed() {
-        val booking = Booking(id= "1", date = LocalDateTime.now().plusDays(1), battery = null)
+        val booking = Booking(id = "1", date = LocalDateTime.now().plusDays(1), battery = null)
 
         rule.setContent {
             HomeScreen(
                 state = HomeScreenState(bookings = listOf(booking), isLoading = false),
                 navigateTo = {},
                 uiLayout = uiLayout,
-                onNotificationClick = { _,_ -> }
+                onNotificationClick = { _, _ -> }
             )
         }
 
@@ -466,14 +523,84 @@ class HomeScreenKtCompactLandscapeTest {
         rule.onNodeWithText(context.getString(R.string.no_battery_assigned)).assertIsDisplayed()
     }
 
+    @Test
+    fun homeScreen_expandedBookingWithBatteryInfo_BatteryDetailsButtonIsDiplayed() {
+        val booking = Booking(
+            id = "1", date = LocalDateTime.now().minusDays(2),
+            boat = "testBoat",
+            battery = "testBattery",
+            batteryUserFirstName = "TestFirstName",
+            batteryUserLastName = "TestLastName",
+            batteryUserEmail = "TestMail",
+            batteryUserPhoneNumber = "TestPhone"
+        )
 
-    private fun getState(user: User? = null, notifications : List<Notification> = emptyList(), bookings : List<Booking> = emptyList(), isLoading : Boolean = false, apiError: String = "", unReadNotifications: Int = 0 ) : HomeScreenState {
+        rule.setContent {
+            HomeScreen(
+                state = getState(bookings = listOf(booking)),
+                navigateTo = {},
+                uiLayout = uiLayout,
+                onNotificationClick = { _, _ -> }
+            )
+        }
+
+        bookingTabSelecor.performClick()
+        rule.onNodeWithTag("ExpandButton").performClick()
+        rule.onNodeWithText("${booking.boat}").assertIsDisplayed()
+        rule.onNodeWithText("${booking.battery}").assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.click_for_battery_user_info))
+            .assertIsDisplayed()
+        rule.onNodeWithContentDescription(context.getString(R.string.battery_info_expanded_content_info))
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun homeScreen_batteryContactInfoIsClicked_BatteryDetailsButtonIsDisplayed() {
+        val booking = Booking(
+            id = "1", date = LocalDateTime.now().minusDays(2),
+            boat = "testBoat",
+            battery = "testBattery",
+            batteryUserFirstName = "TestFirstName",
+            batteryUserLastName = "TestLastName",
+            batteryUserEmail = "TestMail",
+            batteryUserPhoneNumber = "TestPhone"
+        )
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(bookings = listOf(booking)),
+                navigateTo = {},
+                uiLayout = uiLayout,
+                onNotificationClick = { _, _ -> }
+            )
+        }
+
+        bookingTabSelecor.performClick()
+        rule.onNodeWithTag("ExpandButton").performClick()
+        rule.onNodeWithContentDescription(context.getString(R.string.battery_info_expanded_content_info))
+            .performClick()
+        rule.onNodeWithText("${booking.batteryUserFirstName} ${booking.batteryUserLastName}")
+            .assertIsDisplayed()
+        rule.onNodeWithText("${booking.batteryUserEmail}").assertIsDisplayed()
+        rule.onNodeWithText("${booking.batteryUserPhoneNumber}").assertIsDisplayed()
+    }
+
+
+    private fun getState(
+        user: User? = null,
+        notifications: List<Notification> = emptyList(),
+        bookings: List<Booking> = emptyList(),
+        isLoading: Boolean = false,
+        apiError: String = "",
+        unReadNotifications: Int = 0
+    ): HomeScreenState {
         return HomeScreenState(
             user = user,
             notifications = notifications,
             bookings = bookings,
             isLoading = isLoading,
             apiError = apiError,
-            unReadNotifications = unReadNotifications)
+            unReadNotifications = unReadNotifications
+        )
     }
 }

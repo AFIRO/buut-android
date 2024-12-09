@@ -28,7 +28,7 @@ import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
 
-class UpdateBookingScreenKtCompactLandscapeTest{
+class UpdateBookingScreenKtCompactLandscapeTest {
     val startOrientation = ScreenOrientation.LANDSCAPE
     val updatedOrientation = ScreenOrientation.PORTRAIT
     val uiLayout = UiLayout.LANDSCAPE_SMALL
@@ -301,7 +301,7 @@ class UpdateBookingScreenKtCompactLandscapeTest{
                         state = HomeScreenState(),
                         navigateTo = { },
                         uiLayout = uiLayout,
-                        onNotificationClick = { _,_ -> }
+                        onNotificationClick = { _, _ -> }
                     )
                 }
             }

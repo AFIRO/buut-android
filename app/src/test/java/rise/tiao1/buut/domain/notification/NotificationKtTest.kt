@@ -11,7 +11,7 @@ import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
 import java.time.LocalDateTime
 
 
-class NotificationKtTest{
+class NotificationKtTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
     private val today: LocalDateTime = LocalDateTime.now()

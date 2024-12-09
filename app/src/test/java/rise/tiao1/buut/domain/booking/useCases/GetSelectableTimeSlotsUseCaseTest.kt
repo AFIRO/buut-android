@@ -1,7 +1,6 @@
 package rise.tiao1.buut.domain.booking.useCases
 
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -25,17 +24,20 @@ class GetSelectableTimeSlotsUseCaseTest {
     )
 
     @Test
-    fun GetSelectableTimeSlotsUseCase_WhenInvoked_ReturnsListOfTimeSlots() = scope.runTest{
-        val TestDate = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    fun GetSelectableTimeSlotsUseCase_WhenInvoked_ReturnsListOfTimeSlots() = scope.runTest {
+        val TestDate =
+            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
         coEvery { bookingRepository.getFreeTimeSlotsForDateRange(any()) } returns getSelectableTimeSlots()
         val expected = getSelectableTimeSlots()
         val actual = useCase(TestDate)
         assertEquals(expected, actual)
     }
 
-    fun getSelectableTimeSlots(): List<TimeSlot>{
-        return listOf(TimeSlot(today, "Morning", true),
+    fun getSelectableTimeSlots(): List<TimeSlot> {
+        return listOf(
+            TimeSlot(today, "Morning", true),
             TimeSlot(today, "Afternoon", false),
-            TimeSlot(today, "Evening", true))
+            TimeSlot(today, "Evening", true)
+        )
     }
 }

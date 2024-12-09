@@ -41,12 +41,12 @@ class CreateBookingsUseCaseTest {
     private fun getTimeSlot(): TimeSlot {
         return TimeSlot(
             date = today.toApiDateString().toLocalDateTimeFromApiString(),
-            slot= "Morning",
+            slot = "Morning",
             available = true
         )
     }
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "fg",
             firstName = "TestFirstName",

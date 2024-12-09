@@ -6,18 +6,16 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import rise.tiao1.buut.data.local.booking.LocalBooking
-import rise.tiao1.buut.domain.booking.Booking
-import rise.tiao1.buut.domain.user.toLocalUser
-import java.time.LocalDateTime
+import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 
 
 @ExperimentalCoroutinesApi
-class BookingDTOKtTest{
+class BookingDTOKtTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
 
     @Test
-    fun whenToLocalBookingIsCalled_returnsCorrectLocalBooking() = scope.runTest{
+    fun whenToLocalBookingIsCalled_returnsCorrectLocalBooking() = scope.runTest {
         val booking = getBookingDTO()
         val expected = getLocalBooking()
         val result = booking.toLocalBooking("TestUserId")
@@ -25,32 +23,45 @@ class BookingDTOKtTest{
     }
 
 
-    fun getBookingDTO() : BookingDTO {
+    fun getBookingDTO(): BookingDTO {
         return BookingDTO(
             id = "1",
             date = "TestDate",
             boat = getBoatDTO(),
-            battery = getBatteryDTO())
+            battery = getBatteryDTO()
+        )
     }
 
-    fun getLocalBooking() : LocalBooking {
+    fun getLocalBooking(): LocalBooking {
         return LocalBooking(
             id = "1",
             date = "TestDate",
             boat = "TestBoat",
             battery = "TestBattery",
+            batteryUserFirstName = "TestUserName",
+            batteryUserLastName = "TestLastName",
+            batteryUserEmail = "TestEmail",
+            batteryUserPhoneNumber = "TestPhone",
             userId = "TestUserId"
         )
     }
 
-    fun getBoatDTO() : BoatDTO {
+    fun getBoatDTO(): BoatDTO {
         return BoatDTO(
-            name = "TestBoat")
+            name = "TestBoat"
+        )
     }
 
-    fun getBatteryDTO() : BatteryDTO {
+    fun getBatteryDTO(): BatteryDTO {
         return BatteryDTO(
-            name = "TestBattery")
+            name = "TestBattery",
+            currentUser = UserBatteryDTO(
+                "TestUserName",
+                lastName = "TestLastName",
+                email = "TestEmail",
+                phoneNumber = "TestPhone",
+            )
+        )
     }
 
 }

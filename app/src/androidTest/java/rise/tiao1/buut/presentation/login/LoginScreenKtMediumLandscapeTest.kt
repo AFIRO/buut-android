@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -22,7 +21,6 @@ import androidx.test.espresso.device.action.ScreenOrientation
 import androidx.test.espresso.device.rules.ScreenOrientationRule
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import rise.tiao1.buut.R
@@ -41,6 +39,7 @@ class LoginScreenKtMediumLandscapeTest {
     @get:Rule
     val rule: ComposeContentTestRule =
         createComposeRule()
+
     @get:Rule
     val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(startOrientation)
     val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -242,22 +241,26 @@ class LoginScreenKtMediumLandscapeTest {
             val navController = rememberNavController()
             navControllerState = navController
             NavHost(navController = navController, startDestination = NavigationKeys.Route.HOME) {
-                composable(NavigationKeys.Route.HOME)  { LoginScreen(
-                    state = LoginScreenState(),
-                    onValueUpdate = { _, _ -> },
-                    login = { },
-                    onRegisterClick = {navController.navigate(NavigationKeys.Route.REGISTER) },
-                    onValidate = { _, _ -> },
-                    uiLayout = uiLayout
-                ) }
-                composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
-                    state = RegistrationScreenState(),
-                    onValueChanged = { _, _ -> },
-                    onCheckedChanged = { _, _ -> },
-                    onValidate = { _ -> },
-                    onSubmitClick = {},
-                    uiLayout = uiLayout,
-                ) }
+                composable(NavigationKeys.Route.HOME) {
+                    LoginScreen(
+                        state = LoginScreenState(),
+                        onValueUpdate = { _, _ -> },
+                        login = { },
+                        onRegisterClick = { navController.navigate(NavigationKeys.Route.REGISTER) },
+                        onValidate = { _, _ -> },
+                        uiLayout = uiLayout
+                    )
+                }
+                composable(NavigationKeys.Route.REGISTER) {
+                    RegistrationScreen(
+                        state = RegistrationScreenState(),
+                        onValueChanged = { _, _ -> },
+                        onCheckedChanged = { _, _ -> },
+                        onValidate = { _ -> },
+                        onSubmitClick = {},
+                        uiLayout = uiLayout,
+                    )
+                }
             }
         }
         val navController = navControllerState!!

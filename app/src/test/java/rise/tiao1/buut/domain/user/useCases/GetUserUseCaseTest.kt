@@ -9,7 +9,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import rise.tiao1.buut.data.repositories.UserRepository
@@ -41,7 +40,7 @@ class GetUserUseCaseTest {
         assertEquals(result, getUser())
     }
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "fg",
             firstName = "TestFirstName",

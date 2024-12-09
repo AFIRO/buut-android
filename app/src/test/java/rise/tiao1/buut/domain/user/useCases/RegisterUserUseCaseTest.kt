@@ -21,26 +21,32 @@ class RegisterUserUseCaseTest {
     var repository: UserRepository = mockk()
 
     @Test
-    fun registerUser_returnsSuccess(): Unit = scope.runTest{
+    fun registerUser_returnsSuccess(): Unit = scope.runTest {
         coEvery { repository.registerUser(any()) } returns Unit
         val user = getUser()
         val registerUserUseCase = RegisterUserUseCase(repository)
         var result = false
-        registerUserUseCase.invoke(user, onSuccess = {result = true }, onError = {result = false})
+        registerUserUseCase.invoke(
+            user,
+            onSuccess = { result = true },
+            onError = { result = false })
         assert(result)
     }
 
     @Test
-    fun registerUserException_returnsError(): Unit = scope.runTest{
+    fun registerUserException_returnsError(): Unit = scope.runTest {
         coEvery { repository.registerUser(any()) } throws Exception("Registration Failed")
         val user = getUser()
         val registerUserUseCase = RegisterUserUseCase(repository)
         var result = false
-        registerUserUseCase.invoke(user, onSuccess = {result = false }, onError = {result = true})
+        registerUserUseCase.invoke(
+            user,
+            onSuccess = { result = false },
+            onError = { result = true })
         assert(result)
     }
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "TestId",
             firstName = "TestFirstName",

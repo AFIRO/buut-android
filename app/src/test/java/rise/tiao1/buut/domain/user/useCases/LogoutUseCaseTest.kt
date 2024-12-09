@@ -8,12 +8,12 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import io.mockk.verify
 import rise.tiao1.buut.data.repositories.UserRepository
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.User
@@ -33,7 +33,7 @@ class LogoutUseCaseTest {
 
 
     @Test
-    fun logoutUser_returnsSuccess(): Unit = scope.runTest{
+    fun logoutUser_returnsSuccess(): Unit = scope.runTest {
         val user = getUser()
         every { sharedPreferences.edit() } returns sharedPreferencesEditor
         every { sharedPreferencesEditor.clear() } returns sharedPreferencesEditor
@@ -51,16 +51,16 @@ class LogoutUseCaseTest {
     }
 
     @Test
-    fun logoutUserNull_doesNothing(): Unit = scope.runTest{
+    fun logoutUserNull_doesNothing(): Unit = scope.runTest {
         val logoutUseCase = LogoutUseCase(userRepository, credentialsManager, sharedPreferences)
         logoutUseCase.invoke(null)
         coVerify(exactly = 0) { userRepository.deleteUser(any()) }
-        verify (exactly = 0) { sharedPreferencesEditor.clear() }
+        verify(exactly = 0) { sharedPreferencesEditor.clear() }
         verify(exactly = 0) { sharedPreferences.edit() }
         verify(exactly = 0) { credentialsManager.clearCredentials() }
     }
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "TestId",
             firstName = "TestFirstName",

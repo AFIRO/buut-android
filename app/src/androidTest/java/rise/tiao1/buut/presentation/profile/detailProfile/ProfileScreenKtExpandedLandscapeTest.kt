@@ -1,6 +1,8 @@
 package rise.tiao1.buut.presentation.profile.detailProfile
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
@@ -26,8 +28,6 @@ import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.UiLayout
 import java.time.LocalDateTime
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
 
 class ProfileScreenKtExpandedLandscapeTest {

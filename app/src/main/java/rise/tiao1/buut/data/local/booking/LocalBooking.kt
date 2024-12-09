@@ -20,6 +20,14 @@ data class LocalBooking (
     @ColumnInfo
     val battery: String? = null,
     @ColumnInfo
+    val batteryUserFirstName: String? = null,
+    @ColumnInfo
+    val batteryUserLastName: String? = null,
+    @ColumnInfo
+    val batteryUserEmail: String? = null,
+    @ColumnInfo
+    val batteryUserPhoneNumber: String? = null,
+    @ColumnInfo
     val userId: String? = null
 )
 

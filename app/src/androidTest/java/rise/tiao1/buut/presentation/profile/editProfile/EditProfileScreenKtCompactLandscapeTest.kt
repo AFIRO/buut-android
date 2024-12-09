@@ -96,7 +96,11 @@ class EditProfileScreenKtCompactLandscapeTest {
     fun profileScreen_errorState_showsErrorContainer() {
         rule.setContent {
             EditProfileScreen(
-                state = EditProfileScreenState(user = null, isLoading = false, apiError = testError),
+                state = EditProfileScreenState(
+                    user = null,
+                    isLoading = false,
+                    apiError = testError
+                ),
                 onValueChanged = { _: String, _: String -> },
                 navigateTo = {},
                 uiLayout = uiLayout,
@@ -177,11 +181,15 @@ class EditProfileScreenKtCompactLandscapeTest {
             ) {
                 composable(route = NavigationKeys.Route.EDIT_PROFILE) {
                     EditProfileScreen(
-                        state = EditProfileScreenState(user = getUser(), isLoading = false, apiError = ""),
+                        state = EditProfileScreenState(
+                            user = getUser(),
+                            isLoading = false,
+                            apiError = ""
+                        ),
                         navigateTo = { navController.navigate(NavigationKeys.Route.PROFILE) },
                         onValueChanged = { _: String, _: String -> },
                         uiLayout = uiLayout,
-                        onConfirmClick = {navController.navigate(NavigationKeys.Route.PROFILE)},
+                        onConfirmClick = { navController.navigate(NavigationKeys.Route.PROFILE) },
                         onCancelClick = {},
                         onValidate = {}
                     )
@@ -210,12 +218,16 @@ class EditProfileScreenKtCompactLandscapeTest {
             ) {
                 composable(route = NavigationKeys.Route.EDIT_PROFILE) {
                     EditProfileScreen(
-                        state = EditProfileScreenState(user = getUser(), isLoading = false, apiError = ""),
+                        state = EditProfileScreenState(
+                            user = getUser(),
+                            isLoading = false,
+                            apiError = ""
+                        ),
                         navigateTo = { navController.navigate(NavigationKeys.Route.PROFILE) },
                         onValueChanged = { _: String, _: String -> },
                         uiLayout = uiLayout,
                         onConfirmClick = {},
-                        onCancelClick = {navController.navigate(NavigationKeys.Route.PROFILE)},
+                        onCancelClick = { navController.navigate(NavigationKeys.Route.PROFILE) },
                         onValidate = {}
                     )
 
