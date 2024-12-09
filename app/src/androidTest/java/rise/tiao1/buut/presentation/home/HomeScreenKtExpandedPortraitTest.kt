@@ -366,10 +366,10 @@ class HomeScreenKtExpandedPortraitTest {
         }
 
         bookingTabSelecor.performClick()
-        rule.onNodeWithText("Boat: expandedBoat").assertIsDisplayed()
-        rule.onNodeWithText("Battery: expandedBattery").assertIsDisplayed()
-        rule.onNodeWithText("Boat: collapsedBoat").assertIsNotDisplayed()
-        rule.onNodeWithText("Battery: collapsedBattery").assertIsNotDisplayed()
+        rule.onNodeWithText("expandedBoat").assertIsDisplayed()
+        rule.onNodeWithText("expandedBattery").assertIsDisplayed()
+        rule.onNodeWithText("collapsedBoat").assertIsNotDisplayed()
+        rule.onNodeWithText("collapsedBattery").assertIsNotDisplayed()
     }
 
     @Test
@@ -405,7 +405,7 @@ class HomeScreenKtExpandedPortraitTest {
 
         bookingTabSelecor.performClick()
         rule.onNodeWithTag("ExpandButton").performClick()
-        rule.onNodeWithText("${context.getString(R.string.boat)}: ${booking.boat}").assertIsDisplayed()
+        rule.onNodeWithText("${booking.boat}").assertIsDisplayed()
     }
 
     @Test

@@ -46,7 +46,6 @@ class BookingRepositoryTest {
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns getLocalBookings()
         val expected = getBookings()
-        \
         val actual = repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS)
 
         assert(expected == actual)
