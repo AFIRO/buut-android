@@ -22,7 +22,10 @@ class ValidateEmailTest {
         val validateEmail = ValidateEmail()
         val result = validateEmail.execute("")
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.email_is_blank_error).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(resId = R.string.email_is_blank_error).getStringId(),
+            result?.getStringId()
+        )
     }
 
     @Test
@@ -30,7 +33,10 @@ class ValidateEmailTest {
         val validateEmail = ValidateEmail()
         val result = validateEmail.execute("invalid-email")
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.email_not_valid_error).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(resId = R.string.email_not_valid_error).getStringId(),
+            result?.getStringId()
+        )
 
     }
 

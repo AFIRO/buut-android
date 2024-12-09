@@ -8,7 +8,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.BookingUpdateDTO
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.TimeSlot
@@ -22,7 +21,7 @@ import java.time.LocalDateTime
 
 
 @ExperimentalCoroutinesApi
-class UpdateBookingsUseCaseTest{
+class UpdateBookingsUseCaseTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
     private val bookingRepository: BookingRepository = mockk()
@@ -34,23 +33,35 @@ class UpdateBookingsUseCaseTest{
     @Test
     fun updateBookingsUseCase_returnsSuccess() = scope.runTest {
         coEvery { getUserUseCase() } returns getUser()
-        coEvery { bookingRepository.updateBooking(testBookingId, getUser().id.toString(), getExpectedBookingDTO()) } returns Unit
+        coEvery {
+            bookingRepository.updateBooking(
+                testBookingId,
+                getUser().id.toString(),
+                getExpectedBookingDTO()
+            )
+        } returns Unit
 
         updateBookingsUseCase(testBookingId, getTimeSlot())
 
-        coVerify { bookingRepository.updateBooking(testBookingId, getUser().id.toString(), getExpectedBookingDTO()) }
+        coVerify {
+            bookingRepository.updateBooking(
+                testBookingId,
+                getUser().id.toString(),
+                getExpectedBookingDTO()
+            )
+        }
     }
 
     private fun getTimeSlot(): TimeSlot {
         return TimeSlot(
             date = today.plusDays(1).toApiDateString().toLocalDateTimeFromApiString(),
-            slot= "Morning",
+            slot = "Morning",
             available = true
         )
     }
 
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "fg",
             firstName = "TestFirstName",

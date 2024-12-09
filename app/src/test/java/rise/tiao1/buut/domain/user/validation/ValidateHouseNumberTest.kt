@@ -1,7 +1,5 @@
 package rise.tiao1.buut.domain.user.validation
 
-import android.text.TextUtils
-import android.text.TextUtils.isDigitsOnly
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
@@ -10,12 +8,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import rise.tiao1.buut.utils.UiText
 import rise.tiao1.buut.R
+import rise.tiao1.buut.utils.UiText
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
-class ValidateHouseNumberTest{
+class ValidateHouseNumberTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
 
@@ -24,7 +22,12 @@ class ValidateHouseNumberTest{
         val validateHouseNumber = ValidateHouseNumber()
         val result = validateHouseNumber.execute("")
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(
+                resId = R.string.invalid_house_number_error,
+                LOWEST_POSSIBLE_HOUSE_NUMBER
+            ).getStringId(), result?.getStringId()
+        )
     }
 
     @Test
@@ -32,7 +35,12 @@ class ValidateHouseNumberTest{
         val validateHouseNumber = ValidateHouseNumber()
         val result = validateHouseNumber.execute("-1")
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(
+                resId = R.string.invalid_house_number_error,
+                LOWEST_POSSIBLE_HOUSE_NUMBER
+            ).getStringId(), result?.getStringId()
+        )
     }
 
     @Test
@@ -40,7 +48,12 @@ class ValidateHouseNumberTest{
         val validateHouseNumber = ValidateHouseNumber()
         val result = validateHouseNumber.execute("abc")
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(
+                resId = R.string.invalid_house_number_error,
+                LOWEST_POSSIBLE_HOUSE_NUMBER
+            ).getStringId(), result?.getStringId()
+        )
     }
 
     @Test

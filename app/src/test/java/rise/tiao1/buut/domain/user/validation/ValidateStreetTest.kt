@@ -16,19 +16,25 @@ class ValidateStreetTest {
     private val scope = TestScope(dispatcher)
 
     @Test
-    fun streetIsBlank_returnsCorrectError() = scope.runTest{
+    fun streetIsBlank_returnsCorrectError() = scope.runTest {
         val validateStreet = ValidateStreet()
         val result = validateStreet.execute("")
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.street_is_blank_error).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(resId = R.string.street_is_blank_error).getStringId(),
+            result?.getStringId()
+        )
     }
 
     @Test
-    fun streetIsInvalid_returnsCorrectError() = scope.runTest{
+    fun streetIsInvalid_returnsCorrectError() = scope.runTest {
         val validateStreet = ValidateStreet()
         val result = validateStreet.execute("Buutstraat")
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.invalid_street).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(resId = R.string.invalid_street).getStringId(),
+            result?.getStringId()
+        )
     }
 
     @Test

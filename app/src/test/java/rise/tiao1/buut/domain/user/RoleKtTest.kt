@@ -13,7 +13,7 @@ class RoleKtTest {
     private val scope = TestScope(dispatcher)
 
     @Test
-    fun whenToRoleDtoIsCalled_returnsCorrectDto() = scope.runTest{
+    fun whenToRoleDtoIsCalled_returnsCorrectDto() = scope.runTest {
         val given = getRole()
         val expected = getRoleDTO()
         val result = given.toRoleDTO()
@@ -22,13 +22,13 @@ class RoleKtTest {
     }
 }
 
-fun getRole() : Role {
+fun getRole(): Role {
     return Role(
         name = "Tester"
     )
 }
 
-fun getRoleDTO() : RoleDTO {
+fun getRoleDTO(): RoleDTO {
     return RoleDTO(
         name = "Tester"
     )

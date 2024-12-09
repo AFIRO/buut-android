@@ -15,7 +15,7 @@ import rise.tiao1.buut.data.local.user.UserDao
  */
 @Database(
     entities = [LocalUser::class, LocalBooking::class, LocalNotification::class],
-    version = 20,
+    version = 21,
     exportSchema = false
 )
 

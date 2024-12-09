@@ -237,7 +237,7 @@ class EditProfileViewModelTest {
     }
 
     @Test
-    fun validate_correctFirstNameValues_updatesErrorStatesCorrectly() = scope.runTest{
+    fun validate_correctFirstNameValues_updatesErrorStatesCorrectly() = scope.runTest {
         // train mock
         every { validateFirstName.execute("John") } returns null
         viewModel.update("John", InputKeys.FIRST_NAME)
@@ -250,7 +250,7 @@ class EditProfileViewModelTest {
     }
 
     @Test
-    fun validate_wrongFirstNameValues_updatesErrorStatesCorrectly() = scope.runTest{
+    fun validate_wrongFirstNameValues_updatesErrorStatesCorrectly() = scope.runTest {
         val error = UiText.StringResource(resId = R.string.first_name_is_blank_error)
 
         // train mock
@@ -265,7 +265,7 @@ class EditProfileViewModelTest {
     }
 
     @Test
-    fun update_firstNameInput_updatesInputCorrectly() = scope.runTest{
+    fun update_firstNameInput_updatesInputCorrectly() = scope.runTest {
         // call update
         viewModel.update("John", InputKeys.FIRST_NAME)
         assertEquals("John", viewModel.state.value.firstName)
@@ -485,7 +485,7 @@ class EditProfileViewModelTest {
 
 
     @Test
-    fun onConfirmClick_invalidLastNameInputs_doesNotNavigate() = scope.runTest{
+    fun onConfirmClick_invalidLastNameInputs_doesNotNavigate() = scope.runTest {
         every { validateFirstName.execute("") } returns null
         every { validateLastName.execute("") } returns UiText.StringResource(R.string.first_name_is_blank_error)
         every { validateEmail.execute("") } returns null
@@ -498,8 +498,9 @@ class EditProfileViewModelTest {
 
         assertTrue(viewModel.state.value.formHasErrors)
     }
+
     @Test
-    fun onConfirmClick_invalidFirstNameInput_doesNotNavigate() = scope.runTest{
+    fun onConfirmClick_invalidFirstNameInput_doesNotNavigate() = scope.runTest {
         every { validateFirstName.execute("") } returns UiText.StringResource(R.string.first_name_is_blank_error)
         every { validateLastName.execute("") } returns null
         every { validateEmail.execute("") } returns null
@@ -512,8 +513,9 @@ class EditProfileViewModelTest {
 
         assertTrue(viewModel.state.value.formHasErrors)
     }
+
     @Test
-    fun onConfirmClick_invalidEmailInput_doesNotNavigate() = scope.runTest{
+    fun onConfirmClick_invalidEmailInput_doesNotNavigate() = scope.runTest {
         every { validateFirstName.execute("") } returns null
         every { validateLastName.execute("") } returns null
         every { validateEmail.execute("") } returns UiText.StringResource(R.string.first_name_is_blank_error)
@@ -526,8 +528,9 @@ class EditProfileViewModelTest {
 
         assertTrue(viewModel.state.value.formHasErrors)
     }
+
     @Test
-    fun onConfirmClick_invalidStreetInput_doesNotNavigate() = scope.runTest{
+    fun onConfirmClick_invalidStreetInput_doesNotNavigate() = scope.runTest {
         every { validateFirstName.execute("") } returns null
         every { validateLastName.execute("") } returns null
         every { validateEmail.execute("") } returns null
@@ -540,8 +543,9 @@ class EditProfileViewModelTest {
 
         assertTrue(viewModel.state.value.formHasErrors)
     }
+
     @Test
-    fun onConfirmClick_invalidPhoneInput_doesNotNavigate() = scope.runTest{
+    fun onConfirmClick_invalidPhoneInput_doesNotNavigate() = scope.runTest {
         every { validateFirstName.execute("") } returns null
         every { validateLastName.execute("") } returns null
         every { validateEmail.execute("") } returns null
@@ -554,8 +558,9 @@ class EditProfileViewModelTest {
 
         assertTrue(viewModel.state.value.formHasErrors)
     }
+
     @Test
-    fun onConfirmClick_invalidHouseNumerInput_doesNotNavigate() = scope.runTest{
+    fun onConfirmClick_invalidHouseNumerInput_doesNotNavigate() = scope.runTest {
         every { validateFirstName.execute("") } returns null
         every { validateLastName.execute("") } returns null
         every { validateEmail.execute("") } returns null
@@ -632,7 +637,7 @@ class EditProfileViewModelTest {
 
 
     @Test
-    fun onCancelClick_invokesMethod() = scope.runTest{
+    fun onCancelClick_invokesMethod() = scope.runTest {
 
         // Create a mock for navigateToProfile
         var navigateCalled = false
@@ -643,8 +648,6 @@ class EditProfileViewModelTest {
 
         assertTrue(navigateCalled)
     }
-
-
 
 
     fun getMockUser(): User {

@@ -16,9 +16,9 @@ import rise.tiao1.buut.domain.booking.useCases.GetSelectableTimeSlotsUseCase
 class CreateBookingViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope()
-    private val getSelectableDatesUseCase : GetSelectableDatesUseCase = mockk()
-    private val getSelectableTimeSlotsUseCase : GetSelectableTimeSlotsUseCase = mockk()
-    private val createBookingUseCase : CreateBookingsUseCase = mockk()
+    private val getSelectableDatesUseCase: GetSelectableDatesUseCase = mockk()
+    private val getSelectableTimeSlotsUseCase: GetSelectableTimeSlotsUseCase = mockk()
+    private val createBookingUseCase: CreateBookingsUseCase = mockk()
     private val today = java.time.LocalDateTime.now()
 
     @Test
@@ -160,10 +160,15 @@ class CreateBookingViewModelTest {
     }
 
     private fun getViewModel(): CreateBookingViewModel {
-        return CreateBookingViewModel(getSelectableDatesUseCase, getSelectableTimeSlotsUseCase, createBookingUseCase, dispatcher)
+        return CreateBookingViewModel(
+            getSelectableDatesUseCase,
+            getSelectableTimeSlotsUseCase,
+            createBookingUseCase,
+            dispatcher
+        )
     }
 
-    fun getSelectableTimeSlots(): List<TimeSlot>{
+    fun getSelectableTimeSlots(): List<TimeSlot> {
         return listOf(
             TimeSlot(today, "Morning", true),
             TimeSlot(today, "Afternoon", false),

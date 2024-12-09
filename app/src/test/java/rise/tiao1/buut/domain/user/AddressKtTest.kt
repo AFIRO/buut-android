@@ -14,18 +14,18 @@ class AddressKtTest {
     private val scope = TestScope(dispatcher)
 
     @Test
-    fun toDtoIsCalled_returnsCorrectDto() = scope.runTest{
+    fun toDtoIsCalled_returnsCorrectDto() = scope.runTest {
         val address = getAddress()
         val expected = getAddressDto()
         val result = address.toAddressDTO()
         assert(result.equals(expected))
     }
 
-    fun getAddress() : Address {
+    fun getAddress(): Address {
         return Address(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 
-    fun getAddressDto() : AddressDTO {
+    fun getAddressDto(): AddressDTO {
         return AddressDTO(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 

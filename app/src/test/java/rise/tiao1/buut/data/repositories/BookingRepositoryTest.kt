@@ -2,14 +2,12 @@ package rise.tiao1.buut.data.repositories
 
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
-import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.mockito.kotlin.any
 import retrofit2.Response
@@ -21,6 +19,7 @@ import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.BookingUpdateDTO
 import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
+import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.toBooking
@@ -82,8 +81,10 @@ class BookingRepositoryTest {
 
     @Test
     fun getFreeDates_refreshThrowsExceptionAndHandles() = scope.runTest {
-        coEvery { service.getFreeTimeSlotsForDateRange(any(), any()) } throws Exception(testException)
-        val result = runCatching {  repo.getFreeTimeSlotsForDateRange(today.toApiDateString()) }
+        coEvery { service.getFreeTimeSlotsForDateRange(any(), any()) } throws Exception(
+            testException
+        )
+        val result = runCatching { repo.getFreeTimeSlotsForDateRange(today.toApiDateString()) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
         Assert.assertEquals(testException, result.exceptionOrNull()?.message)
@@ -93,7 +94,9 @@ class BookingRepositoryTest {
     fun createBooking_createsBooking() = scope.runTest {
         coEvery { service.createBooking(any()) } returns Unit
         coEvery { dao.insertAllBookings(any()) } returns Unit
-        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(getBookingsDTOs()[0])
+        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
+            getBookingsDTOs()[0]
+        )
 
         repo.createBooking(getBookingDTO())
 
@@ -116,7 +119,9 @@ class BookingRepositoryTest {
     @Test
     fun createBooking_refreshThrowsExceptionAndHandles() = scope.runTest {
         coEvery { service.createBooking(any()) } returns Unit
-        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) }  throws Exception(testException)
+        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(
+            testException
+        )
 
         val result = runCatching { repo.createBooking(getBookingDTO()) }
         Assert.assertTrue(result.isFailure)
@@ -126,22 +131,49 @@ class BookingRepositoryTest {
 
     @Test
     fun updateBook_updatesBooking() = scope.runTest {
-        coEvery { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) } returns Response.success(Unit)
+        coEvery {
+            service.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                getBookingUpdateDto()
+            )
+        } returns Response.success(Unit)
         coEvery { dao.insertAllBookings(any()) } returns Unit
-        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(getBookingsDTOs()[0])
+        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
+            getBookingsDTOs()[0]
+        )
 
-        repo.updateBooking(getBookingUpdateDto().id.toString(), USER_ID_WITH_BOOKINGS, getBookingUpdateDto())
+        repo.updateBooking(
+            getBookingUpdateDto().id.toString(),
+            USER_ID_WITH_BOOKINGS,
+            getBookingUpdateDto()
+        )
 
-        coVerify { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) }
+        coVerify {
+            service.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                getBookingUpdateDto()
+            )
+        }
         coVerify { dao.insertAllBookings(any()) }
         coVerify { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) }
     }
 
     @Test
     fun updateBook_serviceThrowsExceptionAndHandles() = scope.runTest {
-        coEvery { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) } throws Exception(testException)
+        coEvery {
+            service.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                getBookingUpdateDto()
+            )
+        } throws Exception(testException)
 
-        val result = runCatching { repo.updateBooking(getBookingUpdateDto().id.toString(), USER_ID_WITH_BOOKINGS, getBookingUpdateDto()) }
+        val result = runCatching {
+            repo.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                USER_ID_WITH_BOOKINGS,
+                getBookingUpdateDto()
+            )
+        }
 
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
@@ -150,16 +182,28 @@ class BookingRepositoryTest {
 
     @Test
     fun updateBook_refreshThrowsExceptionAndHandles() = scope.runTest {
-        coEvery { service.updateBooking(getBookingUpdateDto().id.toString(), getBookingUpdateDto()) } returns Response.success(Unit)
-        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(testException)
+        coEvery {
+            service.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                getBookingUpdateDto()
+            )
+        } returns Response.success(Unit)
+        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(
+            testException
+        )
 
-        val result = runCatching { repo.updateBooking(getBookingUpdateDto().id.toString(), USER_ID_WITH_BOOKINGS, getBookingUpdateDto()) }
+        val result = runCatching {
+            repo.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                USER_ID_WITH_BOOKINGS,
+                getBookingUpdateDto()
+            )
+        }
 
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
         Assert.assertEquals(testException, result.exceptionOrNull()?.message)
     }
-
 
 
     fun getTimeslots(): List<TimeSlot> {
@@ -190,24 +234,60 @@ class BookingRepositoryTest {
 
     fun getBookingsDTOs(): List<BookingDTO> {
         return listOf(
-            BookingDTO("1", today.toApiDateString(), "TestTimeSlot1", getBoatDTO(), getBatteryDTO(), "TestUser1"),
-            BookingDTO("2", today.toApiDateString(), "TestTimeSlot2",getBoatDTO(), getBatteryDTO(), "TestUser2"),
-            BookingDTO("3", today.toApiDateString(), "TestTimeSlot3",getBoatDTO(), getBatteryDTO(), "TestUser3"),
+            BookingDTO(
+                "1",
+                today.toApiDateString(),
+                "TestTimeSlot1",
+                getBoatDTO(),
+                getBatteryDTO(),
+                "TestUser1"
+            ),
+            BookingDTO(
+                "2",
+                today.toApiDateString(),
+                "TestTimeSlot2",
+                getBoatDTO(),
+                getBatteryDTO(),
+                "TestUser2"
+            ),
+            BookingDTO(
+                "3",
+                today.toApiDateString(),
+                "TestTimeSlot3",
+                getBoatDTO(),
+                getBatteryDTO(),
+                "TestUser3"
+            ),
         )
     }
 
-    fun getBoatDTO() : BoatDTO {
+    fun getBoatDTO(): BoatDTO {
         return BoatDTO(
-            name = "TestBoat")
+            name = "TestBoat"
+        )
     }
 
-    fun getBatteryDTO() : BatteryDTO {
+    fun getBatteryDTO(): BatteryDTO {
         return BatteryDTO(
-            name = "TestBattery")
+            name = "TestBattery",
+            currentUser = UserBatteryDTO(
+                "TestUserName",
+                lastName = "TestLastName",
+                email = "TestEmail",
+                phoneNumber = "TestPhone",
+            )
+        )
     }
 
-    fun getBookingDTO() : BookingDTO =
-        BookingDTO("1", today.toApiDateString(), "TestTimeSlot1", getBoatDTO(), getBatteryDTO(), "TestUser1")
+    fun getBookingDTO(): BookingDTO =
+        BookingDTO(
+            "1",
+            today.toApiDateString(),
+            "TestTimeSlot1",
+            getBoatDTO(),
+            getBatteryDTO(),
+            "TestUser1"
+        )
 
     fun getBookingUpdateDto(): BookingUpdateDTO =
         BookingUpdateDTO("1", today.plusDays(1).toApiDateString())

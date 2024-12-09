@@ -17,7 +17,7 @@ class UserKtTest {
     private val scope = TestScope(dispatcher)
 
     @Test
-    fun whenToLocalUserIsCalled_returnsCorrectLocalUser() = scope.runTest{
+    fun whenToLocalUserIsCalled_returnsCorrectLocalUser() = scope.runTest {
         val user = getUser()
         val expected = getLocalUser()
         val result = user.toLocalUser()
@@ -25,22 +25,22 @@ class UserKtTest {
     }
 
     @Test
-    fun whenToDtoIsCalled_returnsCorrectDto() = scope.runTest{
+    fun whenToDtoIsCalled_returnsCorrectDto() = scope.runTest {
         val user = getUser()
         val expected = getUserDto()
         val result = user.toUserDTO()
         assert(result.equals(expected))
     }
 
-    fun getAddress() : Address {
+    fun getAddress(): Address {
         return Address(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 
-    fun getAddressDto() : AddressDTO {
+    fun getAddressDto(): AddressDTO {
         return AddressDTO(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "fg",
             firstName = "TestFirstName",
@@ -48,20 +48,20 @@ class UserKtTest {
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1),
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0, 1),
             address = getAddress(),
             roles = listOf()
         )
     }
 
-    fun getUserDto() : UserDTO {
+    fun getUserDto(): UserDTO {
         return UserDTO(
             firstName = "TestFirstName",
             lastName = "TestLastName",
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0, 1).toString(),
             address = getAddressDto()
         )
     }
@@ -73,7 +73,7 @@ class UserKtTest {
             lastName = "TestLastName",
             email = "TestEmail",
             phone = "TestPhone",
-            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0, 1).toString(),
             address = getAddress(),
             roles = "[]"
         )
