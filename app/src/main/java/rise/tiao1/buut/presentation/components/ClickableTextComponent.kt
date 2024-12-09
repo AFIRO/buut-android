@@ -17,7 +17,8 @@ fun ClickableTextComponent(
     @StringRes leadingText: Int? = null,
     @StringRes clickableText: Int,
     @StringRes trailingText: Int? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isEnabled: Boolean = true
 ) {
     Row {
         if(leadingText != null) {
@@ -32,7 +33,7 @@ fun ClickableTextComponent(
             color = Color.White,
             fontStyle = FontStyle.Italic,
             textDecoration = TextDecoration.Underline,
-            modifier = Modifier.clickable { onClick() },
+            modifier = if (isEnabled) Modifier.clickable { onClick() } else Modifier,
             fontWeight = FontWeight.Bold
         )
         if(trailingText != null) {

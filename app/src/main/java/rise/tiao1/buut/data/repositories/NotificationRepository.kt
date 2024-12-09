@@ -1,8 +1,5 @@
 package rise.tiao1.buut.data.repositories
 
-import android.content.Context
-import android.net.ConnectivityManager
-import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -27,7 +24,7 @@ class NotificationRepository @Inject constructor(
     CoroutineDispatcher
 ) {
 
-    suspend fun getAllNotificationsFromUser(userId: String): List<Notification>  =
+    suspend fun getAllNotificationsFromUser(userId: String): List<Notification> =
         withContext(dispatcher) {
             try {
                 if (networkConnectivityChecker.isNetworkAvailable()) {
@@ -35,14 +32,18 @@ class NotificationRepository @Inject constructor(
                 }
             } catch (e: Exception) {
                 when (e) {
-                    is HttpException -> { throw Exception(e.toApiErrorMessage())}
+                    is HttpException -> {
+                        throw Exception(e.toApiErrorMessage())
+                    }
+
                     else -> throw Exception(e.message)
                 }
             }
-            return@withContext  notificationDao.getNotificationsByUserId(userId).map { it.toNotification(userId) }.sortedByDescending { it.createdAt }
+            return@withContext notificationDao.getNotificationsByUserId(userId)
+                .map { it.toNotification(userId) }.sortedByDescending { it.createdAt }
         }
 
-    suspend fun toggleNotificationReadStatus(notificationId: String, currentStatus: Boolean)  =
+    suspend fun toggleNotificationReadStatus(notificationId: String, currentStatus: Boolean) =
         withContext(dispatcher) {
             try {
                 if (networkConnectivityChecker.isNetworkAvailable()) {
@@ -60,7 +61,10 @@ class NotificationRepository @Inject constructor(
 
             } catch (e: Exception) {
                 when (e) {
-                    is HttpException -> { throw Exception(e.toApiErrorMessage())}
+                    is HttpException -> {
+                        throw Exception(e.toApiErrorMessage())
+                    }
+
                     else -> throw Exception(e.message)
                 }
             }
@@ -68,6 +72,10 @@ class NotificationRepository @Inject constructor(
 
     private suspend fun refreshCache(userId: String) {
         val remoteNotifications = apiService.getAllNotificationsFromUser(userId)
-        notificationDao.insertAllNotifications(remoteNotifications.map {it.toLocalNotification(userId)})
+        notificationDao.insertAllNotifications(remoteNotifications.map {
+            it.toLocalNotification(
+                userId
+            )
+        })
     }
 }

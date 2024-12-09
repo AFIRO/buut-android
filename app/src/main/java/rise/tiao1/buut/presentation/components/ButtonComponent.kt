@@ -25,7 +25,8 @@ fun ButtonComponent(
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     @StringRes label: Int,
     onClick: () -> Unit,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    isButtonEnabled: Boolean = true
 ){
     Button(
         onClick = { onClick() },
@@ -33,7 +34,7 @@ fun ButtonComponent(
             .heightIn(48.dp),
 
         shape = RoundedCornerShape(8.dp),
-        enabled = !isLoading,
+        enabled = !isLoading && isButtonEnabled,
         colors = colors
     ) {
         if (isLoading) {

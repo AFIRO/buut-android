@@ -1,9 +1,12 @@
 package rise.tiao1.buut.presentation.booking.bookingList
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -30,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -53,45 +57,53 @@ fun BookingList(
     state: HomeScreenState,
     onEditClicked: (String) -> Unit,
 ) {
-    when {
-        state.isLoading -> {
+    val connectivityManager =
+        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val isNetworkAvailable = connectivityManager.activeNetwork != null
+
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        val lazyListState = rememberLazyListState()
+        val coroutineScope = rememberCoroutineScope()
+        val firstUpcomingBookingIndex = state.bookings.indexOfFirst {
+            it.date.isAfter(LocalDateTime.now().minusDays(1))
+        }
+
+        LaunchedEffect(firstUpcomingBookingIndex) {
+            if (firstUpcomingBookingIndex >= 0) {
+                coroutineScope.launch {
+                    lazyListState.scrollToItem(firstUpcomingBookingIndex, scrollOffset = 0)
+                }
+            }
+        }
+
+        LazyColumn(
+            state = lazyListState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = if (!isNetworkAvailable || !state.apiError.isNullOrBlank()) 110.dp else 0.dp)
+        ) {
+            itemsIndexed(state.bookings) { index, booking ->
+                BookingItem(
+                    item = booking,
+                    isExpanded = index == firstUpcomingBookingIndex,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny)),
+                    onEditClicked = onEditClicked,
+                    editEnabled = isNetworkAvailable
+                )
+            }
+        }
+
+        if (!isNetworkAvailable) {
+            ActionErrorContainer(
+                LocalContext.current.getString(R.string.no_internet_connection),
+            )
+        } else if (state.isLoading) {
             LoadingIndicator()
-        }
-
-        !state.apiError.isNullOrBlank() -> {
+        } else if (!state.apiError.isNullOrBlank()) {
             ActionErrorContainer(state.apiError)
-        }
-
-        state.bookings.isEmpty() -> {
+        } else if (state.bookings.isEmpty()) {
             InfoContainer(stringResource(R.string.user_has_no_bookings))
-        }
-
-        else -> {
-            val lazyListState = rememberLazyListState()
-            val coroutineScope = rememberCoroutineScope()
-
-            val firstUpcomingBookingIndex = state.bookings.indexOfFirst {
-                it.date.isAfter(LocalDateTime.now().minusDays(1))
-            }
-
-            LaunchedEffect(firstUpcomingBookingIndex) {
-                if (firstUpcomingBookingIndex >= 0) {
-                    coroutineScope.launch {
-                        lazyListState.scrollToItem(firstUpcomingBookingIndex, scrollOffset = 0)
-                    }
-                }
-            }
-
-            LazyColumn(state = lazyListState) {
-                itemsIndexed(state.bookings) { index, booking ->
-                    BookingItem(
-                        item = booking,
-                        isExpanded = index == firstUpcomingBookingIndex,
-                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny)),
-                        onEditClicked = onEditClicked
-                    )
-                }
-            }
         }
     }
 }
@@ -102,9 +114,11 @@ fun BookingItem(
     isExpanded: Boolean = false,
     modifier: Modifier,
     onEditClicked: (String) -> Unit,
+    editEnabled: Boolean = true
 ) {
     var expanded by rememberSaveable { mutableStateOf(isExpanded) }
     val isHistory = item.date.isBefore(LocalDateTime.now().minusDays(1))
+
 
     Card(
         modifier = modifier
@@ -123,7 +137,7 @@ fun BookingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row (horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
+                Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
                     Box(modifier = Modifier.widthIn(180.dp)) {
                         Column {
                             Text(
@@ -143,7 +157,11 @@ fun BookingItem(
                         && item.battery == null
                         && item.date.isAfter(LocalDateTime.now())
                     ) {
-                        IconButton(onClick = { onEditClicked(item.id) }, modifier = Modifier.testTag("bookingEditButton")) {
+                        IconButton(
+                            onClick = { onEditClicked(item.id) },
+                            modifier = Modifier.testTag("bookingEditButton"),
+                            enabled = editEnabled
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Edit,
                                 contentDescription = stringResource(R.string.edit_booking_button),

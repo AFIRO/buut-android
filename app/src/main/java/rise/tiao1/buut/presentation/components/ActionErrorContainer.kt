@@ -42,6 +42,7 @@ fun ActionErrorContainer(errorMessage: String) {
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
 
         }

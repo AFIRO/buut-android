@@ -13,6 +13,7 @@ import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.toBooking
 import rise.tiao1.buut.domain.booking.toTimeSlot
+import rise.tiao1.buut.utils.NetworkConnectivityChecker
 import rise.tiao1.buut.utils.toApiErrorMessage
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,13 +22,19 @@ import javax.inject.Singleton
 class BookingRepository @Inject constructor(
     private val bookingDao: BookingDao,
     private val apiService: BookingApiService,
+    private val networkConnectivityChecker: NetworkConnectivityChecker,
     @IoDispatcher private val dispatcher:
     CoroutineDispatcher
 ) {
+    val noInternetConnection =
+        "You appear to be offline. Displaying local data until reconnection. \n You will not be able to create a new booking, edit a booking or edit your personal data."
+
     suspend fun getAllBookingsFromUser(userId: String): List<Booking> =
         withContext(dispatcher) {
             try {
-                refreshCache(userId)
+                if (networkConnectivityChecker.isNetworkAvailable()) {
+                    refreshCache(userId)
+                }
             } catch (e: Exception) {
                 when (e) {
                     is HttpException -> {
@@ -52,6 +59,9 @@ class BookingRepository @Inject constructor(
     suspend fun getAvailableDays(): List<TimeSlot> =
         withContext(dispatcher) {
             try {
+                if (!networkConnectivityChecker.isNetworkAvailable()) {
+                    throw Exception(noInternetConnection)
+                }
                 val remoteAvailableDays = apiService.getAvailableDays().value
                 return@withContext remoteAvailableDays.map { it.toTimeSlot() }
             } catch (e: Exception) {
@@ -68,6 +78,9 @@ class BookingRepository @Inject constructor(
     suspend fun getFreeTimeSlotsForDateRange(date: String): List<TimeSlot> =
         withContext(dispatcher) {
             try {
+                if (!networkConnectivityChecker.isNetworkAvailable()) {
+                    throw Exception(noInternetConnection)
+                }
                 val remoteTimeSlots = apiService.getFreeTimeSlotsForDateRange(date, date)
                 return@withContext remoteTimeSlots.map { it.toTimeSlot() }
             } catch (e: Exception) {
@@ -84,6 +97,9 @@ class BookingRepository @Inject constructor(
     suspend fun createBooking(bookingDto: BookingDTO) {
         withContext(dispatcher) {
             try {
+                if (!networkConnectivityChecker.isNetworkAvailable()) {
+                    throw Exception(noInternetConnection)
+                }
                 apiService.createBooking(bookingDto)
                 refreshCache(bookingDto.userId ?: "")
             } catch (e: Exception) {
@@ -105,6 +121,9 @@ class BookingRepository @Inject constructor(
     ) {
         withContext(dispatcher) {
             try {
+                if (!networkConnectivityChecker.isNetworkAvailable()) {
+                    throw Exception(noInternetConnection)
+                }
                 apiService.updateBooking(bookingId, bookingUpdateDTO)
                 refreshCache(userId ?: "")
             } catch (e: Exception) {
@@ -112,6 +131,7 @@ class BookingRepository @Inject constructor(
                     is HttpException -> {
                         throw Exception(e.toApiErrorMessage())
                     }
+
                     else -> throw Exception(e.message)
                 }
             }

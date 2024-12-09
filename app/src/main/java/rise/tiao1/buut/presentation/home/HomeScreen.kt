@@ -104,7 +104,7 @@ fun HomeScreen(
                         uiLayout = uiLayout,
                         navigateTo = navigateTo,
                         currentPage = NavigationKeys.Route.HOME,
-                        content = {Content(state, onNotificationClick, onEditBookingClicked)}
+                        content = { Content(state, onNotificationClick, onEditBookingClicked) }
                     )
                     Content(state, onNotificationClick, onEditBookingClicked)
                 }
@@ -115,22 +115,26 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Content(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Unit, onEditBookingClicked: (String) -> Unit) {
+fun Content(
+    state: HomeScreenState,
+    onNotificationClick: (String, Boolean) -> Unit,
+    onEditBookingClicked: (String) -> Unit
+) {
     val tabItems = listOf(
-        TabItem(title= stringResource(R.string.notifications_title)),
-        TabItem(title= stringResource(R.string.booking_list_title))
+        TabItem(title = stringResource(R.string.notifications_title)),
+        TabItem(title = stringResource(R.string.booking_list_title))
     )
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf( 0) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val pagerState = rememberPagerState {
         tabItems.size
     }
 
-    LaunchedEffect (selectedTabIndex) {
+    LaunchedEffect(selectedTabIndex) {
         pagerState.animateScrollToPage(selectedTabIndex)
     }
 
-    LaunchedEffect (pagerState.currentPage, pagerState.isScrollInProgress) {
-        if(!pagerState.isScrollInProgress)
+    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+        if (!pagerState.isScrollInProgress)
             selectedTabIndex = pagerState.currentPage
     }
 
@@ -156,25 +160,26 @@ fun Content(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Un
 
                     },
                     modifier = Modifier.testTag(item.title),
-                    icon = {if (index == 0) NotificationBadge(state.unReadNotifications)}
+                    icon = { if (index == 0) NotificationBadge(state.unReadNotifications) }
                 )
             }
         }
         HorizontalPager(
-            state= pagerState,
+            state = pagerState,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
         ) { index ->
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(dimensionResource(R.dimen.padding_medium))
             ) {
-                when (tabItems[index].title){
+                when (tabItems[index].title) {
                     stringResource(R.string.booking_list_title) -> {
                         BookingList(state, onEditBookingClicked)
                     }
+
                     stringResource(R.string.notifications_title) -> {
                         NotificationList(state, onNotificationClick)
                     }
@@ -269,7 +274,7 @@ private fun getPreviewHomeScreenState(emptyList: Boolean = false): HomeScreenSta
 fun PortraitPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(true), {},  PORTRAIT_SMALL, {_,_->}
+            getPreviewHomeScreenState(true), {}, PORTRAIT_SMALL, { _, _ -> }
         )
     }
 }
@@ -284,7 +289,7 @@ fun PortraitPreview() {
 fun LandscapePreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_SMALL, {_,_->}
+            getPreviewHomeScreenState(), {}, LANDSCAPE_SMALL, { _, _ -> }
         )
     }
 }
@@ -300,7 +305,7 @@ fun LandscapePreview() {
 fun PortraitMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  PORTRAIT_MEDIUM, {_,_->}
+            getPreviewHomeScreenState(), {}, PORTRAIT_MEDIUM, { _, _ -> }
         )
     }
 }
@@ -315,7 +320,7 @@ fun PortraitMediumPreview() {
 fun LandscapeMediumPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_MEDIUM, {_,_->}
+            getPreviewHomeScreenState(), {}, LANDSCAPE_MEDIUM, { _, _ -> }
         )
     }
 }
@@ -331,7 +336,7 @@ fun LandscapeMediumPreview() {
 fun PortraitExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  PORTRAIT_EXPANDED, {_,_->}
+            getPreviewHomeScreenState(), {}, PORTRAIT_EXPANDED, { _, _ -> }
         )
     }
 }
@@ -346,7 +351,7 @@ fun PortraitExpandedPreview() {
 fun LandscapeExpandedPreview() {
     AppTheme {
         HomeScreen(
-            getPreviewHomeScreenState(), {},  LANDSCAPE_EXPANDED, {_,_->}
+            getPreviewHomeScreenState(), {}, LANDSCAPE_EXPANDED, { _, _ -> }
         )
     }
 }

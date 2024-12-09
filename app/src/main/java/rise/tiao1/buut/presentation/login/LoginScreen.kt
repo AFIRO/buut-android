@@ -1,6 +1,8 @@
 package rise.tiao1.buut.presentation.login
 
+import android.content.Context
 import android.content.res.Configuration
+import android.net.ConnectivityManager
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,11 +20,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import rise.tiao1.buut.R
+import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.ButtonComponent
 import rise.tiao1.buut.presentation.components.BuutLogo
 import rise.tiao1.buut.presentation.components.ClickableTextComponent
@@ -46,13 +50,15 @@ fun LoginScreen(
 ) {
 
     val scrollState = rememberScrollState()
+    val connectivityManager =
+        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val isNetworkAvailable = connectivityManager.activeNetwork != null
 
     Box()
     {
         MainBackgroundImage()
 
-        if (uiLayout == UiLayout.LANDSCAPE_SMALL || uiLayout == UiLayout.LANDSCAPE_MEDIUM)
-            {
+        if (uiLayout == UiLayout.LANDSCAPE_SMALL || uiLayout == UiLayout.LANDSCAPE_MEDIUM) {
             Row(
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
@@ -64,6 +70,9 @@ fun LoginScreen(
                     LoginScreenContent(
                         state, onValueUpdate, login, onRegisterClick, onValidate
                     )
+                    if (!isNetworkAvailable) {
+                        ActionErrorContainer(LocalContext.current.getString(R.string.no_internet_connection_login))
+                    }
                 }
 
             }
@@ -79,8 +88,11 @@ fun LoginScreen(
                 BuutLogo()
                 Spacer(modifier = Modifier.heightIn(70.dp))
                 LoginScreenContent(
-                    state, onValueUpdate, login, onRegisterClick, onValidate
+                    state, onValueUpdate, login, onRegisterClick, onValidate, isNetworkAvailable
                 )
+                if (!isNetworkAvailable) {
+                    ActionErrorContainer(LocalContext.current.getString(R.string.no_internet_connection_login))
+                }
             }
         }
     }
@@ -94,8 +106,9 @@ fun LoginScreenContent(
     login: () -> Unit,
     onRegisterClick: () -> Unit,
     onValidate: (input: String, field: String) -> Unit,
+    registerEnabled: Boolean = true
 
-    ) {
+) {
     Column(
         modifier = Modifier.width(300.dp)
     ) {
@@ -141,14 +154,19 @@ fun LoginScreenContent(
             ClickableTextComponent(
                 leadingText = R.string.no_account_yet,
                 clickableText = R.string.register_here,
-                onClick = onRegisterClick
+                onClick = onRegisterClick,
+                isEnabled = registerEnabled
             )
         }
     }
 }
 
 
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp", uiMode = Configuration.ORIENTATION_PORTRAIT)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    uiMode = Configuration.ORIENTATION_PORTRAIT
+)
 @Composable
 fun LoginPortraitSmallPreview() {
     AppTheme {
@@ -163,7 +181,11 @@ fun LoginPortraitSmallPreview() {
     }
 }
 
-@Preview(showBackground = true, device = "spec:width=411dp,height=891dp", uiMode = Configuration.ORIENTATION_LANDSCAPE)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    uiMode = Configuration.ORIENTATION_LANDSCAPE
+)
 @Composable
 fun LoginLandscapeSmallPreview() {
     AppTheme {
@@ -178,7 +200,11 @@ fun LoginLandscapeSmallPreview() {
     }
 }
 
-@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_PORTRAIT)
+@Preview(
+    showBackground = true,
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.ORIENTATION_PORTRAIT
+)
 @Composable
 fun LoginExpandedPortraitPreview() {
     AppTheme {
@@ -193,7 +219,11 @@ fun LoginExpandedPortraitPreview() {
     }
 }
 
-@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240", uiMode = Configuration.ORIENTATION_LANDSCAPE)
+@Preview(
+    showBackground = true,
+    device = "spec:width=1280dp,height=800dp,dpi=240",
+    uiMode = Configuration.ORIENTATION_LANDSCAPE
+)
 @Composable
 fun LoginExpandedLandscapePreview() {
     AppTheme {

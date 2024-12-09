@@ -95,5 +95,6 @@
     <string name="edit_booking_button">edit booking</string>
     <string name="login_error">Login failed</string>
     <string name="no_required_roles">You do not have the required roles.</string>
-    <string name="no_internet_connection">You appear to be offline. Displaying local data until reconnection.</string>
+    <string name="no_internet_connection">You appear to be offline. Displaying local data until reconnection. \n You will not be able to create a new booking, edit a booking or edit your personal data.</string>
+    <string name="no_internet_connection_login">You appear to be offline.\nYou will not be able to log in or register until you reconnect.</string>
 </resources>
