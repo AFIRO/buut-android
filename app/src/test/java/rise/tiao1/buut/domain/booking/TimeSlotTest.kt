@@ -32,10 +32,10 @@ class TimeSlotTest {
         )
     }
 
-    private fun getTimeSlot(): TimeSlot{
+    private fun getTimeSlot(): TimeSlot {
         return TimeSlot(
             date = today.toApiDateString().toLocalDateTimeFromApiString(),
-            slot= "Morning",
+            slot = "Morning",
             available = true
         )
     }

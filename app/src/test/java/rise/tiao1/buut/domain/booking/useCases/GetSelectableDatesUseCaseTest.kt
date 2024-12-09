@@ -6,12 +6,9 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.TimeSlot
-import rise.tiao1.buut.presentation.components.toMillis
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -36,7 +33,7 @@ class GetSelectableDatesUseCaseTest {
         }
 
 
-    fun getSelectableTimeSlots(): List<TimeSlot>{
+    fun getSelectableTimeSlots(): List<TimeSlot> {
         return listOf(
             TimeSlot(today, "Morning", true),
             TimeSlot(today, "Afternoon", false),

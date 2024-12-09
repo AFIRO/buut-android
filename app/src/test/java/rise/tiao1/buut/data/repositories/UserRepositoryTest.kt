@@ -16,16 +16,16 @@ import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.local.user.UserDao
 import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.data.remote.user.UserApiService
+import rise.tiao1.buut.data.remote.user.dto.AddressDTO
+import rise.tiao1.buut.data.remote.user.dto.PutUserDTO
+import rise.tiao1.buut.data.remote.user.dto.RoleDTO
+import rise.tiao1.buut.data.remote.user.dto.UserDTO
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.toLocalUser
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toLocalUser
 import rise.tiao1.buut.utils.toUser
-import rise.tiao1.buut.data.remote.user.dto.AddressDTO
-import rise.tiao1.buut.data.remote.user.dto.PutUserDTO
-import rise.tiao1.buut.data.remote.user.dto.RoleDTO
-import rise.tiao1.buut.data.remote.user.dto.UserDTO
 import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
@@ -74,7 +74,7 @@ class UserRepositoryTest {
             null.toString(),
             null.toString(),
             null.toString(),
-            birthDate = LocalDateTime.of(1996, 8, 19,0,0,1).toString(),
+            birthDate = LocalDateTime.of(1996, 8, 19, 0, 0, 1).toString(),
             address = getAddressDto(),
             roles = listOf(RoleDTO(name = "Admin"))
         )
@@ -143,8 +143,9 @@ class UserRepositoryTest {
         val putUserDTO = getPutUserDto()
 
         // Mock behaviors
-        coEvery { apiService.updateUser(putUserDTO) }throws HttpException(
-            Response.error<Any>(400, ResponseBody.create(null, "Bad Request")))
+        coEvery { apiService.updateUser(putUserDTO) } throws HttpException(
+            Response.error<Any>(400, ResponseBody.create(null, "Bad Request"))
+        )
 
 
         // Assert exception
@@ -159,10 +160,7 @@ class UserRepositoryTest {
     }
 
 
-
-
-
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "fg",
             firstName = "TestFirstName",
@@ -170,7 +168,7 @@ class UserRepositoryTest {
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1),
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0, 1),
             address = getAddress(),
             roles = listOf()
         )
@@ -183,39 +181,39 @@ class UserRepositoryTest {
             lastName = "TestLastName",
             email = "TestEmail",
             phone = "TestPhone",
-            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0 ,1).toString(),
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0, 1).toString(),
             address = getAddress(),
             roles = ""
         )
     }
 
-    fun getRemoteUser(): RemoteUser{
+    fun getRemoteUser(): RemoteUser {
         return RemoteUser(
             id = "fg",
             firstName = "TestFirstName",
             lastName = "TestLastName",
             email = "TestEmail",
             phoneNumber = "TestPhone",
-            birthDate = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
+            birthDate = LocalDateTime.of(1996, 8, 19, 0, 0, 1).toString(),
             address = getAddressDto(),
             roles = listOf()
         )
     }
 
-    fun getUserDto() : UserDTO {
+    fun getUserDto(): UserDTO {
         return UserDTO(
             firstName = "TestFirstName",
             lastName = "TestLastName",
             email = "TestEmail",
             password = "TestPassword",
             phone = "TestPhone",
-            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0,1).toString(),
+            dateOfBirth = LocalDateTime.of(1996, 8, 19, 0, 0, 1).toString(),
             address = getAddressDto()
         )
 
     }
 
-    fun getPutUserDto() : PutUserDTO {
+    fun getPutUserDto(): PutUserDTO {
         return PutUserDTO(
             firstName = "TestFirstName",
             lastName = "TestLastName",
@@ -230,11 +228,11 @@ class UserRepositoryTest {
 
     }
 
-    fun getAddressDto() : AddressDTO {
+    fun getAddressDto(): AddressDTO {
         return AddressDTO(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 
-    fun getAddress() : Address {
+    fun getAddress(): Address {
         return Address(StreetType.AFRIKALAAN, "TestHuisnummer", "TestBox")
     }
 

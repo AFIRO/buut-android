@@ -15,12 +15,12 @@ import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
 import java.time.LocalDateTime
 
 @ExperimentalCoroutinesApi
-class BookingTest{
+class BookingTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
 
     @Test
-    fun whenBookingDTOToBookingIsCalled_returnsCorrectBooking() = scope.runTest{
+    fun whenBookingDTOToBookingIsCalled_returnsCorrectBooking() = scope.runTest {
         val booking = getBookingDTO()
         val expected = getBooking()
         val result = booking.toBooking()
@@ -36,7 +36,7 @@ class BookingTest{
     }
 
 
-    fun getBooking() : Booking {
+    fun getBooking(): Booking {
         return Booking(
             id = "1",
             date = LocalDateTime.now().toApiDateString().toLocalDateTimeFromApiString(),
@@ -45,20 +45,22 @@ class BookingTest{
             batteryUserFirstName = "TestUserName",
             batteryUserLastName = "TestLastName",
             batteryUserEmail = "TestEmail",
-            batteryUserPhoneNumber = "TestPhone")
+            batteryUserPhoneNumber = "TestPhone"
+        )
 
     }
 
 
-    fun getBookingDTO() : BookingDTO {
+    fun getBookingDTO(): BookingDTO {
         return BookingDTO(
             id = "1",
             date = LocalDateTime.now().toApiDateString(),
             boat = getBoatDTO(),
-            battery = getBatteryDTO())
+            battery = getBatteryDTO()
+        )
     }
 
-    fun getLocalBooking() : LocalBooking {
+    fun getLocalBooking(): LocalBooking {
         return LocalBooking(
             id = "1",
             date = LocalDateTime.now().toApiDateString(),
@@ -72,12 +74,13 @@ class BookingTest{
         )
     }
 
-    fun getBoatDTO() : BoatDTO {
+    fun getBoatDTO(): BoatDTO {
         return BoatDTO(
-            name = "TestBoat")
+            name = "TestBoat"
+        )
     }
 
-    fun getBatteryDTO() : BatteryDTO {
+    fun getBatteryDTO(): BatteryDTO {
         return BatteryDTO(
             name = "TestBattery",
             currentUser = UserBatteryDTO(

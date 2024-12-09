@@ -22,27 +22,27 @@ class UpdateUserUseCaseTest {
     var updateUserUseCase = UpdateUserUseCase(repository)
 
     @Test
-    fun updateUser_returnsSucces() = scope.runTest{
+    fun updateUser_returnsSucces() = scope.runTest {
         coEvery { repository.updateUser(any()) } returns Unit
         val user = getUser()
         var result = false
-        updateUserUseCase(user, onSuccess = {result = true }, onError = {result = false})
+        updateUserUseCase(user, onSuccess = { result = true }, onError = { result = false })
         assert(result)
 
     }
 
     @Test
-    fun updateUser_repoGivesExcetion_returnsSucces() = scope.runTest{
+    fun updateUser_repoGivesExcetion_returnsSucces() = scope.runTest {
         coEvery { repository.updateUser(any()) } throws Exception("Registration Failed")
         val user = getUser()
         var result = false
-        updateUserUseCase(user, onSuccess = {result = false }, onError = {result = true})
+        updateUserUseCase(user, onSuccess = { result = false }, onError = { result = true })
         assert(result)
 
     }
 
 
-    fun getUser() : User {
+    fun getUser(): User {
         return User(
             id = "TestId",
             firstName = "TestFirstName",

@@ -6,8 +6,8 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import rise.tiao1.buut.utils.UiText
 import rise.tiao1.buut.R
+import rise.tiao1.buut.utils.UiText
 
 @ExperimentalCoroutinesApi
 class ValidatePrivacyTest {
@@ -26,7 +26,10 @@ class ValidatePrivacyTest {
         val validatePrivacy = ValidatePrivacy()
         val result = validatePrivacy.execute(false)
         assert(result != null)
-        assertEquals(UiText.StringResource(resId = R.string.privacy_not_accepted_error).getStringId(), result?.getStringId())
+        assertEquals(
+            UiText.StringResource(resId = R.string.privacy_not_accepted_error).getStringId(),
+            result?.getStringId()
+        )
     }
 
 }

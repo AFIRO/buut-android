@@ -12,7 +12,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.core.content.ContextCompat
 
 @Composable
@@ -39,7 +41,7 @@ fun CallBatteryOwnerButton(phoneNumber: String) {
             val intent = Intent(Intent.ACTION_CALL, uri)
             context.startActivity(intent)
         }
-    }) {
+    }, modifier = Modifier.testTag("callBatteryOwnerButton")) {
         Icon(
             imageVector = Icons.Filled.Phone,
             contentDescription = "Call",

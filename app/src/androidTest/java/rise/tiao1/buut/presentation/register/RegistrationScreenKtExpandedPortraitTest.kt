@@ -38,7 +38,7 @@ import rise.tiao1.buut.utils.UiLayout
 import rise.tiao1.buut.utils.UiText
 
 
-class RegistrationScreenKtExpandedPortraitTest{
+class RegistrationScreenKtExpandedPortraitTest {
     val startOrientation = ScreenOrientation.PORTRAIT
     val updatedOrientation = ScreenOrientation.LANDSCAPE
 
@@ -47,6 +47,7 @@ class RegistrationScreenKtExpandedPortraitTest{
     @get:Rule
     val rule: ComposeContentTestRule =
         createComposeRule()
+
     @get:Rule
     val screenOrientationRule: ScreenOrientationRule = ScreenOrientationRule(startOrientation)
 
@@ -71,7 +72,7 @@ class RegistrationScreenKtExpandedPortraitTest{
     val registrationSuccessModalButton = rule.onNodeWithTag("RegistrationSuccessModalButton")
 
     @Before
-    fun resetOrientation(){
+    fun resetOrientation() {
         onDevice().setScreenOrientation(startOrientation)
     }
 
@@ -103,7 +104,7 @@ class RegistrationScreenKtExpandedPortraitTest{
         termsInput.assertIsDisplayed()
         privacyInput.assertIsDisplayed()
         errorMessage.assertIsNotDisplayed()
-        }
+    }
 
     @Test
     fun registrationScreen_streetInput_dropdownAppears() {
@@ -131,7 +132,7 @@ class RegistrationScreenKtExpandedPortraitTest{
                     if (field == InputKeys.FIRST_NAME) {
                         firstName = input
                     }
-                                 },
+                },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
                 uiLayout = uiLayout
@@ -477,9 +478,10 @@ class RegistrationScreenKtExpandedPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                uiLayout = uiLayout)
+                uiLayout = uiLayout
+            )
 
-            }
+        }
         confirmPasswordInput.performTextInput("TestPassword")
         Assert.assertEquals("TestPassword", confirmPassword)
     }
@@ -497,7 +499,8 @@ class RegistrationScreenKtExpandedPortraitTest{
                 },
                 onCheckedChanged = { _, _ -> },
                 onValidate = { },
-                uiLayout = uiLayout)
+                uiLayout = uiLayout
+            )
 
         }
         confirmPasswordInput.performTextInput("TestPassword")
@@ -601,7 +604,8 @@ class RegistrationScreenKtExpandedPortraitTest{
                 uiLayout = uiLayout
             )
         }
-        rule.onNodeWithText(context.getString(R.string.first_name_is_blank_error)).assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.first_name_is_blank_error))
+            .assertIsDisplayed()
     }
 
     @Test
@@ -615,8 +619,9 @@ class RegistrationScreenKtExpandedPortraitTest{
                 uiLayout = uiLayout
             )
         }
-        rule.onNodeWithText(context.getString(R.string.last_name_is_blank_error)).assertIsDisplayed()
-        }
+        rule.onNodeWithText(context.getString(R.string.last_name_is_blank_error))
+            .assertIsDisplayed()
+    }
 
     @Test
     fun registrationScreen_streetError_DisplaysError() {
@@ -636,14 +641,24 @@ class RegistrationScreenKtExpandedPortraitTest{
     fun registrationScreen_houseNumberError_DisplaysError() {
         rule.setContent {
             RegistrationScreen(
-                state = RegistrationScreenState(houseNumberError = UiText.StringResource(resId = R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER)),
+                state = RegistrationScreenState(
+                    houseNumberError = UiText.StringResource(
+                        resId = R.string.invalid_house_number_error,
+                        LOWEST_POSSIBLE_HOUSE_NUMBER
+                    )
+                ),
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
                 uiLayout = uiLayout
             )
         }
-        rule.onNodeWithText(context.getString(R.string.invalid_house_number_error, LOWEST_POSSIBLE_HOUSE_NUMBER)).assertIsDisplayed()
+        rule.onNodeWithText(
+            context.getString(
+                R.string.invalid_house_number_error,
+                LOWEST_POSSIBLE_HOUSE_NUMBER
+            )
+        ).assertIsDisplayed()
     }
 
 
@@ -686,7 +701,8 @@ class RegistrationScreenKtExpandedPortraitTest{
                 uiLayout = uiLayout
             )
         }
-        rule.onNodeWithText(context.getString(R.string.password_not_valid_error)).assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.password_not_valid_error))
+            .assertIsDisplayed()
     }
 
     @Test
@@ -701,7 +717,7 @@ class RegistrationScreenKtExpandedPortraitTest{
             )
         }
         rule.onNodeWithText(context.getString(R.string.repeated_password_error)).assertIsDisplayed()
-        }
+    }
 
     @Test
     fun registrationScreen_termsError_DisplaysError() {
@@ -714,7 +730,8 @@ class RegistrationScreenKtExpandedPortraitTest{
                 uiLayout = uiLayout
             )
         }
-        rule.onNodeWithText(context.getString(R.string.terms_not_accepted_error)).assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.terms_not_accepted_error))
+            .assertIsDisplayed()
     }
 
     @Test
@@ -729,21 +746,28 @@ class RegistrationScreenKtExpandedPortraitTest{
             )
         }
 
-        rule.onNodeWithText(context.getString(R.string.privacy_not_accepted_error)).assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.privacy_not_accepted_error))
+            .assertIsDisplayed()
     }
 
     @Test
     fun registrationScreen_dateOfBirthError_DisplaysError() {
         rule.setContent {
             RegistrationScreen(
-                state = RegistrationScreenState(dateOfBirthError = UiText.StringResource(resId = R.string.minimum_age_error, MINIMUM_AGE)),
+                state = RegistrationScreenState(
+                    dateOfBirthError = UiText.StringResource(
+                        resId = R.string.minimum_age_error,
+                        MINIMUM_AGE
+                    )
+                ),
                 onValueChanged = { _, _ -> },
                 onCheckedChanged = { _, _ -> },
                 onValidate = {},
                 uiLayout = uiLayout
             )
         }
-        rule.onNodeWithText(context.getString(R.string.minimum_age_error, MINIMUM_AGE)).assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.minimum_age_error, MINIMUM_AGE))
+            .assertIsDisplayed()
     }
 
     @Test
@@ -761,7 +785,7 @@ class RegistrationScreenKtExpandedPortraitTest{
     }
 
     @Test
-    fun registrationScreen_onRegistrationSuccess_showModal(){
+    fun registrationScreen_onRegistrationSuccess_showModal() {
         rule.setContent {
             RegistrationScreen(
                 state = RegistrationScreenState(registrationSuccess = true),
@@ -770,7 +794,7 @@ class RegistrationScreenKtExpandedPortraitTest{
                 onValidate = {},
                 uiLayout = uiLayout,
                 onSubmitClick = {},
-                onRegistrationSuccessDismissed = {  }
+                onRegistrationSuccessDismissed = { }
             )
         }
         rule.waitForIdle()
@@ -778,86 +802,94 @@ class RegistrationScreenKtExpandedPortraitTest{
         registrationSuccessModalButton.assertIsDisplayed()
     }
 
-        @Test
-        fun registrationScreen_onRegisterClickAndSuccesfulRegistration_openRegistrationSuccessModal(){
-            var registrationSuccess by mutableStateOf(false)
-            rule.setContent {
-                RegistrationScreen(
-                    state = RegistrationScreenState(registrationSuccess = registrationSuccess),
-                    onValueChanged = { _, _ -> },
-                    onCheckedChanged = { _, _ -> },
-                    onValidate = {},
-                    uiLayout = uiLayout,
-                    onSubmitClick = {registrationSuccess = true},
-                    onRegistrationSuccessDismissed = {  }
-                )
-            }
-            registerButton.performClick()
-            rule.waitForIdle()
-            registrationSuccessModal.assertIsDisplayed()
-            registrationSuccessModalButton.assertIsDisplayed()
-            errorMessage.assertIsNotDisplayed()
+    @Test
+    fun registrationScreen_onRegisterClickAndSuccesfulRegistration_openRegistrationSuccessModal() {
+        var registrationSuccess by mutableStateOf(false)
+        rule.setContent {
+            RegistrationScreen(
+                state = RegistrationScreenState(registrationSuccess = registrationSuccess),
+                onValueChanged = { _, _ -> },
+                onCheckedChanged = { _, _ -> },
+                onValidate = {},
+                uiLayout = uiLayout,
+                onSubmitClick = { registrationSuccess = true },
+                onRegistrationSuccessDismissed = { }
+            )
         }
+        registerButton.performClick()
+        rule.waitForIdle()
+        registrationSuccessModal.assertIsDisplayed()
+        registrationSuccessModalButton.assertIsDisplayed()
+        errorMessage.assertIsNotDisplayed()
+    }
 
-        @Test
-        fun registrationScreen_onRegisterButtonClickAndError_DisplaysErrorAndNotModal() {
-            var apiError by mutableStateOf("")
-            rule.setContent {
-                RegistrationScreen(
-                    state = RegistrationScreenState(apiError = apiError),
-                    onValueChanged = { _, _ -> },
-                    onCheckedChanged = { _, _ -> },
-                    onValidate = {},
-                    uiLayout = uiLayout,
-                    onSubmitClick = {apiError = "TestError"},
-                    onRegistrationSuccessDismissed = {  }
-                )
-            }
-            registerButton.performClick()
-            rule.waitForIdle()
-            errorMessage.assertIsDisplayed()
-            registrationSuccessModal.isNotDisplayed()
-            registrationSuccessModalButton.isNotDisplayed()
+    @Test
+    fun registrationScreen_onRegisterButtonClickAndError_DisplaysErrorAndNotModal() {
+        var apiError by mutableStateOf("")
+        rule.setContent {
+            RegistrationScreen(
+                state = RegistrationScreenState(apiError = apiError),
+                onValueChanged = { _, _ -> },
+                onCheckedChanged = { _, _ -> },
+                onValidate = {},
+                uiLayout = uiLayout,
+                onSubmitClick = { apiError = "TestError" },
+                onRegistrationSuccessDismissed = { }
+            )
         }
+        registerButton.performClick()
+        rule.waitForIdle()
+        errorMessage.assertIsDisplayed()
+        registrationSuccessModal.isNotDisplayed()
+        registrationSuccessModalButton.isNotDisplayed()
+    }
 
-        @Test
-        fun registrationScreen_onRegistrationSuccessModalButtonClick_dismissModalAndRouteToHome(){
-            var registrationSuccess by mutableStateOf(true)
-            val state = RegistrationScreenState(registrationSuccess = registrationSuccess)
-            rule.setContent {
-                val navController = rememberNavController()
-                navControllerState = navController
-                NavHost(navController = navController, startDestination = NavigationKeys.Route.REGISTER) {
-                    composable(NavigationKeys.Route.HOME)  { LoginScreen(
+    @Test
+    fun registrationScreen_onRegistrationSuccessModalButtonClick_dismissModalAndRouteToHome() {
+        var registrationSuccess by mutableStateOf(true)
+        val state = RegistrationScreenState(registrationSuccess = registrationSuccess)
+        rule.setContent {
+            val navController = rememberNavController()
+            navControllerState = navController
+            NavHost(
+                navController = navController,
+                startDestination = NavigationKeys.Route.REGISTER
+            ) {
+                composable(NavigationKeys.Route.HOME) {
+                    LoginScreen(
                         state = LoginScreenState(),
                         onValueUpdate = { _, _ -> },
                         login = { },
                         onRegisterClick = { },
                         onValidate = { _, _ -> },
                         uiLayout = uiLayout
-                    ) }
-                    composable(NavigationKeys.Route.REGISTER) { RegistrationScreen(
+                    )
+                }
+                composable(NavigationKeys.Route.REGISTER) {
+                    RegistrationScreen(
                         state = state,
-                        onValueChanged = { _,_ ->  },
-                        onCheckedChanged = { _,_ ->  },
-                        onValidate = {_ ->  },
+                        onValueChanged = { _, _ -> },
+                        onCheckedChanged = { _, _ -> },
+                        onValidate = { _ -> },
                         onSubmitClick = {},
                         uiLayout = uiLayout,
                         onRegistrationSuccessDismissed = {
                             registrationSuccess = false
-                            navController.navigate(NavigationKeys.Route.HOME)}
-                    ) }
+                            navController.navigate(NavigationKeys.Route.HOME)
+                        }
+                    )
                 }
             }
-            val navController = navControllerState!!
-            rule.waitForIdle()
-            registrationSuccessModal.assertIsDisplayed()
-            registrationSuccessModalButton.assertIsDisplayed()
-            registrationSuccessModalButton.performClick()
-            rule.waitForIdle()
-            assert(registrationSuccess == false)
-            registrationSuccessModal.isNotDisplayed()
-            registrationSuccessModalButton.isNotDisplayed()
-            assert(navController.currentDestination?.route == NavigationKeys.Route.HOME)
         }
+        val navController = navControllerState!!
+        rule.waitForIdle()
+        registrationSuccessModal.assertIsDisplayed()
+        registrationSuccessModalButton.assertIsDisplayed()
+        registrationSuccessModalButton.performClick()
+        rule.waitForIdle()
+        assert(registrationSuccess == false)
+        registrationSuccessModal.isNotDisplayed()
+        registrationSuccessModalButton.isNotDisplayed()
+        assert(navController.currentDestination?.route == NavigationKeys.Route.HOME)
     }
+}

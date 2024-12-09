@@ -299,7 +299,7 @@ class CreateBookingScreenKtExpandedLandscapeTest {
                         state = HomeScreenState(),
                         navigateTo = { },
                         uiLayout = uiLayout,
-                        onNotificationClick = { _,_ -> }
+                        onNotificationClick = { _, _ -> }
                     )
                 }
             }

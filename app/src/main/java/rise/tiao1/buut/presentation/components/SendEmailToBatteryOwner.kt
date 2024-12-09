@@ -8,10 +8,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import rise.tiao1.buut.R
-import rise.tiao1.buut.ui.theme.md_theme_light_primary
 
 @Composable
 fun SendEmailToBatteryOwner(recipientEmail: String) {
@@ -27,7 +28,7 @@ fun SendEmailToBatteryOwner(recipientEmail: String) {
         }
 
         context.startActivity(Intent.createChooser(intent, "Send Email"))
-    }) {
+    }, modifier = Modifier.testTag("sendEmailButton")) {
         Icon(
             imageVector = Icons.Filled.Email,
             contentDescription = "Send Email",

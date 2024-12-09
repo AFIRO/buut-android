@@ -10,13 +10,13 @@ import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDateTime
 
 
-class NotificationDTOKtTest{
+class NotificationDTOKtTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope(dispatcher)
     private val today: LocalDateTime = LocalDateTime.now()
 
     @Test
-    fun notificationDTO_toLocalNotification_mapsCorrectly() = scope.runTest{
+    fun notificationDTO_toLocalNotification_mapsCorrectly() = scope.runTest {
         val initial = getNotificationDTO()
         val expected = getLocalNotification()
         val actual = initial.toLocalNotification("TestUserId")

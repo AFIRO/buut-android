@@ -219,10 +219,12 @@ fun BookingDetails(
                     Icon(
                         imageVector = Icons.Filled.DirectionsBoatFilled,
                         contentDescription = stringResource(R.string.boat),
-                        Modifier.padding(
-                            start = dimensionResource(R.dimen.padding_small),
-                            end = dimensionResource(R.dimen.padding_medium)
-                        ),
+                        Modifier
+                            .padding(
+                                start = dimensionResource(R.dimen.padding_small),
+                                end = dimensionResource(R.dimen.padding_medium)
+                            )
+                            .testTag("BoatIcon"),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 },
@@ -252,10 +254,12 @@ fun BookingDetails(
                     Icon(
                         imageVector = Icons.Filled.BatteryChargingFull,
                         contentDescription = stringResource(R.string.boat),
-                        Modifier.padding(
-                            start = dimensionResource(R.dimen.padding_small),
-                            end = dimensionResource(R.dimen.padding_medium)
-                        ),
+                        Modifier
+                            .padding(
+                                start = dimensionResource(R.dimen.padding_small),
+                                end = dimensionResource(R.dimen.padding_medium)
+                            )
+                            .testTag("BatteryIcon"),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 },

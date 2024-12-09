@@ -9,9 +9,6 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import rise.tiao1.buut.data.local.booking.LocalBooking
-import rise.tiao1.buut.data.remote.booking.BatteryDTO
-import rise.tiao1.buut.data.remote.booking.BoatDTO
-import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.toBooking

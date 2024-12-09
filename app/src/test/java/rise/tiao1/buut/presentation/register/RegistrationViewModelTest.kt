@@ -99,10 +99,23 @@ class RegistrationViewModelTest {
             acceptedPrivacyConditions = true
         )
         viewModel.updateState {
-            copy(firstName = updatedState.firstName, lastName = updatedState.lastName, email = updatedState.email, phone = updatedState.phone, street = updatedState.street, houseNumber = updatedState.houseNumber, box = updatedState.box, dateOfBirth = updatedState.dateOfBirth, password = updatedState.password, repeatedPassword = updatedState.repeatedPassword, acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage, acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions)
-            }
-        assert(viewModel.state.value == updatedState)
+            copy(
+                firstName = updatedState.firstName,
+                lastName = updatedState.lastName,
+                email = updatedState.email,
+                phone = updatedState.phone,
+                street = updatedState.street,
+                houseNumber = updatedState.houseNumber,
+                box = updatedState.box,
+                dateOfBirth = updatedState.dateOfBirth,
+                password = updatedState.password,
+                repeatedPassword = updatedState.repeatedPassword,
+                acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage,
+                acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions
+            )
         }
+        assert(viewModel.state.value == updatedState)
+    }
 
     @Test
     fun validate_firstNameError_updatesStateWithCorrectError() = scope.runTest {
@@ -231,7 +244,12 @@ class RegistrationViewModelTest {
     fun validate_passwordRepeatedError_updatesStateWithCorrectError() = scope.runTest {
         val viewModel = getViewModel()
         val passwordRepeatedError = UiText.StringResource(resId = R.string.repeated_password_error)
-        every { validateRepeatedPassword.execute("1234567", "1234568") } returns passwordRepeatedError
+        every {
+            validateRepeatedPassword.execute(
+                "1234567",
+                "1234568"
+            )
+        } returns passwordRepeatedError
         viewModel.updateState {
             copy(password = "1234567", repeatedPassword = "1234568")
         }
@@ -295,11 +313,29 @@ class RegistrationViewModelTest {
         every { validateBox.execute("A") } returns boxError
         every { validateDateOfBirth.execute("01-01-2000") } returns dateOfBirthError
         every { validatePassword.execute("1234567") } returns passwordError
-        every { validateRepeatedPassword.execute("1234567", "1234568") } returns passwordRepeatedError
+        every {
+            validateRepeatedPassword.execute(
+                "1234567",
+                "1234568"
+            )
+        } returns passwordRepeatedError
         every { validateTerms.execute(false) } returns termsError
         every { validatePrivacy.execute(false) } returns privacyError
         viewModel.updateState {
-            copy(firstName = "",lastName = "", email = "", phone = "1234567", street = "", houseNumber = "0", box = "A", dateOfBirth = "01-01-2000", password = "1234567", repeatedPassword = "1234568", acceptedTermsOfUsage = false, acceptedPrivacyConditions = false)
+            copy(
+                firstName = "",
+                lastName = "",
+                email = "",
+                phone = "1234567",
+                street = "",
+                houseNumber = "0",
+                box = "A",
+                dateOfBirth = "01-01-2000",
+                password = "1234567",
+                repeatedPassword = "1234568",
+                acceptedTermsOfUsage = false,
+                acceptedPrivacyConditions = false
+            )
         }
         viewModel.validate("firstName")
         viewModel.validate("lastName")
@@ -339,58 +375,71 @@ class RegistrationViewModelTest {
         verify { validatePrivacy.execute(false) }
     }
 
-   @Test
-   fun onRegisterClick_happyFlow() = scope.runTest {
-       val viewModel = spyk(getViewModel())
-       val updatedState = RegistrationScreenState(
-           firstName = "Jan",
-           lastName = "Jansen",
-           email = "william.henry.harrison@example-pet-store.com",
-           phone = "0612345678",
-           street = StreetType.AFRIKALAAN.streetName,
-           houseNumber = "123",
-           box = "12",
-           dateOfBirth = "01/01/1990",
-           password = "Password1!",
-           repeatedPassword = "Password1!",
-           acceptedTermsOfUsage = true,
-           acceptedPrivacyConditions = true
-       )
-       viewModel.updateState {
-           copy(firstName = updatedState.firstName, lastName = updatedState.lastName, email = updatedState.email, phone = updatedState.phone, street = updatedState.street, houseNumber = updatedState.houseNumber, box = updatedState.box, dateOfBirth = updatedState.dateOfBirth, password = updatedState.password, repeatedPassword = updatedState.repeatedPassword, acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage, acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions)
-       }
-       every { validateFirstName.execute(any()) } returns null
-       every { validateLastName.execute(any()) } returns null
-       every { validateEmail.execute(any()) } returns null
-       every { validatePhone.execute(any()) } returns null
-       every { validateStreet.execute(any()) } returns null
-       every { validateHouseNumber.execute(any()) } returns null
-       every { validateBox.execute(any()) } returns null
-       every { validateDateOfBirth.execute(any()) } returns null
-       every { validatePassword.execute(any()) } returns null
-       every { validateRepeatedPassword.execute(any(), any()) } returns null
-       every { validateTerms.execute(any()) } returns null
-       every { validatePrivacy.execute(any()) } returns null
-       coEvery { registerUserUseCase.invoke(any(), any(), any()) } just Runs
-       val testDispatcher = StandardTestDispatcher()
-       Dispatchers.setMain(testDispatcher)
-       viewModel.onRegisterClick()
-       advanceUntilIdle()
-       verify { validateFirstName.execute(any()) }
-       verify { validateLastName.execute(any()) }
-       verify { validateEmail.execute(any()) }
-       verify { validatePhone.execute(any()) }
-       verify { validateStreet.execute(any()) }
-       verify { validateHouseNumber.execute(any()) }
-       verify { validateBox.execute(any()) }
-       verify { validateDateOfBirth.execute(any()) }
-       verify { validatePassword.execute(any()) }
-       verify { validateRepeatedPassword.execute(any(), any()) }
-       verify { validateTerms.execute(any()) }
-       verify { validatePrivacy.execute(any()) }
-       verify { viewModel.onRegisterClick() }
-       Dispatchers.resetMain()
-   }
+    @Test
+    fun onRegisterClick_happyFlow() = scope.runTest {
+        val viewModel = spyk(getViewModel())
+        val updatedState = RegistrationScreenState(
+            firstName = "Jan",
+            lastName = "Jansen",
+            email = "william.henry.harrison@example-pet-store.com",
+            phone = "0612345678",
+            street = StreetType.AFRIKALAAN.streetName,
+            houseNumber = "123",
+            box = "12",
+            dateOfBirth = "01/01/1990",
+            password = "Password1!",
+            repeatedPassword = "Password1!",
+            acceptedTermsOfUsage = true,
+            acceptedPrivacyConditions = true
+        )
+        viewModel.updateState {
+            copy(
+                firstName = updatedState.firstName,
+                lastName = updatedState.lastName,
+                email = updatedState.email,
+                phone = updatedState.phone,
+                street = updatedState.street,
+                houseNumber = updatedState.houseNumber,
+                box = updatedState.box,
+                dateOfBirth = updatedState.dateOfBirth,
+                password = updatedState.password,
+                repeatedPassword = updatedState.repeatedPassword,
+                acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage,
+                acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions
+            )
+        }
+        every { validateFirstName.execute(any()) } returns null
+        every { validateLastName.execute(any()) } returns null
+        every { validateEmail.execute(any()) } returns null
+        every { validatePhone.execute(any()) } returns null
+        every { validateStreet.execute(any()) } returns null
+        every { validateHouseNumber.execute(any()) } returns null
+        every { validateBox.execute(any()) } returns null
+        every { validateDateOfBirth.execute(any()) } returns null
+        every { validatePassword.execute(any()) } returns null
+        every { validateRepeatedPassword.execute(any(), any()) } returns null
+        every { validateTerms.execute(any()) } returns null
+        every { validatePrivacy.execute(any()) } returns null
+        coEvery { registerUserUseCase.invoke(any(), any(), any()) } just Runs
+        val testDispatcher = StandardTestDispatcher()
+        Dispatchers.setMain(testDispatcher)
+        viewModel.onRegisterClick()
+        advanceUntilIdle()
+        verify { validateFirstName.execute(any()) }
+        verify { validateLastName.execute(any()) }
+        verify { validateEmail.execute(any()) }
+        verify { validatePhone.execute(any()) }
+        verify { validateStreet.execute(any()) }
+        verify { validateHouseNumber.execute(any()) }
+        verify { validateBox.execute(any()) }
+        verify { validateDateOfBirth.execute(any()) }
+        verify { validatePassword.execute(any()) }
+        verify { validateRepeatedPassword.execute(any(), any()) }
+        verify { validateTerms.execute(any()) }
+        verify { validatePrivacy.execute(any()) }
+        verify { viewModel.onRegisterClick() }
+        Dispatchers.resetMain()
+    }
 
     @Test
     fun onRegisterClick_errorHappens_dataNotSend() = scope.runTest {
@@ -410,7 +459,20 @@ class RegistrationViewModelTest {
             acceptedPrivacyConditions = true
         )
         viewModel.updateState {
-            copy(firstName = updatedState.firstName, lastName = updatedState.lastName, email = updatedState.email, phone = updatedState.phone, street = updatedState.street, houseNumber = updatedState.houseNumber, box = updatedState.box, dateOfBirth = updatedState.dateOfBirth, password = updatedState.password, repeatedPassword = updatedState.repeatedPassword, acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage, acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions)
+            copy(
+                firstName = updatedState.firstName,
+                lastName = updatedState.lastName,
+                email = updatedState.email,
+                phone = updatedState.phone,
+                street = updatedState.street,
+                houseNumber = updatedState.houseNumber,
+                box = updatedState.box,
+                dateOfBirth = updatedState.dateOfBirth,
+                password = updatedState.password,
+                repeatedPassword = updatedState.repeatedPassword,
+                acceptedTermsOfUsage = updatedState.acceptedTermsOfUsage,
+                acceptedPrivacyConditions = updatedState.acceptedPrivacyConditions
+            )
         }
         val firstNameError = UiText.StringResource(resId = R.string.first_name_is_blank_error)
         every { validateFirstName.execute(any()) } returns firstNameError
@@ -446,20 +508,20 @@ class RegistrationViewModelTest {
     }
 
     private fun getViewModel(): RegistrationViewModel {
-          return RegistrationViewModel(
-              validateFirstName = validateFirstName,
-              validateLastName = validateLastName,
-              validateEmail = validateEmail,
-              validatePassword = validatePassword,
-              validateRepeatedPassword = validateRepeatedPassword,
-              validateStreet = validateStreet,
-              validateHouseNumber = validateHouseNumber,
-              validateBox = validateBox,
-              validateDateOfBirth = validateDateOfBirth,
-              validatePhone = validatePhone,
-              validateTerms = validateTerms,
-              validatePrivacy = validatePrivacy,
-              registerUserUseCase = registerUserUseCase
-          )
+        return RegistrationViewModel(
+            validateFirstName = validateFirstName,
+            validateLastName = validateLastName,
+            validateEmail = validateEmail,
+            validatePassword = validatePassword,
+            validateRepeatedPassword = validateRepeatedPassword,
+            validateStreet = validateStreet,
+            validateHouseNumber = validateHouseNumber,
+            validateBox = validateBox,
+            validateDateOfBirth = validateDateOfBirth,
+            validatePhone = validatePhone,
+            validateTerms = validateTerms,
+            validatePrivacy = validatePrivacy,
+            registerUserUseCase = registerUserUseCase
+        )
     }
 }
