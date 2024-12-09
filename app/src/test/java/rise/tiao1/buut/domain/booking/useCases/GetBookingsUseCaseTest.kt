@@ -11,7 +11,7 @@ import org.junit.Test
 import rise.tiao1.buut.data.local.booking.LocalBooking
 import rise.tiao1.buut.data.remote.booking.BatteryDTO
 import rise.tiao1.buut.data.remote.booking.BoatDTO
-import rise.tiao1.buut.data.remote.booking.BookingDTO
+import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.toBooking
@@ -56,24 +56,5 @@ class GetBookingsUseCaseTest {
             LocalBooking("2", today.toApiDateString(), "TestBoat", "TestBattery", "TestUser2"),
             LocalBooking("3", today.toApiDateString(), "TestBoat", "TestBattery", "TestUser3"),
         )
-    }
-
-    fun getBookingsDTOs(): List<BookingDTO> {
-        return listOf(
-            BookingDTO("1", today.toApiDateString(), "TestTimeSlot1", getBoatDTO(), getBatteryDTO(), "TestUser1"),
-            BookingDTO("2", today.toApiDateString(), "TestTimeSlot2",getBoatDTO(), getBatteryDTO(), "TestUser2"),
-            BookingDTO("3", today.toApiDateString(), "TestTimeSlot3",getBoatDTO(), getBatteryDTO(), "TestUser3"),
-        )
-    }
-
-    fun getBoatDTO() : BoatDTO {
-        return BoatDTO(
-            name = "TestBoat")
-    }
-
-    fun getBatteryDTO() : BatteryDTO {
-        return BatteryDTO(
-            name = "TestBattery",
-            currentUser = null)
     }
 }

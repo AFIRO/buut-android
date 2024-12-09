@@ -9,6 +9,7 @@ import rise.tiao1.buut.data.local.booking.LocalBooking
 import rise.tiao1.buut.data.remote.booking.BatteryDTO
 import rise.tiao1.buut.data.remote.booking.BoatDTO
 import rise.tiao1.buut.data.remote.booking.BookingDTO
+import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 import rise.tiao1.buut.utils.toApiDateString
 import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
 import java.time.LocalDateTime
@@ -40,7 +41,11 @@ class BookingTest{
             id = "1",
             date = LocalDateTime.now().toApiDateString().toLocalDateTimeFromApiString(),
             boat = "TestBoat",
-            battery = "TestBattery")
+            battery = "TestBattery",
+            batteryUserFirstName = "TestUserName",
+            batteryUserLastName = "TestLastName",
+            batteryUserEmail = "TestEmail",
+            batteryUserPhoneNumber = "TestPhone")
 
     }
 
@@ -59,6 +64,10 @@ class BookingTest{
             date = LocalDateTime.now().toApiDateString(),
             boat = "TestBoat",
             battery = "TestBattery",
+            batteryUserFirstName = "TestUserName",
+            batteryUserLastName = "TestLastName",
+            batteryUserEmail = "TestEmail",
+            batteryUserPhoneNumber = "TestPhone",
             userId = "TestUserId"
         )
     }
@@ -70,6 +79,13 @@ class BookingTest{
 
     fun getBatteryDTO() : BatteryDTO {
         return BatteryDTO(
-            name = "TestBattery")
+            name = "TestBattery",
+            currentUser = UserBatteryDTO(
+                "TestUserName",
+                lastName = "TestLastName",
+                email = "TestEmail",
+                phoneNumber = "TestPhone",
+            )
+        )
     }
 }

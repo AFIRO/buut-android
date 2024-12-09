@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.DirectionsBoatFilled
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Houseboat
 import androidx.compose.material.icons.filled.SupervisedUserCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
@@ -36,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -53,17 +51,7 @@ import rise.tiao1.buut.presentation.components.InfoContainer
 import rise.tiao1.buut.presentation.components.LoadingIndicator
 import rise.tiao1.buut.presentation.components.SendEmailToBatteryOwner
 import rise.tiao1.buut.presentation.home.HomeScreenState
-import rise.tiao1.buut.ui.theme.md_theme_light_background
-import rise.tiao1.buut.ui.theme.md_theme_light_inverseSurface
-import rise.tiao1.buut.ui.theme.md_theme_light_onBackground
-import rise.tiao1.buut.ui.theme.md_theme_light_onPrimary
-import rise.tiao1.buut.ui.theme.md_theme_light_outline
-import rise.tiao1.buut.ui.theme.md_theme_light_outlineVariant
-import rise.tiao1.buut.ui.theme.md_theme_light_primaryContainer
-import rise.tiao1.buut.ui.theme.md_theme_light_secondary
-import rise.tiao1.buut.ui.theme.md_theme_light_surface
 import rise.tiao1.buut.ui.theme.md_theme_light_surfaceVariant
-import rise.tiao1.buut.ui.theme.md_theme_light_tertiary
 import rise.tiao1.buut.utils.toDateString
 import rise.tiao1.buut.utils.toTimeString
 import java.time.LocalDateTime
@@ -230,7 +218,7 @@ fun BookingDetails(
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Filled.DirectionsBoatFilled,
-                        contentDescription =  stringResource(R.string.boat),
+                        contentDescription = stringResource(R.string.boat),
                         Modifier.padding(
                             start = dimensionResource(R.dimen.padding_small),
                             end = dimensionResource(R.dimen.padding_medium)
@@ -239,7 +227,8 @@ fun BookingDetails(
                     )
                 },
                 colors = ListItemDefaults.colors(
-                    md_theme_light_surfaceVariant )
+                    md_theme_light_surfaceVariant
+                )
             )
         } else {
             Text(
@@ -262,7 +251,7 @@ fun BookingDetails(
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Filled.BatteryChargingFull,
-                        contentDescription =  stringResource(R.string.boat),
+                        contentDescription = stringResource(R.string.boat),
                         Modifier.padding(
                             start = dimensionResource(R.dimen.padding_small),
                             end = dimensionResource(R.dimen.padding_medium)
@@ -271,7 +260,8 @@ fun BookingDetails(
                     )
                 },
                 colors = ListItemDefaults.colors(
-                    md_theme_light_surfaceVariant )
+                    md_theme_light_surfaceVariant
+                )
             )
         } else {
             Text(

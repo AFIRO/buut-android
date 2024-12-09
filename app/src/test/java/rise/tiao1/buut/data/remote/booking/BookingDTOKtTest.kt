@@ -6,6 +6,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import rise.tiao1.buut.data.local.booking.LocalBooking
+import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.user.toLocalUser
 import java.time.LocalDateTime
@@ -39,6 +40,10 @@ class BookingDTOKtTest{
             date = "TestDate",
             boat = "TestBoat",
             battery = "TestBattery",
+            batteryUserFirstName = "TestUserName",
+            batteryUserLastName = "TestLastName",
+            batteryUserEmail = "TestEmail",
+            batteryUserPhoneNumber = "TestPhone",
             userId = "TestUserId"
         )
     }
@@ -50,7 +55,14 @@ class BookingDTOKtTest{
 
     fun getBatteryDTO() : BatteryDTO {
         return BatteryDTO(
-            name = "TestBattery")
+            name = "TestBattery",
+            currentUser = UserBatteryDTO(
+                "TestUserName",
+                lastName = "TestLastName",
+                email = "TestEmail",
+                phoneNumber = "TestPhone",
+            )
+        )
     }
 
 }

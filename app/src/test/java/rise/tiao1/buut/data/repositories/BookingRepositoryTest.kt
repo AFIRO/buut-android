@@ -21,6 +21,7 @@ import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.BookingUpdateDTO
 import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
+import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.toBooking
@@ -45,6 +46,7 @@ class BookingRepositoryTest {
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns getLocalBookings()
         val expected = getBookings()
+        \
         val actual = repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS)
 
         assert(expected == actual)
@@ -203,7 +205,14 @@ class BookingRepositoryTest {
 
     fun getBatteryDTO() : BatteryDTO {
         return BatteryDTO(
-            name = "TestBattery")
+            name = "TestBattery",
+            currentUser = UserBatteryDTO(
+                "TestUserName",
+                lastName = "TestLastName",
+                email = "TestEmail",
+                phoneNumber = "TestPhone",
+            )
+        )
     }
 
     fun getBookingDTO() : BookingDTO =
