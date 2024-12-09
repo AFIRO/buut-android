@@ -4,6 +4,8 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.dokka")
+    id("com.github.jk1.dependency-license-report")
+    id("jacoco")
 }
 
 android {
@@ -58,8 +60,36 @@ android {
         )
         )
     }
+}
 
+jacoco {
+    toolVersion = "0.8.10" 
+}
 
+tasks.register("jacocoTestReport", JacocoReport::class) {
+    dependsOn("testDebugUnitTest") // Run unit tests before generating the report
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
+    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
 }
 
 
