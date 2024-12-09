@@ -28,6 +28,7 @@ import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.notification.NotificationApiService
 import rise.tiao1.buut.data.remote.user.UserApiService
 import rise.tiao1.buut.presentation.home.HomeScreenState
+import rise.tiao1.buut.utils.NetworkConnectivityChecker
 import rise.tiao1.buut.utils.SharedPreferencesKeys
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -156,6 +157,11 @@ object BuutModule {
     @Singleton
     fun homeScreenState(): HomeScreenState {
         return HomeScreenState()
+    }
+
+    @Provides
+    fun provideNetworkConnectivityChecker(@ApplicationContext context: Context): NetworkConnectivityChecker {
+        return NetworkConnectivityChecker(context)
     }
 }
 
