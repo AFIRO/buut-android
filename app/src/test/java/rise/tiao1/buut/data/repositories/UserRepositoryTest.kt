@@ -23,6 +23,7 @@ import rise.tiao1.buut.data.remote.user.dto.UserDTO
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.toLocalUser
+import rise.tiao1.buut.utils.NetworkConnectivityChecker
 import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toLocalUser
 import rise.tiao1.buut.utils.toUser
@@ -34,7 +35,8 @@ class UserRepositoryTest {
     private val scope = TestScope(dispatcher)
     private val dao: UserDao = mockk()
     private val apiService: UserApiService = mockk()
-    private val userRepository = UserRepository(dao, apiService, dispatcher)
+    private val networkConnectivityChecker = mockk<NetworkConnectivityChecker>()
+    private val userRepository = UserRepository(dao, apiService,networkConnectivityChecker, dispatcher)
 
     @Test
     fun getUser_userExistsInRoom_returnsUser() = scope.runTest {
@@ -54,6 +56,7 @@ class UserRepositoryTest {
         val userFromApi = getRemoteUser()
         val userToInsert = userFromApi.toLocalUser()
         val expected = userFromApi.toLocalUser().toUser()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         coEvery { dao.getUserById(expected.id.toString()) } returns userFromDao
         coEvery { apiService.getUserById(expected.id.toString()) } returns userFromApi
         coEvery { dao.insertUser(userToInsert) } returns Unit
@@ -80,6 +83,7 @@ class UserRepositoryTest {
         )
         val userToInsert = userFromApi.toLocalUser()
         val expected = userFromApi.toLocalUser().toUser()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         coEvery { dao.getUserById(expected.id.toString()) } returns userFromDao
         coEvery { apiService.getUserById(expected.id.toString()) } returns userFromApi
         coEvery { dao.insertUser(userToInsert) } returns Unit
@@ -102,6 +106,7 @@ class UserRepositoryTest {
     fun registerUser_succesful_returnsTrue() = scope.runTest {
         val userDto = getUserDto()
         coEvery { apiService.registerUser(userDto) } returns Unit
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         userRepository.registerUser(userDto)
         coVerify { apiService.registerUser(userDto) }
     }
@@ -110,6 +115,7 @@ class UserRepositoryTest {
     fun registerUser_unsuccesful_returnsFalse() = scope.runTest {
         val userDto = getUserDto()
         coEvery { apiService.registerUser(userDto) } throws Exception()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { userRepository.registerUser(userDto) }
         assert(result.isFailure)
         assert(result.exceptionOrNull() != null)
@@ -127,6 +133,7 @@ class UserRepositoryTest {
         coEvery { apiService.updateUser(putUserDTO) } returns Unit
         coEvery { apiService.getUserById("fg") } returns remoteUser
         coEvery { dao.insertUser(remoteUser.toLocalUser()) } returns Unit
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
 
         // Call the method
         userRepository.updateUser(putUserDTO)

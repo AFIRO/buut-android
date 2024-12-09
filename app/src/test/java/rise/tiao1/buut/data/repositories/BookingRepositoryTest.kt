@@ -24,6 +24,7 @@ import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.toBooking
 import rise.tiao1.buut.domain.booking.toTimeSlot
+import rise.tiao1.buut.utils.NetworkConnectivityChecker
 import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDateTime
 
@@ -33,7 +34,8 @@ class BookingRepositoryTest {
     private val scope = TestScope(dispatcher)
     private val dao = mockk<BookingDao>()
     private val service = mockk<BookingApiService>()
-    private val repo = BookingRepository(dao, service, dispatcher)
+    private val networkConnectivityChecker = mockk<NetworkConnectivityChecker>()
+    private val repo = BookingRepository(dao, service,networkConnectivityChecker, dispatcher)
     private val today = LocalDateTime.now()
     private val testException = "We can not load the bookings at this moment in time."
     private val USER_ID_WITH_BOOKINGS = "TestUser1"
@@ -43,6 +45,7 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(any()) } returns getBookingsDTOs()
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns getLocalBookings()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val expected = getBookings()
         val actual = repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS)
 
@@ -54,6 +57,7 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(any()) } returns emptyList()
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns emptyList()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val expected = emptyList<Booking>()
         val actual = repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS)
 
@@ -65,6 +69,7 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(any()) } throws Exception(testException)
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns getLocalBookings()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
@@ -74,6 +79,7 @@ class BookingRepositoryTest {
     @Test
     fun getFreeDates_returnsListOfTimeSlots() = scope.runTest {
         coEvery { service.getFreeTimeSlotsForDateRange(any(), any()) } returns getTimeslotDTOs()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val actual = repo.getFreeTimeSlotsForDateRange(today.toApiDateString())
         val expected = getTimeslots()
         assert(expected == actual)
@@ -84,6 +90,7 @@ class BookingRepositoryTest {
         coEvery { service.getFreeTimeSlotsForDateRange(any(), any()) } throws Exception(
             testException
         )
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.getFreeTimeSlotsForDateRange(today.toApiDateString()) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
@@ -94,6 +101,7 @@ class BookingRepositoryTest {
     fun createBooking_createsBooking() = scope.runTest {
         coEvery { service.createBooking(any()) } returns Unit
         coEvery { dao.insertAllBookings(any()) } returns Unit
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
             getBookingsDTOs()[0]
         )
@@ -109,7 +117,7 @@ class BookingRepositoryTest {
     fun createBooking_serviceThrowsExceptionAndHandles() = scope.runTest {
         coEvery { service.createBooking(any()) } throws Exception(testException)
         coEvery { dao.insertAllBookings(any()) } returns Unit
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.createBooking(getBookingDTO()) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
@@ -122,7 +130,7 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(
             testException
         )
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.createBooking(getBookingDTO()) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
@@ -141,7 +149,7 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
             getBookingsDTOs()[0]
         )
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         repo.updateBooking(
             getBookingUpdateDto().id.toString(),
             USER_ID_WITH_BOOKINGS,
@@ -166,7 +174,7 @@ class BookingRepositoryTest {
                 getBookingUpdateDto()
             )
         } throws Exception(testException)
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching {
             repo.updateBooking(
                 getBookingUpdateDto().id.toString(),
@@ -188,10 +196,11 @@ class BookingRepositoryTest {
                 getBookingUpdateDto()
             )
         } returns Response.success(Unit)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(
             testException
         )
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching {
             repo.updateBooking(
                 getBookingUpdateDto().id.toString(),

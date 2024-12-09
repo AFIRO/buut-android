@@ -14,6 +14,7 @@ import rise.tiao1.buut.data.remote.notification.NotificationApiService
 import rise.tiao1.buut.data.remote.notification.NotificationDTO
 import rise.tiao1.buut.data.remote.notification.NotificationIsReadDTO
 import rise.tiao1.buut.domain.notification.Notification
+import rise.tiao1.buut.utils.NetworkConnectivityChecker
 import rise.tiao1.buut.utils.NotificationType
 import rise.tiao1.buut.utils.toApiDateString
 import rise.tiao1.buut.utils.toLocalDateTimeFromApiString
@@ -26,7 +27,8 @@ class NotificationRepositoryTest {
     private val today: LocalDateTime = LocalDateTime.now()
     private val notificationDao = mockk<NotificationDao>()
     private val apiService = mockk<NotificationApiService>()
-    private val repository = NotificationRepository(notificationDao, apiService, dispatcher)
+    private val networkConnectivityChecker = mockk<NetworkConnectivityChecker>()
+    private val repository = NotificationRepository(notificationDao, apiService,networkConnectivityChecker, dispatcher)
     private val testId = "TestId"
     private val testError = "TestError"
 
@@ -35,6 +37,7 @@ class NotificationRepositoryTest {
         coEvery { notificationDao.getNotificationsByUserId(testId) } returns getLocalNotifications()
         coEvery { apiService.getAllNotificationsFromUser(testId) } returns getNotificationDTOs()
         coEvery { notificationDao.insertAllNotifications(any()) } returns Unit
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         var actual = repository.getAllNotificationsFromUser(testId)
         var expected = getNotifications()
         assertEquals(actual, expected)
@@ -47,6 +50,7 @@ class NotificationRepositoryTest {
     fun getAllNotificationsFromUser_ApiError_HandlesCorrectly() = scope.runTest {
         coEvery { notificationDao.getNotificationsByUserId(testId) } returns getLocalNotifications()
         coEvery { apiService.getAllNotificationsFromUser(testId) } throws Exception(testError)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val actual = runCatching { repository.getAllNotificationsFromUser(testId) }
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
@@ -60,6 +64,7 @@ class NotificationRepositoryTest {
         coEvery { apiService.getAllNotificationsFromUser(testId) } returns getNotificationDTOs()
         coEvery { notificationDao.getNotificationsByUserId(testId) } returns getLocalNotifications()
         coEvery { notificationDao.insertAllNotifications(any()) } throws Exception(testError)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val actual = runCatching { repository.getAllNotificationsFromUser(testId) }
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
@@ -75,6 +80,7 @@ class NotificationRepositoryTest {
         coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } returns Unit
         coEvery { notificationDao.getNotificationById(testId) } returns getLocalNotifications()[0]
         coEvery { notificationDao.insertNotification(expected) } returns Unit
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         repository.toggleNotificationReadStatus(testId, false)
         coVerify { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
         coVerify { notificationDao.getNotificationById(testId) }
@@ -86,6 +92,8 @@ class NotificationRepositoryTest {
         coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } throws Exception(
             testError
         )
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val actual = runCatching { repository.toggleNotificationReadStatus(testId, false) }
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
@@ -99,6 +107,8 @@ class NotificationRepositoryTest {
         coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } returns Unit
         coEvery { notificationDao.getNotificationById(testId) } returns getLocalNotifications()[0]
         coEvery { notificationDao.insertNotification(any()) } throws Exception(testError)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val actual = runCatching { repository.toggleNotificationReadStatus(testId, false) }
         assertEquals(actual.isFailure, true)
         assertEquals(actual.exceptionOrNull()?.message, testError)
