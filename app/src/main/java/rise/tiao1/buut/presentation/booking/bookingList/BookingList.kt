@@ -11,13 +11,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.DirectionsBoatFilled
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Houseboat
+import androidx.compose.material.icons.filled.SupervisedUserCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -41,12 +48,26 @@ import kotlinx.coroutines.launch
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.presentation.components.ActionErrorContainer
+import rise.tiao1.buut.presentation.components.CallBatteryOwnerButton
 import rise.tiao1.buut.presentation.components.InfoContainer
 import rise.tiao1.buut.presentation.components.LoadingIndicator
+import rise.tiao1.buut.presentation.components.SendEmailToBatteryOwner
 import rise.tiao1.buut.presentation.home.HomeScreenState
+import rise.tiao1.buut.ui.theme.md_theme_light_background
+import rise.tiao1.buut.ui.theme.md_theme_light_inverseSurface
+import rise.tiao1.buut.ui.theme.md_theme_light_onBackground
+import rise.tiao1.buut.ui.theme.md_theme_light_onPrimary
+import rise.tiao1.buut.ui.theme.md_theme_light_outline
+import rise.tiao1.buut.ui.theme.md_theme_light_outlineVariant
+import rise.tiao1.buut.ui.theme.md_theme_light_primaryContainer
+import rise.tiao1.buut.ui.theme.md_theme_light_secondary
+import rise.tiao1.buut.ui.theme.md_theme_light_surface
+import rise.tiao1.buut.ui.theme.md_theme_light_surfaceVariant
+import rise.tiao1.buut.ui.theme.md_theme_light_tertiary
 import rise.tiao1.buut.utils.toDateString
 import rise.tiao1.buut.utils.toTimeString
 import java.time.LocalDateTime
+
 
 @Composable
 fun BookingList(
@@ -123,7 +144,7 @@ fun BookingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row (horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
+                Row(horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))) {
                     Box(modifier = Modifier.widthIn(180.dp)) {
                         Column {
                             Text(
@@ -143,7 +164,10 @@ fun BookingItem(
                         && item.battery == null
                         && item.date.isAfter(LocalDateTime.now())
                     ) {
-                        IconButton(onClick = { onEditClicked(item.id) }, modifier = Modifier.testTag("bookingEditButton")) {
+                        IconButton(
+                            onClick = { onEditClicked(item.id) },
+                            modifier = Modifier.testTag("bookingEditButton")
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Edit,
                                 contentDescription = stringResource(R.string.edit_booking_button),
@@ -172,6 +196,10 @@ fun BookingItem(
                 BookingDetails(
                     item.boat,
                     item.battery,
+                    item.batteryUserFirstName,
+                    item.batteryUserLastName,
+                    item.batteryUserEmail,
+                    item.batteryUserPhoneNumber,
                 )
 
             }
@@ -183,21 +211,165 @@ fun BookingItem(
 fun BookingDetails(
     boat: String? = null,
     battery: String? = null,
+    batteryUserFirstName: String? = null,
+    batteryUserLastName: String? = null,
+    batteryUserEmail: String? = null,
+    batteryUserPhoneNumber: String? = null,
 ) {
+    var batteryDetailsExpanded by rememberSaveable { mutableStateOf(false) }
     Column {
-        Text(
-            text = if (boat != null) stringResource(R.string.boat) + ": $boat" else stringResource(
-                R.string.no_boat_assigned
-            ),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_small))
-        )
+        if (boat != null) {
 
-        Text(
-            text = if (battery != null) stringResource(R.string.battery) + ": $battery" else stringResource(
-                R.string.no_battery_assigned
-            ),
-            style = MaterialTheme.typography.bodyLarge,
-        )
+            ListItem(
+                headlineContent = {
+                    Text(
+                        "$boat",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.DirectionsBoatFilled,
+                        contentDescription =  stringResource(R.string.boat),
+                        Modifier.padding(
+                            start = dimensionResource(R.dimen.padding_small),
+                            end = dimensionResource(R.dimen.padding_medium)
+                        ),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+                colors = ListItemDefaults.colors(
+                    md_theme_light_surfaceVariant )
+            )
+        } else {
+            Text(
+                text = stringResource(
+                    R.string.no_boat_assigned
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_small))
+            )
+        }
+
+        if (battery != null) {
+            ListItem(
+                headlineContent = {
+                    Text(
+                        "$battery",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.BatteryChargingFull,
+                        contentDescription =  stringResource(R.string.boat),
+                        Modifier.padding(
+                            start = dimensionResource(R.dimen.padding_small),
+                            end = dimensionResource(R.dimen.padding_medium)
+                        ),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+                colors = ListItemDefaults.colors(
+                    md_theme_light_surfaceVariant )
+            )
+        } else {
+            Text(
+                text = stringResource(
+                    R.string.no_battery_assigned
+                ),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_small))
+            )
+        }
+
+        if (batteryUserFirstName != null || batteryUserLastName != null || batteryUserEmail != null || batteryUserPhoneNumber != null) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(R.string.click_for_battery_user_info))
+                IconButton(
+                    onClick = { batteryDetailsExpanded = !batteryDetailsExpanded },
+                    modifier = Modifier.semantics { this.testTag = "BatteryExpandButton" }
+                ) {
+                    Icon(
+                        imageVector = if (batteryDetailsExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = stringResource(R.string.battery_info_expanded_content_info),
+                    )
+                }
+            }
+        }
+    }
+
+    if (batteryDetailsExpanded) {
+        Card(modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_small))) {
+            BatteryDetails(
+                batteryUserFirstName,
+                batteryUserLastName,
+                batteryUserEmail,
+                batteryUserPhoneNumber
+            )
+        }
+    }
+}
+
+
+@Composable
+fun BatteryDetails(
+    batteryUserFirstName: String? = null,
+    batteryUserLastName: String? = null,
+    batteryUserEmail: String? = null,
+    batteryUserPhoneNumber: String? = null
+) {
+    if (batteryUserFirstName != null || batteryUserLastName != null || batteryUserEmail != null || batteryUserPhoneNumber != null) {
+        Column {
+            if (batteryUserFirstName != null && batteryUserLastName != null) {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            "$batteryUserFirstName $batteryUserLastName",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Filled.SupervisedUserCircle,
+                            contentDescription = "Battery User",
+                            Modifier.padding(
+                                start = dimensionResource(R.dimen.padding_small),
+                                end = dimensionResource(R.dimen.padding_medium)
+                            ),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                )
+            }
+
+            if (batteryUserPhoneNumber != null) {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            batteryUserPhoneNumber,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    leadingContent = { CallBatteryOwnerButton(batteryUserPhoneNumber) }
+                )
+            }
+
+            if (batteryUserEmail != null) {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            batteryUserEmail,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    leadingContent = { SendEmailToBatteryOwner(batteryUserEmail) },
+                )
+            }
+        }
     }
 }

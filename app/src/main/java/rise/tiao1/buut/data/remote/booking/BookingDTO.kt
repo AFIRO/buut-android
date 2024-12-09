@@ -24,6 +24,10 @@ fun BookingDTO.toLocalBooking(userId: String): LocalBooking{
         date = this.date,
         boat = this.boat?.name,
         battery = this.battery?.name,
+        batteryUserFirstName = this.battery?.currentUser?.firstName,
+        batteryUserLastName = this.battery?.currentUser?.lastName,
+        batteryUserEmail = this.battery?.currentUser?.email,
+        batteryUserPhoneNumber = this.battery?.currentUser?.phoneNumber,
         userId = userId
     )
 }

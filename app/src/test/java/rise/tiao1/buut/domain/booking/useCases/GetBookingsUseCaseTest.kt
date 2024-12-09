@@ -8,12 +8,9 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import rise.tiao1.buut.data.DummyContent
-import rise.tiao1.buut.data.local.booking.BookingDao
 import rise.tiao1.buut.data.local.booking.LocalBooking
 import rise.tiao1.buut.data.remote.booking.BatteryDTO
 import rise.tiao1.buut.data.remote.booking.BoatDTO
-import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.repositories.BookingRepository
 import rise.tiao1.buut.domain.booking.Booking
@@ -76,6 +73,7 @@ class GetBookingsUseCaseTest {
 
     fun getBatteryDTO() : BatteryDTO {
         return BatteryDTO(
-            name = "TestBattery")
+            name = "TestBattery",
+            currentUser = null)
     }
 }

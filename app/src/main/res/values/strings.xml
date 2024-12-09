@@ -57,8 +57,8 @@
     <string name="notifications_title">Notifications</string>
     <string name="booking_list_title">My bookings</string>
     <string name="expand_button_content_description">See more or less information about a booking.</string>
-    <string name="no_boat_assigned">There has not yet been a boat assigned to this booking.</string>
-    <string name="no_battery_assigned">There has not yet been a battery assigned to this booking.</string>
+    <string name="no_boat_assigned">Your boat will be assigned to you a couple of days before your booking.</string>
+    <string name="no_battery_assigned">Your battery will be assigned to you a couple of days before your booking.</string>
     <string name="user_has_no_bookings">You do not have any bookings yet.</string>
     <string name="close_label">Close</string>
     <string name="registration_succesful">Registration Successful</string>
@@ -95,4 +95,8 @@
     <string name="edit_booking_button">edit booking</string>
     <string name="login_error">Login failed</string>
     <string name="no_required_roles">You do not have the required roles.</string>
+    <string name="battery_info_expanded_content_info">See more or less information about the battery.</string>
+    <string name="click_for_battery_user_info">Click here for battery contact details.</string>
+    <string name="battery_owner_email_subject">Battery Retrieval For Booking</string>
+    <string name="battery_owner_email_body">Hi,\n\nCould we make arrangements to pick up a battery for my Buut?</string>
 </resources>
