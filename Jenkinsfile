@@ -130,7 +130,7 @@ pipeline {
 
         stage("Publish to Play Store") {
             steps {
-                sh "${GRADLE_PATH} publishReleaseBundle --artifact-dir app/build/outputs/bundle/release"
+                sh "${GRADLE_PATH} assembleRelease"
             }
         }
     }
