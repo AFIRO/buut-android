@@ -57,12 +57,9 @@ fun Navigation(
     uiLayout: UiLayout,
     navigateTo: (String) -> Unit,
     currentPage: String,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
+    isNetworkAvailable: Boolean = true
 ) {
-    val connectivityManager =
-        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val isNetworkAvailable = connectivityManager.activeNetwork != null
-
     val navItems = listOf(
         NavigationItemContent(
             selectedIcon = Icons.Filled.Home,

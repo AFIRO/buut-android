@@ -66,11 +66,6 @@ fun BookingList(
     state: HomeScreenState,
     onEditClicked: (String) -> Unit,
 ) {
-    val connectivityManager =
-        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val isNetworkAvailable = connectivityManager.activeNetwork != null
-
-
     Box(modifier = Modifier.fillMaxSize()) {
         val lazyListState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
@@ -90,7 +85,7 @@ fun BookingList(
             state = lazyListState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = if (!isNetworkAvailable || !state.apiError.isNullOrBlank()) 110.dp else 0.dp)
+                .padding(top = if (!state.isNetworkAvailable || !state.apiError.isNullOrBlank()) 110.dp else 0.dp)
         ) {
             itemsIndexed(state.bookings) { index, booking ->
                 BookingItem(
@@ -98,12 +93,12 @@ fun BookingList(
                     isExpanded = index == firstUpcomingBookingIndex,
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_tiny)),
                     onEditClicked = onEditClicked,
-                    editEnabled = isNetworkAvailable
+                    editEnabled = state.isNetworkAvailable
                 )
             }
         }
 
-        if (!isNetworkAvailable) {
+        if (!state.isNetworkAvailable) {
             ActionErrorContainer(
                 LocalContext.current.getString(R.string.no_internet_connection),
             )

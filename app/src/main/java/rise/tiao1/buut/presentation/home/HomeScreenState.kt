@@ -10,6 +10,6 @@ data class HomeScreenState (
     var notifications: List<Any> = emptyList(),
     val isLoading: Boolean = true,
     val apiError: String? = "",
-    val unReadNotifications: Int = 0
-
+    val unReadNotifications: Int = 0,
+    val isNetworkAvailable: Boolean = true
 )

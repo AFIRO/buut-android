@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import rise.tiao1.buut.R
 import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.ButtonComponent
@@ -46,13 +48,19 @@ fun LoginScreen(
     login: () -> Unit,
     onRegisterClick: () -> Unit,
     onValidate: (input: String, field: String) -> Unit,
-    uiLayout: UiLayout
+    uiLayout: UiLayout,
+    onNetworkStatusChange: (Boolean) -> Unit = {}
 ) {
-
     val scrollState = rememberScrollState()
-    val connectivityManager =
-        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val isNetworkAvailable = connectivityManager.activeNetwork != null
+    val context = LocalContext.current
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val isNetworkAvailable = connectivityManager.activeNetwork != null
+            onNetworkStatusChange(isNetworkAvailable)
+            delay(1000)
+        }
+    }
 
     Box()
     {
@@ -70,7 +78,7 @@ fun LoginScreen(
                     LoginScreenContent(
                         state, onValueUpdate, login, onRegisterClick, onValidate
                     )
-                    if (!isNetworkAvailable) {
+                    if (!state.isNetworkAvailable) {
                         ActionErrorContainer(LocalContext.current.getString(R.string.no_internet_connection_login))
                     }
                 }
@@ -88,9 +96,9 @@ fun LoginScreen(
                 BuutLogo()
                 Spacer(modifier = Modifier.heightIn(70.dp))
                 LoginScreenContent(
-                    state, onValueUpdate, login, onRegisterClick, onValidate, isNetworkAvailable
+                    state, onValueUpdate, login, onRegisterClick, onValidate, state.isNetworkAvailable
                 )
-                if (!isNetworkAvailable) {
+                if (!state.isNetworkAvailable) {
                     ActionErrorContainer(LocalContext.current.getString(R.string.no_internet_connection_login))
                 }
             }

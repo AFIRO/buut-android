@@ -1,6 +1,7 @@
 package rise.tiao1.buut.presentation.home
 
 import android.content.res.Configuration
+import android.net.ConnectivityManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -30,11 +31,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.delay
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.notification.Notification
@@ -52,6 +55,8 @@ import rise.tiao1.buut.utils.UiLayout.PORTRAIT_EXPANDED
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_MEDIUM
 import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
 import java.time.LocalDateTime
+import android.content.Context
+import android.util.Log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,8 +65,19 @@ fun HomeScreen(
     navigateTo: (String) -> Unit,
     uiLayout: UiLayout,
     onNotificationClick: (String, Boolean) -> Unit,
-    onEditBookingClicked: (String) -> Unit = {}
+    onEditBookingClicked: (String) -> Unit = {},
+    onNetworkStatusChange: (Boolean) -> Unit = {}
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val isNetworkAvailable = connectivityManager.activeNetwork != null
+            onNetworkStatusChange(isNetworkAvailable)
+            delay(1000)
+        }
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -88,7 +104,8 @@ fun HomeScreen(
                 Navigation(
                     navigateTo = navigateTo,
                     uiLayout = uiLayout,
-                    currentPage = NavigationKeys.Route.HOME
+                    currentPage = NavigationKeys.Route.HOME,
+                    isNetworkAvailable = state.isNetworkAvailable
                 )
             }
         }
@@ -104,7 +121,8 @@ fun HomeScreen(
                         uiLayout = uiLayout,
                         navigateTo = navigateTo,
                         currentPage = NavigationKeys.Route.HOME,
-                        content = { Content(state, onNotificationClick, onEditBookingClicked) }
+                        content = { Content(state, onNotificationClick, onEditBookingClicked) },
+                        isNetworkAvailable = state.isNetworkAvailable
                     )
                     Content(state, onNotificationClick, onEditBookingClicked)
                 }

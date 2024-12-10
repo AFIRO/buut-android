@@ -19,6 +19,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import rise.tiao1.buut.R
 import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.AutoCompleteTextFieldComponent
@@ -51,12 +53,19 @@ fun RegistrationScreen(
     onValidate: (field: String) -> Unit,
     onSubmitClick: () -> Unit = {},
     onRegistrationSuccessDismissed: () -> Unit = {},
-    uiLayout: UiLayout = UiLayout.PORTRAIT_SMALL
+    uiLayout: UiLayout = UiLayout.PORTRAIT_SMALL,
+    onNetworkStatusChange: (isAvailable: Boolean) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
-    val connectivityManager =
-        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val isNetworkAvailable = connectivityManager.activeNetwork != null
+    val context = LocalContext.current
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val isNetworkAvailable = connectivityManager.activeNetwork != null
+            onNetworkStatusChange(isNetworkAvailable)
+            delay(1000)
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         MainBackgroundImage()
@@ -72,7 +81,7 @@ fun RegistrationScreen(
                 UserDetails(state, onValueChanged, onValidate)
                 AddressDetails(state, onValueChanged, onValidate)
                 Passwords(state, onValueChanged, onValidate)
-                CheckboxesAndButton(state, onCheckedChanged, onSubmitClick)
+                CheckboxesAndButton(state, onCheckedChanged, onSubmitClick, state.isNetworkAvailable)
             }
         }
 
@@ -102,7 +111,7 @@ fun RegistrationScreen(
                     modifier = Modifier.heightIn(450.dp),
                 ) {
                     AddressDetails(state, onValueChanged, onValidate)
-                    CheckboxesAndButton(state, onCheckedChanged, onSubmitClick, isNetworkAvailable)
+                    CheckboxesAndButton(state, onCheckedChanged, onSubmitClick, state.isNetworkAvailable)
                 }
             }
         }

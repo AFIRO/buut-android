@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.Role
@@ -71,7 +73,17 @@ fun ProfileScreen(
     navigateTo: (String) -> Unit,
     uiLayout: UiLayout,
     navigateUp: () -> Unit = {},
+    onNetworkStatusChange: (isAvailable: Boolean) -> Unit = {}
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val isNetworkAvailable = connectivityManager.activeNetwork != null
+            onNetworkStatusChange(isNetworkAvailable)
+            delay(1000)
+        }
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -107,7 +119,8 @@ fun ProfileScreen(
                 Navigation(
                     navigateTo = navigateTo,
                     uiLayout = uiLayout,
-                    currentPage = NavigationKeys.Route.HOME
+                    currentPage = NavigationKeys.Route.HOME,
+                    isNetworkAvailable = state.isNetworkAvailable
                 )
             }
         }
@@ -123,7 +136,8 @@ fun ProfileScreen(
                         uiLayout = uiLayout,
                         navigateTo = navigateTo,
                         currentPage = NavigationKeys.Route.PROFILE,
-                        content = { Content(state, navigateTo, logout, uiLayout) }
+                        content = { Content(state, navigateTo, logout, uiLayout) },
+                        isNetworkAvailable = state.isNetworkAvailable
                     )
                     Content(state, navigateTo, logout, uiLayout)
                 }
@@ -140,9 +154,6 @@ fun Content(
     logout: () -> Unit,
     uiLayout: UiLayout,
 ) {
-    val connectivityManager =
-        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val isNetworkAvailable = connectivityManager.activeNetwork != null
     if (state.isLoading) {
         LoadingIndicator()
     }
@@ -155,9 +166,9 @@ fun Content(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             ProfileContent(state, uiLayout)
-            ButtonContent(state, navigateTo, logout, uiLayout, isNetworkAvailable)
+            ButtonContent(state, navigateTo, logout, uiLayout, state.isNetworkAvailable)
 
-            if (!isNetworkAvailable) {
+            if (!state.isNetworkAvailable) {
                 Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
                 ActionErrorContainer(LocalContext.current.getString(R.string.no_internet_connection))
             }

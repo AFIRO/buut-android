@@ -10,5 +10,7 @@ data class LoginScreenState (
     val passwordError: UiText? = null,
 
     val apiError: String = "",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+
+    val isNetworkAvailable: Boolean = true
 )

@@ -33,5 +33,7 @@ data class RegistrationScreenState(
     val formHasErrors: Boolean= false,
     val registrationSuccess: Boolean = false,
 
-    val apiError: String = ""
+    val apiError: String = "",
+
+    val isNetworkAvailable: Boolean = true
 )

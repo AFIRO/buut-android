@@ -93,6 +93,10 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun onNetworkStatusChange(isAvailable: Boolean) {
+        _state.value = state.value.copy(isNetworkAvailable = isAvailable)
+    }
 }
 
 

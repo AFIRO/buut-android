@@ -23,17 +23,13 @@ import rise.tiao1.buut.presentation.components.NotificationCard
 
 @Composable
 fun NotificationList(state: HomeScreenState, onNotificationClick: (String, Boolean) -> Unit) {
-    val connectivityManager =
-        LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val isNetworkAvailable = connectivityManager.activeNetwork != null
-
     Box(modifier = Modifier.fillMaxSize()) {
         val lazyListState = rememberLazyListState()
         LazyColumn(
             state = lazyListState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = if (!isNetworkAvailable || !state.apiError.isNullOrBlank()) 110.dp else 0.dp)
+                .padding(top = if (!state.isNetworkAvailable || !state.apiError.isNullOrBlank()) 110.dp else 0.dp)
         ) {
             itemsIndexed(state.notifications) { index, notification ->
                 if (notification is Notification) {
@@ -42,7 +38,7 @@ fun NotificationList(state: HomeScreenState, onNotificationClick: (String, Boole
             }
         }
 
-        if (!isNetworkAvailable) {
+        if (!state.isNetworkAvailable) {
             ActionErrorContainer(
                 LocalContext.current.getString(R.string.no_internet_connection),
             )
