@@ -53,6 +53,12 @@ class ProfileViewModelTest {
         assertEquals(viewModel.state.value.isLoading, false)
     }
 
+    @Test
+    fun onNetworkChanged_updatesState() = scope.runTest {
+        viewModel.onNetworkStatusChange(false)
+        assertEquals(viewModel.state.value.isNetworkAvailable, false)
+    }
+
     fun getUser(): User {
         return User(
             id = "TestId",

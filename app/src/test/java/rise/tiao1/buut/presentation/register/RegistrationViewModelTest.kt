@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.useCases.RegisterUserUseCase
@@ -505,6 +506,13 @@ class RegistrationViewModelTest {
         verify { validatePrivacy.execute(any()) }
         verify { viewModel.onRegisterClick() }
         Dispatchers.resetMain()
+    }
+
+    @Test
+    fun onNetworkChanged_updatesState() = scope.runTest {
+        val viewModel = getViewModel()
+        viewModel.onNetworkStatusChange(false)
+        assertEquals(viewModel.state.value.isNetworkAvailable, false)
     }
 
     private fun getViewModel(): RegistrationViewModel {
