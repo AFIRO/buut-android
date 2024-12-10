@@ -13,6 +13,7 @@ import rise.tiao1.buut.domain.booking.useCases.CreateBookingsUseCase
 import rise.tiao1.buut.domain.booking.useCases.GetSelectableDatesUseCase
 import rise.tiao1.buut.domain.booking.useCases.GetSelectableTimeSlotsUseCase
 
+@ExperimentalMaterial3Api
 class CreateBookingViewModelTest {
     private val dispatcher = StandardTestDispatcher()
     private val scope = TestScope()
