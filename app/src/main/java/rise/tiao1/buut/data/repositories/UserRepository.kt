@@ -5,15 +5,20 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import rise.tiao1.buut.data.di.IoDispatcher
 import rise.tiao1.buut.data.local.user.UserDao
+import rise.tiao1.buut.data.remote.user.RemoteUser
 import rise.tiao1.buut.data.remote.user.UserApiService
+import rise.tiao1.buut.data.remote.user.dto.AddressDTO
 import rise.tiao1.buut.data.remote.user.dto.PutUserDTO
+import rise.tiao1.buut.data.remote.user.dto.RoleDTO
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
 import rise.tiao1.buut.domain.user.User
 import rise.tiao1.buut.domain.user.toLocalUser
 import rise.tiao1.buut.utils.NetworkConnectivityChecker
+import rise.tiao1.buut.utils.StreetType
 import rise.tiao1.buut.utils.toApiErrorMessage
 import rise.tiao1.buut.utils.toLocalUser
 import rise.tiao1.buut.utils.toUser
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +41,9 @@ class UserRepository @Inject constructor(
                     val remoteUser = apiService.getUserById(id)
                     localUser = remoteUser.toLocalUser()
                     dao.insertUser(localUser)
+                }
+                if (localUser == null && !networkConnectivityChecker.isNetworkAvailable()) {
+                    localUser = getFallbackUser()
                 }
                 return@withContext localUser!!.toUser()
             } catch (e: Exception) {
@@ -112,6 +120,17 @@ class UserRepository @Inject constructor(
             }
         }
     }
+
+    private fun getFallbackUser() = RemoteUser(
+        null.toString(),
+        null.toString(),
+        null.toString(),
+        null.toString(),
+        null.toString(),
+        birthDate = LocalDateTime.now().minusYears(20).toString(),
+        address = AddressDTO(StreetType.AFRIKALAAN, 1.toString(), null.toString()),
+        roles = listOf(RoleDTO(name = "User"))
+    ).toLocalUser()
 }
 
 

@@ -28,7 +28,8 @@ class NotificationRepositoryTest {
     private val notificationDao = mockk<NotificationDao>()
     private val apiService = mockk<NotificationApiService>()
     private val networkConnectivityChecker = mockk<NetworkConnectivityChecker>()
-    private val repository = NotificationRepository(notificationDao, apiService,networkConnectivityChecker, dispatcher)
+    private val repository =
+        NotificationRepository(notificationDao, apiService, networkConnectivityChecker, dispatcher)
     private val testId = "TestId"
     private val testError = "TestError"
 
@@ -38,8 +39,8 @@ class NotificationRepositoryTest {
         coEvery { apiService.getAllNotificationsFromUser(testId) } returns getNotificationDTOs()
         coEvery { notificationDao.insertAllNotifications(any()) } returns Unit
         coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
-        var actual = repository.getAllNotificationsFromUser(testId)
-        var expected = getNotifications()
+        val actual = repository.getAllNotificationsFromUser(testId)
+        val expected = getNotifications()
         assertEquals(actual, expected)
         coVerify { notificationDao.getNotificationsByUserId(testId) }
         coVerify { apiService.getAllNotificationsFromUser(testId) }
@@ -74,8 +75,20 @@ class NotificationRepositoryTest {
     }
 
     @Test
+    fun getAllNotificationsFromUser_noConnection_skipsRefresh() = scope.runTest {
+        coEvery { notificationDao.getNotificationsByUserId(testId) } returns getLocalNotifications()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns false
+        val actual = repository.getAllNotificationsFromUser(testId)
+        val expected = getNotifications()
+        assertEquals(actual, expected)
+        coVerify { notificationDao.getNotificationsByUserId(testId) }
+        coVerify(exactly = 0) { apiService.getAllNotificationsFromUser(testId) }
+        coVerify(exactly = 0) { notificationDao.insertAllNotifications(any()) }
+    }
+
+    @Test
     fun toggleNotificationReadStatus_setsCorrectly() = scope.runTest {
-        var expected = getLocalNotifications()[0].copy(isRead = false)
+        val expected = getLocalNotifications()[0].copy(isRead = false)
 
         coEvery { apiService.markNotificationAsRead(getNotificatioIsReadDto()) } returns Unit
         coEvery { notificationDao.getNotificationById(testId) } returns getLocalNotifications()[0]
@@ -114,6 +127,15 @@ class NotificationRepositoryTest {
         assertEquals(actual.exceptionOrNull()?.message, testError)
         coVerify { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
         coVerify { notificationDao.getNotificationById(testId) }
+    }
+
+    @Test
+    fun toggleNotificationReadStatus_noConnection_skipsSetAndRefresh() = scope.runTest {
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns false
+        repository.toggleNotificationReadStatus(testId, false)
+        coVerify(exactly = 0) { apiService.markNotificationAsRead(getNotificatioIsReadDto()) }
+        coVerify(exactly = 0) { notificationDao.getNotificationById(testId) }
+        coVerify(exactly = 0) { notificationDao.insertNotification(any()) }
     }
 
 
