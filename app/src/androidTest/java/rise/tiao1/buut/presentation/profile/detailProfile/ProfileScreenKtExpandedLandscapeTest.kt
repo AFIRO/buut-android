@@ -183,6 +183,35 @@ class ProfileScreenKtExpandedLandscapeTest {
         )
     }
 
+    @Test
+    fun profileScreen_noConnection_showsProfileContentWithAlert() {
+        rule.setContent {
+            ProfileScreen(
+                state = ProfileScreenState(
+                    user = getUser(),
+                    isLoading = false,
+                    apiError = "",
+                    isNetworkAvailable = false
+                ),
+                logout = {},
+                navigateTo = {},
+                uiLayout = uiLayout
+            )
+        }
+        rule.waitForIdle()
+        loadingIndicator.assertIsNotDisplayed()
+        errorContainer.assertIsNotDisplayed()
+        navigation.assertIsDisplayed()
+        profileEditButton.assertIsDisplayed()
+        profileLogoutButton.assertIsDisplayed()
+        nameInfo.assertIsDisplayed()
+        mailAndPhoneInfo.assertIsDisplayed()
+        dobInfo.assertIsDisplayed()
+        addressInfo.assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.no_internet_connection)).assertIsDisplayed()
+    }
+
+
     fun getUser(): User {
         return User(
             id = "TestId",
