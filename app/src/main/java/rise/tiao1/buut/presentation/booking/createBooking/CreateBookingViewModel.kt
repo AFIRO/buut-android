@@ -22,6 +22,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
+@ExperimentalMaterial3Api
 class CreateBookingViewModel @Inject constructor(
     private val getSelectableDatesUseCase: GetSelectableDatesUseCase,
     private val getSelectableTimeSlotsUseCase: GetSelectableTimeSlotsUseCase,

@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -37,6 +38,7 @@ import rise.tiao1.buut.utils.UiLayout
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@ExperimentalMaterial3Api
 class MainActivity : ComponentActivity() {
 
     @Inject

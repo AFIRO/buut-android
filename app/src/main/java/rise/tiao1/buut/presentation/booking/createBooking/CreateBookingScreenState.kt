@@ -7,6 +7,8 @@ import rise.tiao1.buut.domain.booking.TimeSlot
 import java.time.LocalDate
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
+@ExperimentalMaterial3Api
 data class CreateBookingScreenState @OptIn(ExperimentalMaterial3Api::class) constructor(
 
     val datePickerState: DatePickerState = DatePickerState(
