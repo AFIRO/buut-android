@@ -49,7 +49,8 @@ class LoginUseCaseTest {
             every { setAudience(any()) } returns this
             every { start(any()) } answers {
                 val callback = firstArg<Callback<Credentials, AuthenticationException>>()
-                callback.onFailure(mockk())
+                val exception = mockk<AuthenticationException>(relaxed = true)
+                callback.onFailure(exception)
             }
         }
 
