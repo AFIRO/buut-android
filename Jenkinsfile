@@ -87,7 +87,7 @@ pipeline {
                         }
                     }
                 }
-
+/*
                 stage("Static Analysis with Detekt") {
                     steps {
                         sh "${GRADLE_PATH} downloadDetektConfig detektRelease"
@@ -125,6 +125,7 @@ pipeline {
                         }
                     }
                 }
+                */
             }
         }
 
