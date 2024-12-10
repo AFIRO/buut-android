@@ -114,7 +114,7 @@ fun LoginScreenContent(
     login: () -> Unit,
     onRegisterClick: () -> Unit,
     onValidate: (input: String, field: String) -> Unit,
-    registerEnabled: Boolean = true
+    operationsEnabled: Boolean = true
 
 ) {
     Column(
@@ -156,14 +156,15 @@ fun LoginScreenContent(
                 label = R.string.log_in_button,
                 onClick = { login() },
                 isLoading = state.isLoading,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isButtonEnabled = operationsEnabled
             )
             Spacer(modifier = Modifier.heightIn(6.dp))
             ClickableTextComponent(
                 leadingText = R.string.no_account_yet,
                 clickableText = R.string.register_here,
                 onClick = onRegisterClick,
-                isEnabled = registerEnabled
+                isEnabled = operationsEnabled
             )
         }
     }
