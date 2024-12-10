@@ -265,4 +265,27 @@ class LoginScreenKtExpandedPortraitTest {
         registerButton.performClick()
         assert(navController.currentDestination?.route == NavigationKeys.Route.REGISTER)
     }
+
+    @Test
+    fun loginScreen_noConnection_displayCorrectly() {
+        rule.setContent {
+            LoginScreen(
+                state = LoginScreenState(isNetworkAvailable = false),
+                onValueUpdate = { _, _ -> },
+                login = { },
+                onRegisterClick = { },
+                onValidate = { _, _ -> },
+                uiLayout = uiLayout
+            )
+        }
+
+        logo.assertIsDisplayed()
+        emailInput.assertIsDisplayed()
+        passwordInput.assertIsDisplayed()
+        noAccountLabel.assertIsDisplayed()
+        loginButton.assertIsDisplayed()
+        registerButton.assertIsDisplayed()
+        rule.onNodeWithText(context.getString(R.string.no_internet_connection_login))
+            .assertIsDisplayed()
+    }
 }

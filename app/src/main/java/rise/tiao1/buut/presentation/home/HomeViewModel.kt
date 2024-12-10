@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
                 _state.value = state.value.copy(user = user)
                 getBookings()
                 getNotifications()
-                _state.value = state.value.copy(isLoading = false)
+                _state.value = state.value.copy(isLoading = false, apiError = "")
             } catch (e: Exception) {
                 _state.value = state.value.copy(
                     isLoading = false,
@@ -55,7 +55,7 @@ class HomeViewModel @Inject constructor(
                 val bookings = getBookingsSortedByDateUseCase(
                     userId = state.value.user?.id ?: ""
                 )
-                _state.value = state.value.copy(bookings = bookings)
+                _state.value = state.value.copy(bookings = bookings, apiError = "")
             } catch (e: Exception) {
                 _state.value = state.value.copy(
                     apiError = e.message
@@ -71,7 +71,7 @@ class HomeViewModel @Inject constructor(
                 val notifications = getNotificationsUseCase(
                     userId = state.value.user?.id ?: ""
                 )
-                _state.value = state.value.copy(notifications = notifications, unReadNotifications = notifications.count { !it.isRead })
+                _state.value = state.value.copy(notifications = notifications, unReadNotifications = notifications.count { !it.isRead }, apiError = "")
 
             } catch (e: Exception) {
                 _state.value = state.value.copy(
@@ -92,6 +92,10 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun onNetworkStatusChange(isAvailable: Boolean) {
+        _state.value = state.value.copy(isNetworkAvailable = isAvailable)
     }
 }
 

@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.kotlin.any
 import retrofit2.Response
@@ -19,11 +20,13 @@ import rise.tiao1.buut.data.remote.booking.BookingApiService
 import rise.tiao1.buut.data.remote.booking.BookingDTO
 import rise.tiao1.buut.data.remote.booking.BookingUpdateDTO
 import rise.tiao1.buut.data.remote.booking.TimeSlotDTO
+import rise.tiao1.buut.data.remote.booking.TimeSlotResponse
 import rise.tiao1.buut.data.remote.user.dto.UserBatteryDTO
 import rise.tiao1.buut.domain.booking.Booking
 import rise.tiao1.buut.domain.booking.TimeSlot
 import rise.tiao1.buut.domain.booking.toBooking
 import rise.tiao1.buut.domain.booking.toTimeSlot
+import rise.tiao1.buut.utils.NetworkConnectivityChecker
 import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDateTime
 
@@ -33,16 +36,20 @@ class BookingRepositoryTest {
     private val scope = TestScope(dispatcher)
     private val dao = mockk<BookingDao>()
     private val service = mockk<BookingApiService>()
-    private val repo = BookingRepository(dao, service, dispatcher)
+    private val networkConnectivityChecker = mockk<NetworkConnectivityChecker>()
+    private val repo = BookingRepository(dao, service, networkConnectivityChecker, dispatcher)
     private val today = LocalDateTime.now()
     private val testException = "We can not load the bookings at this moment in time."
     private val USER_ID_WITH_BOOKINGS = "TestUser1"
+    private val noInternetConnectionError =
+        "You appear to be offline. Displaying local data until reconnection. \n You will not be able to create a new booking, edit a booking or edit your personal data."
 
     @Test
     fun getBookings_IsReturningBookingsWhenUserHasBookings() = scope.runTest {
         coEvery { service.getAllBookingsFromUser(any()) } returns getBookingsDTOs()
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns getLocalBookings()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val expected = getBookings()
         val actual = repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS)
 
@@ -54,6 +61,7 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(any()) } returns emptyList()
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns emptyList()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val expected = emptyList<Booking>()
         val actual = repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS)
 
@@ -65,15 +73,57 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(any()) } throws Exception(testException)
         coEvery { dao.insertAllBookings(any()) } returns any()
         coEvery { dao.getBookingsByUserId(any()) } returns getLocalBookings()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
-        Assert.assertEquals(testException, result.exceptionOrNull()?.message)
+        assertEquals(testException, result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun getBookings_noConnection_skipsRefresh() = scope.runTest {
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns false
+        coEvery { dao.getBookingsByUserId(any()) } returns getLocalBookings()
+        val expected = getBookings()
+        val actual = repo.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS)
+        assertEquals(expected, actual)
+        coVerify(exactly = 0) { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) }
+        coVerify(exactly = 0) { dao.insertAllBookings(any()) }
+    }
+
+    @Test
+    fun getAvailableDays_returnsListOfTimeSlots() = scope.runTest {
+        coEvery { service.getAvailableDays() } returns TimeSlotResponse(getTimeslotDTOs(), 200)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
+        val actual = repo.getAvailableDays()
+        val expected = getTimeslots()
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun getAvailableDays_throwsException_handles() = scope.runTest {
+        coEvery { service.getAvailableDays() } throws Exception(testException)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
+        val result = runCatching { repo.getAvailableDays() }
+        Assert.assertTrue(result.isFailure)
+        Assert.assertTrue(result.exceptionOrNull() is Exception)
+        assertEquals(testException, result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun getAvailableDays_noConnection_handles() = scope.runTest {
+        coEvery { service.getAvailableDays() } returns TimeSlotResponse(getTimeslotDTOs(), 200)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns false
+        val result = runCatching { repo.getAvailableDays() }
+        Assert.assertTrue(result.isFailure)
+        Assert.assertTrue(result.exceptionOrNull() is Exception)
+        assertEquals(noInternetConnectionError, result.exceptionOrNull()?.message)
     }
 
     @Test
     fun getFreeDates_returnsListOfTimeSlots() = scope.runTest {
         coEvery { service.getFreeTimeSlotsForDateRange(any(), any()) } returns getTimeslotDTOs()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val actual = repo.getFreeTimeSlotsForDateRange(today.toApiDateString())
         val expected = getTimeslots()
         assert(expected == actual)
@@ -84,16 +134,28 @@ class BookingRepositoryTest {
         coEvery { service.getFreeTimeSlotsForDateRange(any(), any()) } throws Exception(
             testException
         )
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.getFreeTimeSlotsForDateRange(today.toApiDateString()) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
-        Assert.assertEquals(testException, result.exceptionOrNull()?.message)
+        assertEquals(testException, result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun getFreeDates_noConnection_handles() = scope.runTest {
+        coEvery { service.getFreeTimeSlotsForDateRange(any(), any()) } returns getTimeslotDTOs()
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns false
+        val result = runCatching { repo.getFreeTimeSlotsForDateRange(today.toApiDateString()) }
+        Assert.assertTrue(result.isFailure)
+        Assert.assertTrue(result.exceptionOrNull() is Exception)
+        assertEquals(noInternetConnectionError, result.exceptionOrNull()?.message)
     }
 
     @Test
     fun createBooking_createsBooking() = scope.runTest {
         coEvery { service.createBooking(any()) } returns Unit
         coEvery { dao.insertAllBookings(any()) } returns Unit
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
             getBookingsDTOs()[0]
         )
@@ -109,11 +171,11 @@ class BookingRepositoryTest {
     fun createBooking_serviceThrowsExceptionAndHandles() = scope.runTest {
         coEvery { service.createBooking(any()) } throws Exception(testException)
         coEvery { dao.insertAllBookings(any()) } returns Unit
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.createBooking(getBookingDTO()) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
-        Assert.assertEquals(testException, result.exceptionOrNull()?.message)
+        assertEquals(testException, result.exceptionOrNull()?.message)
     }
 
     @Test
@@ -122,11 +184,27 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(
             testException
         )
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching { repo.createBooking(getBookingDTO()) }
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
-        Assert.assertEquals(testException, result.exceptionOrNull()?.message)
+        assertEquals(testException, result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun createBooking_noConnection_handles() = scope.runTest {
+        coEvery { service.createBooking(any()) } returns Unit
+        coEvery { dao.insertAllBookings(any()) } returns Unit
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns false
+        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
+            getBookingsDTOs()[0]
+        )
+
+        val result = runCatching { repo.createBooking(getBookingDTO()) }
+
+        Assert.assertTrue(result.isFailure)
+        Assert.assertTrue(result.exceptionOrNull() is Exception)
+        assertEquals(noInternetConnectionError, result.exceptionOrNull()?.message)
     }
 
     @Test
@@ -141,7 +219,7 @@ class BookingRepositoryTest {
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
             getBookingsDTOs()[0]
         )
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         repo.updateBooking(
             getBookingUpdateDto().id.toString(),
             USER_ID_WITH_BOOKINGS,
@@ -166,7 +244,7 @@ class BookingRepositoryTest {
                 getBookingUpdateDto()
             )
         } throws Exception(testException)
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching {
             repo.updateBooking(
                 getBookingUpdateDto().id.toString(),
@@ -177,7 +255,7 @@ class BookingRepositoryTest {
 
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
-        Assert.assertEquals(testException, result.exceptionOrNull()?.message)
+        assertEquals(testException, result.exceptionOrNull()?.message)
     }
 
     @Test
@@ -188,10 +266,11 @@ class BookingRepositoryTest {
                 getBookingUpdateDto()
             )
         } returns Response.success(Unit)
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } throws Exception(
             testException
         )
-
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns true
         val result = runCatching {
             repo.updateBooking(
                 getBookingUpdateDto().id.toString(),
@@ -202,7 +281,33 @@ class BookingRepositoryTest {
 
         Assert.assertTrue(result.isFailure)
         Assert.assertTrue(result.exceptionOrNull() is Exception)
-        Assert.assertEquals(testException, result.exceptionOrNull()?.message)
+        assertEquals(testException, result.exceptionOrNull()?.message)
+    }
+
+    @Test
+    fun updateBook_noConnection_handles() = scope.runTest {
+        coEvery {
+            service.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                getBookingUpdateDto()
+            )
+        } returns Response.success(Unit)
+        coEvery { dao.insertAllBookings(any()) } returns Unit
+        coEvery { service.getAllBookingsFromUser(USER_ID_WITH_BOOKINGS) } returns listOf(
+            getBookingsDTOs()[0]
+        )
+        coEvery { networkConnectivityChecker.isNetworkAvailable() } returns false
+        val result = runCatching {
+            repo.updateBooking(
+                getBookingUpdateDto().id.toString(),
+                USER_ID_WITH_BOOKINGS,
+                getBookingUpdateDto()
+            )
+        }
+
+        Assert.assertTrue(result.isFailure)
+        Assert.assertTrue(result.exceptionOrNull() is Exception)
+        assertEquals(noInternetConnectionError, result.exceptionOrNull()?.message)
     }
 
 

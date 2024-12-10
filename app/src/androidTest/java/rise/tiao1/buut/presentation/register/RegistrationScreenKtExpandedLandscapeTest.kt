@@ -898,4 +898,36 @@ class RegistrationScreenKtExpandedLandscapeTest {
         registrationSuccessModalButton.isNotDisplayed()
         assert(navController.currentDestination?.route == NavigationKeys.Route.HOME)
     }
+
+    @Test
+    fun registrationScreen_noConnection_displayCorrectly() {
+        rule.setContent {
+            RegistrationScreen(
+                state = RegistrationScreenState(isNetworkAvailable = false),
+                onValueChanged = { _, _ -> },
+                onCheckedChanged = { _, _ -> },
+                onValidate = { },
+                uiLayout = uiLayout
+            )
+        }
+
+        background.assertIsDisplayed()
+        firstNameInput.assertIsDisplayed()
+        lastNameInput.assertIsDisplayed()
+        streetInput.assertIsDisplayed()
+        houseNumberInput.assertIsDisplayed()
+        boxLabelInput.assertIsDisplayed()
+        dateOfBirthInput.assertIsDisplayed()
+        emailInput.assertIsDisplayed()
+        phoneInput.assertIsDisplayed()
+        registerButton.performScrollTo()
+        passwordInput.assertIsDisplayed()
+        confirmPasswordInput.assertIsDisplayed()
+        registerButton.assertIsDisplayed()
+        termsInput.assertIsDisplayed()
+        privacyInput.assertIsDisplayed()
+        errorMessage.assertIsNotDisplayed()
+        rule.onNodeWithText(context.getString(R.string.no_internet_connection_login))
+            .assertIsDisplayed()
+    }
 }

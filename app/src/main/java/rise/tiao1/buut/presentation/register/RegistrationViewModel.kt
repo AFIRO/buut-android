@@ -149,6 +149,10 @@ class RegistrationViewModel @Inject constructor(
         navigateToHome()
     }
 
+    fun onNetworkStatusChange(isAvailable: Boolean) {
+        _state.value = state.value.copy(isNetworkAvailable = isAvailable)
+    }
+
     private val listOfInputKeys = listOf(
         InputKeys.FIRST_NAME,
         InputKeys.LAST_NAME,

@@ -84,7 +84,10 @@ class MainActivity : ComponentActivity() {
                     onValidate = { input, field: String ->
                         loginViewModel.validate(input, field)
                     },
-                    uiLayout = uiLayout
+                    uiLayout = uiLayout,
+                    onNetworkStatusChange = { isNetworkAvailable:Boolean ->
+                        loginViewModel.onNetworkStatusChange(isNetworkAvailable)
+                    }
                 )
             }
             composable(route = Route.HOME) {
@@ -96,6 +99,9 @@ class MainActivity : ComponentActivity() {
                     onNotificationClick =  { notificationId:String, Boolean: Boolean -> viewModel.onNotificationClick(notificationId, Boolean) },
                     onEditBookingClicked = { bookingId:String ->
                         navController.navigate("update_booking/$bookingId")
+                    },
+                    onNetworkStatusChange = { isNetworkAvailable:Boolean ->
+                        viewModel.onNetworkStatusChange(isNetworkAvailable)
                     }
                 )
             }
@@ -117,7 +123,10 @@ class MainActivity : ComponentActivity() {
                         registrationViewModel.onRegistrationSuccessDismissed(
                             navigateToHome = { navController.navigate(Route.LOGIN) })
                     },
-                    uiLayout = uiLayout
+                    uiLayout = uiLayout,
+                    onNetworkStatusChange = { isNetworkAvailable:Boolean ->
+                        registrationViewModel.onNetworkStatusChange(isNetworkAvailable)
+                    }
                 )
             }
             composable(route = Route.CREATE_BOOKING) {
@@ -181,7 +190,10 @@ class MainActivity : ComponentActivity() {
                     },
                     navigateTo = { route:String -> navController.navigate(route)},
                     navigateUp = {navController.navigateUp()},
-                    uiLayout = uiLayout
+                    uiLayout = uiLayout,
+                    onNetworkStatusChange = { isNetworkAvailable:Boolean ->
+                        profileViewModel.onNetworkStatusChange(isNetworkAvailable)
+                    }
                 )
             }
 

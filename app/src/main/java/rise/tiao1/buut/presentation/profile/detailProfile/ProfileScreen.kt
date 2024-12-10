@@ -1,7 +1,8 @@
 package rise.tiao1.buut.presentation.profile.detailProfile
 
+import android.content.Context
 import android.content.res.Configuration
-import android.util.Log
+import android.net.ConnectivityManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,24 +31,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
+import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.ButtonComponent
-import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.HeaderOne
 import rise.tiao1.buut.presentation.components.LoadingIndicator
 import rise.tiao1.buut.presentation.components.Navigation
-import rise.tiao1.buut.presentation.profile.editProfile.TAG
 import rise.tiao1.buut.ui.theme.AppTheme
 import rise.tiao1.buut.utils.NavigationKeys
 import rise.tiao1.buut.utils.StreetType
@@ -61,7 +64,6 @@ import rise.tiao1.buut.utils.UiLayout.PORTRAIT_SMALL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import kotlin.collections.listOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +73,17 @@ fun ProfileScreen(
     navigateTo: (String) -> Unit,
     uiLayout: UiLayout,
     navigateUp: () -> Unit = {},
+    onNetworkStatusChange: (isAvailable: Boolean) -> Unit = {}
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val isNetworkAvailable = connectivityManager.activeNetwork != null
+            onNetworkStatusChange(isNetworkAvailable)
+            delay(1000)
+        }
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -107,7 +119,8 @@ fun ProfileScreen(
                 Navigation(
                     navigateTo = navigateTo,
                     uiLayout = uiLayout,
-                    currentPage = NavigationKeys.Route.HOME
+                    currentPage = NavigationKeys.Route.HOME,
+                    isNetworkAvailable = state.isNetworkAvailable
                 )
             }
         }
@@ -123,7 +136,8 @@ fun ProfileScreen(
                         uiLayout = uiLayout,
                         navigateTo = navigateTo,
                         currentPage = NavigationKeys.Route.PROFILE,
-                        content = { Content(state, navigateTo, logout, uiLayout) }
+                        content = { Content(state, navigateTo, logout, uiLayout) },
+                        isNetworkAvailable = state.isNetworkAvailable
                     )
                     Content(state, navigateTo, logout, uiLayout)
                 }
@@ -143,15 +157,24 @@ fun Content(
     if (state.isLoading) {
         LoadingIndicator()
     }
+
     if (state.apiError?.isNotEmpty() == true) {
-        Log.e(TAG, state.apiError)
-        ErrorMessageContainer(state.apiError)
+        ActionErrorContainer(state.apiError)
     } else {
-        Column(verticalArrangement = Arrangement.Top, modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Column(
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
             ProfileContent(state, uiLayout)
-            ButtonContent(state, navigateTo, logout, uiLayout)
+            ButtonContent(state, navigateTo, logout, uiLayout, state.isNetworkAvailable)
+
+            if (!state.isNetworkAvailable) {
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+                ActionErrorContainer(LocalContext.current.getString(R.string.no_internet_connection))
+            }
         }
     }
+
 }
 
 @Composable
@@ -169,45 +192,50 @@ fun ProfileContent(state: ProfileScreenState, uiLayout: UiLayout) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
     ) {
-            Card(
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally // Or Alignment.Start for left alignment
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally // Or Alignment.Start for left alignment
-                ) {
-                    Text(
-                        text = "${state.user?.firstName} ${state.user?.lastName}",
-                        modifier = Modifier.testTag("name")
-                    )
+                Text(
+                    text = "${state.user?.firstName} ${state.user?.lastName}",
+                    modifier = Modifier.testTag("name")
+                )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = "${state.user?.email ?: ""} ${state.user?.phone ?: ""}",
-                        modifier = Modifier.testTag("mail+phone")
+                Text(
+                    text = "${state.user?.email ?: ""} ${state.user?.phone ?: ""}",
+                    modifier = Modifier.testTag("mail+phone")
 
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "${state.user?.dateOfBirth?.format(DateTimeFormatter.ofLocalizedDate(
-                            FormatStyle.SHORT))}",
-                        modifier = Modifier.testTag("dob")
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "${
+                        state.user?.dateOfBirth?.format(
+                            DateTimeFormatter.ofLocalizedDate(
+                                FormatStyle.SHORT
+                            )
+                        )
+                    }",
+                    modifier = Modifier.testTag("dob")
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = "${state.user?.address?.street?.streetName} ${state.user?.address?.houseNumber} ${state.user?.address?.box ?: ""}",
-                        modifier = Modifier.testTag("address")
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "${state.user?.address?.street?.streetName} ${state.user?.address?.houseNumber} ${state.user?.address?.box ?: ""}",
+                    modifier = Modifier.testTag("address")
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-                }
             }
+        }
     }
 }
 
@@ -216,9 +244,9 @@ fun ButtonContent(
     state: ProfileScreenState,
     navigateTo: (String) -> Unit,
     logout: () -> Unit,
-    uiLayout: UiLayout
+    uiLayout: UiLayout,
+    isEditEnabled: Boolean = true,
 ) {
-
     if (uiLayout == PORTRAIT_SMALL || uiLayout == PORTRAIT_MEDIUM || uiLayout == PORTRAIT_EXPANDED) {
         Column(
             modifier = Modifier
@@ -233,7 +261,8 @@ fun ButtonContent(
                 isLoading = state.isLoading,
                 modifier = Modifier
                     .widthIn(dimensionResource(R.dimen.button_width))
-                    .testTag("profileEditButton")
+                    .testTag("profileEditButton"),
+                isButtonEnabled = isEditEnabled
             )
 
             Spacer(modifier = Modifier.heightIn(dimensionResource(R.dimen.padding_medium)))
@@ -266,7 +295,10 @@ fun ButtonContent(
                 label = R.string.edit_profile_button,
                 onClick = { navigateTo(NavigationKeys.Route.EDIT_PROFILE) },
                 isLoading = state.isLoading,
-                modifier = Modifier.weight(1f).testTag("profileEditButton")
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("profileEditButton"),
+                isButtonEnabled = isEditEnabled
             )
 
             ButtonComponent(
@@ -277,7 +309,9 @@ fun ButtonContent(
                     containerColor = MaterialTheme.colorScheme.error,
                     contentColor = MaterialTheme.colorScheme.onError
                 ),
-                modifier = Modifier.weight(1f).testTag("profileLogoutButton")
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("profileLogoutButton")
             )
         }
     }
@@ -398,8 +432,8 @@ fun getUser(): User {
         email = "Test@Test.be",
         password = "TestPassword",
         phone = "TestPhoneNumber",
-        dateOfBirth =  LocalDateTime.now(),
+        dateOfBirth = LocalDateTime.now(),
         address = Address(StreetType.AFRIKALAAN, "TestHouseNumber", "TestBox"),
-                roles = listOf(Role("admin"))
+        roles = listOf(Role("admin"))
     )
 }

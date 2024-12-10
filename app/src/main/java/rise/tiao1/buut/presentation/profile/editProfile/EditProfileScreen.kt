@@ -45,9 +45,9 @@ import rise.tiao1.buut.R
 import rise.tiao1.buut.domain.user.Address
 import rise.tiao1.buut.domain.user.Role
 import rise.tiao1.buut.domain.user.User
+import rise.tiao1.buut.presentation.components.ActionErrorContainer
 import rise.tiao1.buut.presentation.components.AutoCompleteTextFieldComponent
 import rise.tiao1.buut.presentation.components.ButtonComponent
-import rise.tiao1.buut.presentation.components.ErrorMessageContainer
 import rise.tiao1.buut.presentation.components.HeaderOne
 import rise.tiao1.buut.presentation.components.LoadingIndicator
 import rise.tiao1.buut.presentation.components.OutlinedTextFieldComponent
@@ -139,7 +139,7 @@ fun EditProfileScreenContent(
     if (state.isLoading) {
         LoadingIndicator()
     } else if (state.apiError?.isNotEmpty() == true) {
-        ErrorMessageContainer(state.apiError)
+        ActionErrorContainer(state.apiError)
     } else {
         Column(
             verticalArrangement = Arrangement.Top,

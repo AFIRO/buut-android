@@ -52,6 +52,13 @@ class HomeViewModelTest {
         coVerify { getNotificationsUseCase.invoke(testId) }
     }
 
+    @Test
+    fun onNetworkChanged_updatesState() = scope.runTest {
+        val viewModel = getViewModel()
+        viewModel.onNetworkStatusChange(false)
+        assertEquals(viewModel.state.value.isNetworkAvailable, false)
+    }
+
     private fun getViewModel(): HomeViewModel {
         return HomeViewModel(
             getUserUseCase,

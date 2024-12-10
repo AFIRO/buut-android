@@ -1,5 +1,7 @@
 package rise.tiao1.buut.presentation.components
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -34,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -54,7 +57,8 @@ fun Navigation(
     uiLayout: UiLayout,
     navigateTo: (String) -> Unit,
     currentPage: String,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit = {},
+    isNetworkAvailable: Boolean = true
 ) {
     val navItems = listOf(
         NavigationItemContent(
@@ -102,7 +106,8 @@ fun Navigation(
                                 } else item.unselectedIcon,
                                 contentDescription = item.text
                             )
-                        }
+                        },
+                        enabled = !(item.text == LocalContext.current.getString(R.string.new_booking) && !isNetworkAvailable)
                     )
                 }
             }
@@ -126,6 +131,7 @@ fun Navigation(
                                 contentDescription = item.text
                             )
                         },
+                        enabled = !(item.text == LocalContext.current.getString(R.string.new_booking) && !isNetworkAvailable)
                     )
                 }
             }
@@ -154,7 +160,7 @@ fun Navigation(
                                 },
                                 onClick = {
                                     item.navigateTo()
-                                }
+                                },
                             )
                         }
                     }

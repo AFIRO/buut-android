@@ -585,13 +585,97 @@ class HomeScreenKtCompactPortraitTest {
     }
 
 
+    @Test
+    fun homeScreen_notificationsExistButNoConnection_isDisplayedCorrectly() {
+        val notifications = listOf(
+            Notification(
+                notificationId = "1",
+                title = "testTitle",
+                message = "testMessage",
+                isRead = false,
+                userId = "",
+                type = NotificationType.GENERAL,
+                createdAt = today,
+                relatedEntityId = ""
+            ),
+            Notification(
+                notificationId = "2",
+                title = "testTitle",
+                message = "testMessage",
+                isRead = false,
+                userId = "",
+                type = NotificationType.GENERAL,
+                createdAt = today.plusDays(1),
+                relatedEntityId = ""
+            ),
+            Notification(
+                notificationId = "3",
+                title = "testTitle",
+                message = "testMessage",
+                isRead = false,
+                userId = "",
+                type = NotificationType.GENERAL,
+                createdAt = today.plusDays(3),
+                relatedEntityId = ""
+            ),
+        )
+        rule.setContent {
+            HomeScreen(
+                state = getState(
+                    notifications = notifications,
+                    unReadNotifications = notifications.size,
+                    isNetworkAvailable = false
+                ),
+                navigateTo = {},
+                uiLayout = uiLayout,
+                onNotificationClick = { _, _ -> }
+            )
+        }
+
+        rule.waitForIdle()
+        noNotificationsText.assertIsNotDisplayed()
+        notificationBadge.assertIsDisplayed()
+        notificationBadgeText.assertIsDisplayed()
+        notificationBadgeText.assertTextEquals(notifications.size.toString())
+        val displayedNotifications =
+            rule.onAllNodesWithTag("notificationCard").fetchSemanticsNodes()
+        assert(displayedNotifications.size == notifications.size)
+        rule.onNodeWithText(context.getString(R.string.no_internet_connection)).assertIsDisplayed()
+    }
+
+    @Test
+    fun homeScreen_bookingsExistButNoConnection_isDisplayedCorrectly() {
+        val bookings = listOf(
+            Booking(id = "1", date = LocalDateTime.now().plusDays(1)),
+            Booking(id = "2", date = LocalDateTime.now().plusDays(2)),
+            Booking(id = "3", date = LocalDateTime.now().plusDays(3))
+        )
+
+        rule.setContent {
+            HomeScreen(
+                state = getState(bookings = bookings, isNetworkAvailable = false),
+                navigateTo = {},
+                uiLayout = uiLayout,
+                onNotificationClick = { _, _ -> }
+            )
+        }
+
+        rule.waitForIdle()
+        bookingTabSelecor.performClick()
+        val displayedBookings = rule.onAllNodesWithTag("UpcomingBooking").fetchSemanticsNodes()
+        assert(displayedBookings.size == bookings.size)
+        rule.onNodeWithText(context.getString(R.string.no_internet_connection)).assertIsDisplayed()
+    }
+
+
     private fun getState(
         user: User? = null,
         notifications: List<Notification> = emptyList(),
         bookings: List<Booking> = emptyList(),
         isLoading: Boolean = false,
         apiError: String = "",
-        unReadNotifications: Int = 0
+        unReadNotifications: Int = 0,
+        isNetworkAvailable: Boolean = true
     ): HomeScreenState {
         return HomeScreenState(
             user = user,
@@ -599,7 +683,8 @@ class HomeScreenKtCompactPortraitTest {
             bookings = bookings,
             isLoading = isLoading,
             apiError = apiError,
-            unReadNotifications = unReadNotifications
+            unReadNotifications = unReadNotifications,
+            isNetworkAvailable = isNetworkAvailable
         )
     }
 }
