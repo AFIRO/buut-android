@@ -10,6 +10,6 @@ buildscript {
     dependencies {
         classpath ("com.google.dagger:hilt-android-gradle-plugin:2.48.1")
         classpath ("org.jetbrains.dokka:dokka-gradle-plugin:1.9.10")
-
+        classpath("com.github.jk1:gradle-license-report:1.16")
     }
 }
