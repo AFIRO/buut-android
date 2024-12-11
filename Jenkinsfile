@@ -139,7 +139,6 @@ pipeline {
     post {
         success {
             echo 'Build and Play Store Deployment Successfully Completed!'
-            archiveArtifacts artifacts: '**/*.dll', fingerprint: true
             script {
                 sendDiscordNotification("Build Success")
             }
