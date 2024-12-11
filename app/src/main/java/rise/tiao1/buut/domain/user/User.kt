@@ -3,6 +3,7 @@ package rise.tiao1.buut.domain.user
 import rise.tiao1.buut.data.local.user.LocalUser
 import rise.tiao1.buut.data.remote.user.dto.PutUserDTO
 import rise.tiao1.buut.data.remote.user.dto.UserDTO
+import rise.tiao1.buut.utils.toApiDateString
 import java.time.LocalDateTime
 
 data class User(
@@ -38,7 +39,7 @@ fun User.toUserDTO(): UserDTO {
         phone = this.phone,
         email = this.email,
         password = this.password,
-        dateOfBirth = this.dateOfBirth.toString()
+        dateOfBirth = this.dateOfBirth?.toApiDateString()
     )
 }
 
@@ -51,7 +52,7 @@ fun User.toPutUserDTO(): PutUserDTO {
         phone = this.phone,
         email = null,
         password = null,
-        dateOfBirth = this.dateOfBirth.toString(),
+        dateOfBirth = this.dateOfBirth?.toApiDateString(),
         roles = null
     )
 }
