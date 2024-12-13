@@ -1,21 +1,19 @@
 package rise.tiao1.buut.data.di
 
-import UnsafeOkHttpClient
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.room.Room
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
 import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
-import com.google.rpc.context.AttributeContext.Auth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -88,9 +86,7 @@ object BuutModule {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         }
 
-        // voor productie aanpassen van unsafe naar gewoon OkHttp
-        // unsafe wordt gebruikt voor interactie emulator - lokale db
-        val httpClient = UnsafeOkHttpClient().getUnsafeOkHttpClient().newBuilder()
+        val httpClient = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
             .build()
