@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         ANDROID_HOME = '/opt/android-sdk'
-        APP_ARCHIVE_NAME = 'app' 
+        APP_ARCHIVE_NAME = 'app'
         CHANGELOG_CMD = 'git log --date=format:"%Y-%m-%d" --pretty="format: * %s% b (%an, %cd)" | head -n 10 > commit-changelog.txt'
         DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1301160382307766292/kROxjtgZ-XVOibckTMri2fy5-nNOEjzjPLbT9jEpr_R0UH9JG0ZXb2XzUsYGE0d3yk6I" // NEEDS TO BE CHANGED
         JENKINS_CREDENTIALS_ID = "jenkins-master-key"
@@ -87,30 +87,19 @@ pipeline {
                         }
                     }
                 }
-/*
-                stage("Static Analysis with Detekt") {
-                    steps {
-                        sh "${GRADLE_PATH} downloadDetektConfig detektRelease"
-                    }
-                    post {
-                        always {
-                            archiveArtifacts 'app/build/reports/detekt/*.html'
-                        }
-                    }
-                }
 
                 stage('Coverage Report') {
                     steps {
                         script {
                             sh "${GRADLE_PATH} clean jacocoTestReport"
-                
-                            def coverageHtmlDir = 'app//build/reports/coverage/debug'
-                            def coverageExecFile = 'app/build/jacoco/test.exec'
-                
+
+                            def coverageHtmlDir = 'app/build/reports/jacoco/jacocoTestReport/html'
+                            def coverageExecFile = 'app/build/jacoco/testDebugUnitTest.exec'
+
                             echo "Checking for coverage files..."
                             if (fileExists(coverageExecFile)) {
                                 echo "Coverage report generated."
-                
+
                                 publishHTML([
                                     allowMissing: false,
                                     alwaysLinkToLastBuild: true,
@@ -125,13 +114,17 @@ pipeline {
                         }
                     }
                 }
-                */
             }
         }
 
         stage("Publish to Play Store") {
             steps {
                 sh "${GRADLE_PATH} assembleRelease"
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: "app/build/outputs/apk/release/*.apk", fingerprint: true
+                }
             }
         }
     }
@@ -165,7 +158,7 @@ def sendDiscordNotification(status) {
                 **Author**: ${env.GIT_AUTHOR_NAME} <${env.GIT_AUTHOR_EMAIL}>
                 **Branch**: ${env.GIT_BRANCH}
                 **Message**: ${env.GIT_COMMIT_MESSAGE}
-                
+
                 [**Build output**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/console)
                 [**Test result**](${JENKINS_SERVER}/job/${env.JOB_NAME}/lastBuild/testReport/)
                 [**Coverage report**](${JENKINS_SERVER}/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/Coverage_20Report/)
