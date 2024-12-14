@@ -1,4 +1,4 @@
-## buut-android
+## Buut-android
 
 Android application created during a school project in an internal repository in 2024.
 
